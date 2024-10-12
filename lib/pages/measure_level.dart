@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:self_help/providers/level_provider.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
@@ -16,7 +17,11 @@ class MeasureLevel extends ConsumerWidget {
       body: Center(
         child: Column(
           children: [
-            SizedBox(
+            Container(
+              // decoration: BoxDecoration(
+              //   border: Border.all(color: Colors.black),
+              //   borderRadius: BorderRadius.circular(10),
+              // ),
               width: 300,
               child: SfRadialGauge(
                 axes: <RadialAxis>[
@@ -94,14 +99,22 @@ class MeasureLevel extends ConsumerWidget {
                   onPressed: () {
                     ref.read(levelProvider.notifier).decrement();
                   },
-                  icon: const Icon(Icons.arrow_downward),
+                  icon: const FaIcon(
+                    FontAwesomeIcons.circleDown,
+                    size: 40,
+                    color: Colors.black38,
+                  ),
                 ),
                 const SizedBox(width: 16),
                 IconButton(
                   onPressed: () {
                     ref.read(levelProvider.notifier).increment();
                   },
-                  icon: const Icon(Icons.arrow_upward),
+                  icon: const FaIcon(
+                    FontAwesomeIcons.circleUp,
+                    size: 40,
+                    color: Colors.black38,
+                  ),
                 ),
               ],
             ),

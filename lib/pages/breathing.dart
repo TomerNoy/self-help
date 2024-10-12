@@ -7,7 +7,6 @@ import 'package:pulsator/pulsator.dart';
 import 'package:self_help/core/constants.dart';
 import 'package:self_help/providers/breathing_notifier.dart';
 import 'package:self_help/providers/breathing_provider.dart';
-import 'package:self_help/services/services.dart';
 import 'package:self_help/theme.dart';
 
 class Breathing extends ConsumerWidget {
@@ -38,21 +37,24 @@ class Breathing extends ConsumerWidget {
 
     /// pulse widget effect
     final pulseWidget =
-        provider.timerOn && provider.breathingType == BreathingType.peakHold
+        provider.timerOn && provider.breathingType != BreathingType.stopped
             ? AnimatedContainer(
                 duration: Constants.timerDuration,
                 // decoration: BoxDecoration(
                 //     border: Border.all(color: Colors.grey),
                 //     ),
-                width: breathingScale + 60,
-                height: breathingScale + 60,
+                width: breathingScale + 70,
+                height: breathingScale + 70,
                 child: PulseIcon(
                   pulseColor: breathingTypeColor,
-                  iconSize: breathingScale,
-                  innerSize: 50,
+                  iconSize: breathingScale - 20,
+                  innerSize: breathingScale - 20,
                   pulseCount: 1,
                   pulseDuration: Constants.timerDuration,
                   icon: Icons.circle,
+                  pulseSize: breathingScale + 70,
+                  iconColor: Colors.red,
+                  innerColor: Colors.blue,
                 ),
               )
             : const SizedBox.shrink();
@@ -143,7 +145,7 @@ class Breathing extends ConsumerWidget {
           provider.timerOn
               ? FontAwesomeIcons.circleStop
               : FontAwesomeIcons.circlePlay,
-          size: 60,
+          size: 40,
           color: Colors.black38,
         ),
       ),
@@ -166,8 +168,8 @@ class Breathing extends ConsumerWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  expandingCircleWidget,
                   pulseWidget,
+                  expandingCircleWidget,
                 ],
               ),
             ),
