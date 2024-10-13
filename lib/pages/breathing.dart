@@ -1,12 +1,15 @@
 import 'dart:math';
 
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:glowy_borders/glowy_borders.dart';
 import 'package:pulsator/pulsator.dart';
 import 'package:self_help/core/constants.dart';
 import 'package:self_help/providers/breathing_notifier.dart';
 import 'package:self_help/providers/breathing_provider.dart';
+import 'package:self_help/services/services.dart';
 import 'package:self_help/theme.dart';
 
 class Breathing extends ConsumerWidget {
@@ -17,8 +20,6 @@ class Breathing extends ConsumerWidget {
 
     final provider = ref.watch(breathingExerciseProvider);
 
-    final breathingScale = width / 2 + 70 * provider.breathingScale;
-
     final innerCircleTitle = switch (provider.breathingType) {
       BreathingType.breathIn => 'Breath In',
       BreathingType.peakHold || BreathingType.baseHold => 'Hold',
@@ -28,36 +29,23 @@ class Breathing extends ConsumerWidget {
 
     final breathingType = provider.breathingType;
 
+    //todo: colors?
     final breathingTypeColor = switch (breathingType) {
-      BreathingType.breathIn => mintGreen,
-      BreathingType.peakHold || BreathingType.baseHold => lightPink,
-      BreathingType.breathOut => pastelBlue,
+      BreathingType.breathIn => Colors.grey.shade400,
+      BreathingType.peakHold => Colors.grey.shade400,
+      BreathingType.baseHold => Colors.grey.shade400,
+      BreathingType.breathOut => Colors.grey.shade400,
       _ => Colors.grey.shade300,
     };
 
-    /// pulse widget effect
-    final pulseWidget =
-        provider.timerOn && provider.breathingType != BreathingType.stopped
-            ? AnimatedContainer(
-                duration: Constants.timerDuration,
-                // decoration: BoxDecoration(
-                //     border: Border.all(color: Colors.grey),
-                //     ),
-                width: breathingScale + 70,
-                height: breathingScale + 70,
-                child: PulseIcon(
-                  pulseColor: breathingTypeColor,
-                  iconSize: breathingScale - 20,
-                  innerSize: breathingScale - 20,
-                  pulseCount: 1,
-                  pulseDuration: Constants.timerDuration,
-                  icon: Icons.circle,
-                  pulseSize: breathingScale + 70,
-                  iconColor: Colors.red,
-                  innerColor: Colors.blue,
-                ),
-              )
-            : const SizedBox.shrink();
+    final minScale = width / 2;
+    final maxScale = width / 1.5;
+
+    final circleExpanded = provider.breathingType == BreathingType.breathIn ||
+        provider.breathingType == BreathingType.peakHold;
+
+    final circleSize =
+        circleExpanded ? maxScale.toDouble() : minScale.toDouble();
 
     /// expanding circle inner text
     final expandingCircleInnerText = Column(
@@ -101,30 +89,44 @@ class Breathing extends ConsumerWidget {
     );
 
     /// expanding circle widget
-    final expandingCircleWidget = AnimatedContainer(
-      duration: Constants.timerDuration,
-      width: breathingScale,
-      height: breathingScale,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.grey,
-          width: 6 + provider.breathingScale * 5,
+    final expandingCircleWidget = AvatarGlow(
+      glowColor: breathingTypeColor,
+      glowCount: 3,
+      animate:
+          provider.timerOn && provider.breathingType != BreathingType.stopped,
+      glowRadiusFactor: 0.1,
+      duration: const Duration(seconds: 1),
+      child: AnimatedContainer(
+        duration: switch (provider.breathingType) {
+          BreathingType.breathIn =>
+            Duration(seconds: provider.breathInDuration),
+          BreathingType.breathOut =>
+            Duration(seconds: provider.breathOutDuration),
+          _ => const Duration(seconds: 1),
+        },
+        width: circleSize,
+        height: circleSize,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: Colors.grey,
+            width: circleExpanded ? 10 : 1,
+          ),
+          gradient: RadialGradient(
+            center: Alignment.center,
+            radius: 0.5,
+            colors: [
+              whiteSmoke,
+              whiteSmoke,
+              breathingTypeColor,
+              breathingTypeColor,
+            ],
+            stops: const [0.0, 0.7, 0.9, 1.0],
+          ),
         ),
-        gradient: RadialGradient(
-          center: Alignment.center,
-          radius: 0.5,
-          colors: [
-            whiteSmoke,
-            whiteSmoke,
-            breathingTypeColor,
-            breathingTypeColor,
-          ],
-          stops: const [0.0, 0.7, 0.9, 1.0],
+        child: Center(
+          child: expandingCircleInnerText,
         ),
-      ),
-      child: Center(
-        child: expandingCircleInnerText,
       ),
     );
 
@@ -165,13 +167,7 @@ class Breathing extends ConsumerWidget {
               ),
               height: width,
               width: width,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  pulseWidget,
-                  expandingCircleWidget,
-                ],
-              ),
+              child: Center(child: expandingCircleWidget),
             ),
             startStopButton,
           ],

@@ -39,6 +39,8 @@ class BreathingExerciseNotifier extends ChangeNotifier {
   bool get timerOn => _timerOn;
   BreathingType get breathingType => _breathingType;
   double get breathingScale => _breathingScale;
+  int get breathInDuration => _breathInDuration;
+  int get breathOutDuration => _breathOutDuration;
 
   void stop() {
     _timer?.cancel();

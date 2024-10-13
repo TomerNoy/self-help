@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:self_help/pages/breathing.dart';
 import 'package:self_help/core/strings.dart';
+import 'package:self_help/pages/drag_cloud.dart';
 import 'package:self_help/pages/measure_level.dart';
 import 'package:self_help/theme.dart';
 
@@ -46,10 +47,9 @@ class App extends StatelessWidget {
           textDirection: TextDirection.rtl,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -60,7 +60,8 @@ class App extends StatelessWidget {
                 },
                 child: const Text('breathing test'),
               ),
-              TextButton(
+              const SizedBox(height: 30),
+              ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -70,6 +71,18 @@ class App extends StatelessWidget {
                   );
                 },
                 child: const Text('gauge test'),
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DraggableItemDemo(),
+                    ),
+                  );
+                },
+                child: const Text('cloud test'),
               ),
               // const SizedBox(height: 30),
               // const LargeButton(title: 'תרגול למקרה חירום'),

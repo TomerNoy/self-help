@@ -42,6 +42,8 @@ dependencies:
   shared_preferences: ^2.3.2
   syncfusion_flutter_gauges: ^27.1.52
   pulsator: ^1.0.0+2
+  avatar_glow: ^3.0.1
+  glowy_borders: ^1.0.2
 
 dev_dependencies:
   flutter_test:
