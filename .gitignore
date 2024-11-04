@@ -50,7 +50,6 @@ app.*.map.json
 firebase.json
 .metadata
 .firebaserc
-linux/
-macos/
-functions/
-windows/
+/linux/
+/macos/
+/windows/
