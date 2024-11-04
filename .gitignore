@@ -43,3 +43,14 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/google-services.json
+
+
+.env
+firebase.json
+.metadata
+.firebaserc
+linux/
+macos/
+functions/
+windows/

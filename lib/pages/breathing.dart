@@ -4,18 +4,17 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:glowy_borders/glowy_borders.dart';
-import 'package:pulsator/pulsator.dart';
-import 'package:self_help/core/constants.dart';
+import 'package:self_help/core/widgets/page_navigator.dart';
+import 'package:self_help/pages/widgets/page_app_bar.dart';
 import 'package:self_help/providers/breathing_notifier.dart';
-import 'package:self_help/providers/breathing_provider.dart';
-import 'package:self_help/services/services.dart';
+import 'package:self_help/providers/page_route_provider.dart';
 import 'package:self_help/theme.dart';
 
 class Breathing extends ConsumerWidget {
   const Breathing({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final flowController = ref.read(pageRouteProvider);
     final width = min(MediaQuery.of(context).size.width * 0.8, 400.0);
 
     final provider = ref.watch(breathingExerciseProvider);
@@ -31,10 +30,10 @@ class Breathing extends ConsumerWidget {
 
     //todo: colors?
     final breathingTypeColor = switch (breathingType) {
-      BreathingType.breathIn => Colors.grey.shade400,
+      BreathingType.breathIn => pastelBlue,
       BreathingType.peakHold => Colors.grey.shade400,
+      BreathingType.breathOut => mintGreen,
       BreathingType.baseHold => Colors.grey.shade400,
-      BreathingType.breathOut => Colors.grey.shade400,
       _ => Colors.grey.shade300,
     };
 
@@ -92,8 +91,8 @@ class Breathing extends ConsumerWidget {
     final expandingCircleWidget = AvatarGlow(
       glowColor: breathingTypeColor,
       glowCount: 3,
-      animate:
-          provider.timerOn && provider.breathingType != BreathingType.stopped,
+      animate: [BreathingType.peakHold, BreathingType.baseHold]
+          .contains(provider.breathingType),
       glowRadiusFactor: 0.1,
       duration: const Duration(seconds: 1),
       child: AnimatedContainer(
@@ -110,7 +109,7 @@ class Breathing extends ConsumerWidget {
           shape: BoxShape.circle,
           border: Border.all(
             color: Colors.grey,
-            width: circleExpanded ? 10 : 1,
+            width: 5,
           ),
           gradient: RadialGradient(
             center: Alignment.center,
@@ -124,8 +123,24 @@ class Breathing extends ConsumerWidget {
             stops: const [0.0, 0.7, 0.9, 1.0],
           ),
         ),
-        child: Center(
-          child: expandingCircleInnerText,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Center(
+              child: expandingCircleInnerText,
+            ),
+            SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child: CircularProgressIndicator(
+                value: provider.breathingScale,
+                color: breathingTypeColor,
+                backgroundColor: Colors.grey,
+                valueColor: AlwaysStoppedAnimation<Color>(breathingTypeColor),
+                strokeWidth: 10,
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -153,23 +168,54 @@ class Breathing extends ConsumerWidget {
       ),
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Breathing'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
+    print('breathing scale: ${provider.breathingScale}');
+
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          flowController.backNoPop();
+        }
+      },
+      child: Scaffold(
+        appBar: PageAppBar(title: 'Breathing'),
+        body: Column(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SizedBox(height: 30),
+                      Text(
+                        'תרגול נשימה',
+                        style: TextStyle(fontSize: 20, height: 1.5),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'הנשימה עוזרת לנו להעביר מסר מרגיע למוח',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        height: width,
+                        width: width,
+                        child: Center(child: expandingCircleWidget),
+                      ),
+                      startStopButton,
+                      SizedBox(height: 60),
+                    ],
+                  ),
+                ),
               ),
-              height: width,
-              width: width,
-              child: Center(child: expandingCircleWidget),
             ),
-            startStopButton,
+            StepNavigator(),
           ],
         ),
       ),

@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final levelProvider =
+    ChangeNotifierProvider.autoDispose<CounterNotifier>((ref) {
+  return CounterNotifier();
+});
+
 class CounterNotifier extends ChangeNotifier {
   CounterNotifier();
 
@@ -25,8 +30,3 @@ class CounterNotifier extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-final levelProvider =
-    ChangeNotifierProvider.autoDispose<CounterNotifier>((ref) {
-  return CounterNotifier();
-});

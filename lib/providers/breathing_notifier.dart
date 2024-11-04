@@ -1,8 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:self_help/core/constants.dart';
 import 'package:self_help/services/services.dart';
+
+final breathingExerciseProvider =
+    ChangeNotifierProvider.autoDispose<BreathingExerciseNotifier>(
+  (ref) => BreathingExerciseNotifier(),
+);
 
 enum BreathingType { stopped, breathIn, peakHold, breathOut, baseHold }
 
@@ -29,7 +35,7 @@ class BreathingExerciseNotifier extends ChangeNotifier {
   late double _breathingOutFraction;
 
   /// local params
-  var _timerCount = 0;
+  late int _timerCount = _breathInDuration;
   var _timerOn = false;
   var _breathingType = BreathingType.stopped;
   var _breathingScale = 0.0;
@@ -44,7 +50,7 @@ class BreathingExerciseNotifier extends ChangeNotifier {
 
   void stop() {
     _timer?.cancel();
-    _timerCount = 0;
+    _timerCount = _breathInDuration;
     _timerOn = false;
     _breathingType = BreathingType.stopped;
     _breathingScale = 0;
@@ -64,41 +70,47 @@ class BreathingExerciseNotifier extends ChangeNotifier {
     _breathingType = BreathingType.breathIn;
     var repeats = _repeats;
     _timerCount = _breathInDuration;
+    _breathingScale += _breathingInFraction;
     notifyListeners();
 
     _timer = Timer.periodic(
       Constants.timerDuration,
       (_) {
         _timerCount--;
+        print('_timerCount $_timerCount');
         switch (_breathingType) {
           case BreathingType.breathIn:
-            _breathingScale += _breathingInFraction;
-            if (_timerCount < 0) {
+            if (_timerCount <= 0) {
               _timerCount = _peakHoldDuration;
               _breathingType = BreathingType.peakHold;
+            } else {
+              _breathingScale += _breathingInFraction;
             }
             break;
           case BreathingType.peakHold:
-            if (_timerCount < 0) {
+            if (_timerCount <= 0) {
               _timerCount = _breathOutDuration;
               _breathingType = BreathingType.breathOut;
+              _breathingScale -= _breathingOutFraction;
             }
             break;
           case BreathingType.breathOut:
-            _breathingScale -= _breathingOutFraction;
-            if (_timerCount < 0) {
+            if (_timerCount <= 0) {
               _timerCount = _baseHoldDuration;
               _breathingType = BreathingType.baseHold;
+            } else {
+              _breathingScale -= _breathingOutFraction;
             }
             break;
           case BreathingType.baseHold:
-            if (repeats < 0) {
+            if (repeats <= 0) {
               stop();
             } else {
-              if (_timerCount < 0) {
+              if (_timerCount <= 0) {
                 repeats--;
                 _timerCount = _breathInDuration;
                 _breathingType = BreathingType.breathIn;
+                _breathingScale += _breathingInFraction;
               }
             }
 
