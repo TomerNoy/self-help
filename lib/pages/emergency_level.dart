@@ -127,7 +127,7 @@ class Graph extends ConsumerWidget {
           divisions: 10,
           value: provider.state.toDouble(),
           activeColor: Constants.redToGreenSteps[provider.state],
-          thumbColor: mintGreen,
+          // thumbColor: mintGreen,
           overlayColor: const WidgetStatePropertyAll(Colors.green),
           secondaryActiveColor: Colors.red,
           inactiveColor: Colors.black12,

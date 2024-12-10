@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "624248236630",
+    "project_id": "self-help-47fae",
+    "storage_bucket": "self-help-47fae.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624248236630:android:344edda32f7d924eb5e9f7",
+        "android_client_info": {
+          "package_name": "com.example.self_help"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWO6Mf9Fl1fJm-FNSd-jrRpevuYkE3iKc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

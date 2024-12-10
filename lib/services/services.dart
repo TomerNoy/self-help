@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:self_help/services/app_lifecycle_service.dart';
 import 'package:self_help/services/logger_service.dart';
 import 'package:self_help/services/storage_service.dart';
+import 'package:self_help/services/user_service.dart';
 
 class ServiceProvider {
   static final _getIt = GetIt.instance;
@@ -9,10 +10,10 @@ class ServiceProvider {
   static Future<void> init() async {
     try {
       // logger
-      _getIt.registerSingleton(LoggerService());
+      _getIt.registerSingleton<LoggerService>(LoggerService());
 
       // storage
-      _getIt.registerSingletonAsync(
+      _getIt.registerSingletonAsync<StorageService>(
         () async {
           final storageService = StorageService();
           await storageService.init();
@@ -26,6 +27,9 @@ class ServiceProvider {
       _getIt.registerSingleton<AppLifeCycleService>(
         AppLifeCycleService(),
       );
+
+      // register service
+      _getIt.registerSingleton<UserService>(UserService());
     } catch (e, st) {
       loggerService.error('services error', e, st);
     }
@@ -43,3 +47,5 @@ StorageService get storageService {
 AppLifeCycleService get appLifeCycleService {
   return ServiceProvider._getIt.get<AppLifeCycleService>();
 }
+
+UserService get userService => ServiceProvider._getIt.get<UserService>();

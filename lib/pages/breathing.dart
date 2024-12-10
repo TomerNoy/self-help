@@ -8,6 +8,7 @@ import 'package:self_help/core/widgets/page_navigator.dart';
 import 'package:self_help/pages/widgets/page_app_bar.dart';
 import 'package:self_help/providers/breathing_notifier.dart';
 import 'package:self_help/providers/page_route_provider.dart';
+import 'package:self_help/services/services.dart';
 import 'package:self_help/theme.dart';
 
 class Breathing extends ConsumerWidget {
@@ -30,9 +31,9 @@ class Breathing extends ConsumerWidget {
 
     //todo: colors?
     final breathingTypeColor = switch (breathingType) {
-      BreathingType.breathIn => pastelBlue,
+      // BreathingType.breathIn => pastelBlue,
       BreathingType.peakHold => Colors.grey.shade400,
-      BreathingType.breathOut => mintGreen,
+      // BreathingType.breathOut => mintGreen,
       BreathingType.baseHold => Colors.grey.shade400,
       _ => Colors.grey.shade300,
     };
@@ -115,8 +116,8 @@ class Breathing extends ConsumerWidget {
             center: Alignment.center,
             radius: 0.5,
             colors: [
-              whiteSmoke,
-              whiteSmoke,
+              // whiteSmoke,
+              // whiteSmoke,
               breathingTypeColor,
               breathingTypeColor,
             ],
@@ -168,7 +169,7 @@ class Breathing extends ConsumerWidget {
       ),
     );
 
-    print('breathing scale: ${provider.breathingScale}');
+    loggerService.debug('breathing scale: ${provider.breathingScale}');
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {

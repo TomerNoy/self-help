@@ -42,7 +42,7 @@ class FlowController extends StateNotifier<int> {
     if (state < currentFlow.length - 1) {
       state++;
       Navigator.pushNamed(context, currentFlow[state]);
-      print('push to state: $state');
+      loggerService.debug('push to state: $state');
     }
   }
 
@@ -56,7 +56,7 @@ class FlowController extends StateNotifier<int> {
       (route) {
         final routeName = route.settings.name;
         loggerService.debug('Checking route: $routeName');
-        return routeName == AppRoutes.app;
+        return routeName == AppRoutes.home;
       },
     );
   }

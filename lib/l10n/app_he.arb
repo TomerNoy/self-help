@@ -1,0 +1,16 @@
+{
+  "@@locale": "he",
+  "welcomeTitle": "ברוכים הבאים לSelf Help!",
+  "login": "התחברות",
+  "welcomeSubtitle": "פרוטוקול עזרה עצמית\nלהתמודדות עם לחץ וחרדה",
+  "welcomeButtonTitle": "כניסה",
+  "email": "דואר אלקטרוני",
+  "password": "סיסמה",
+  "repeatPassword": "חזור על הסיסמה",
+  "forgotPassword": "שכחתי סיסמה",
+  "or": "או",
+  "dontHaveAccount": "אין לך משתמש?",
+  "registerNow": "הירשם עכשיו",
+  "registeration": "הרשמה",
+  "register": "הרשם"
+}
