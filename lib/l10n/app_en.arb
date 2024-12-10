@@ -1,0 +1,55 @@
+{
+  "@@locale": "en",
+  "welcomeTitle": "Welcome to Self Help!",
+  "@welcomeTitle": {
+    "description": "welcome page title"
+  },
+  "login": "Login",
+  "@login": {
+    "description": "welcome page login"
+  },
+  "welcomeSubtitle": "Self-help protocol\nfor dealing with stress and anxiety",
+  "@welcomeSubtitle": {
+    "description": "welcome page subtitle"
+  },
+  "welcomeButtonTitle": "Enter",
+  "@welcomeButtonTitle": {
+    "description": "welcome page button title"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "email field"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "password field"
+  },
+  "repeatPassword": "Repeat password",
+  "@repeatPassword": {
+    "description": "repeat password field"
+  },
+  "forgotPassword": "Forgot password?",
+  "@forgotPassword": {
+    "description": "forgot password link"
+  },
+  "or": "or",
+  "@or": {
+    "description": "or"
+  },
+  "dontHaveAccount": "Don't have an account?",
+  "@dontHaveAccount": {
+    "description": "sign up link"
+  },
+  "registerNow": "Register now",
+  "@registerNow": {
+    "description": "register link"
+  },
+  "registeration": "Registration",
+  "@registeration": {
+    "description": "register page title"
+  },
+  "register": "Register",
+  "@register": {
+    "description": "register button"
+  }
+}

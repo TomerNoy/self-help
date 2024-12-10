@@ -30,7 +30,7 @@ class DraggableItemDemoState extends State<DraggableItemDemo> {
             FaIcon(
               FontAwesomeIcons.cloud,
               size: width - 25,
-              color: whiteSmoke,
+              // color: whiteSmoke,
             ),
             Container(
               padding: const EdgeInsets.only(top: 60),

@@ -44,7 +44,7 @@ class MeasureLevel extends ConsumerWidget {
                             style: TextStyle(fontSize: 12),
                           ),
                         ),
-                        Container(
+                        SizedBox(
                           // decoration: BoxDecoration(
                           //   border: Border.all(color: Colors.black),
                           //   borderRadius: BorderRadius.circular(10),

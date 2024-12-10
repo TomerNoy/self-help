@@ -14,11 +14,11 @@ enum BreathingType { stopped, breathIn, peakHold, breathOut, baseHold }
 
 class BreathingExerciseNotifier extends ChangeNotifier {
   BreathingExerciseNotifier() {
-    _repeats = storageService.getRepeats();
-    _breathInDuration = storageService.getBreathInDuration();
-    _peakHoldDuration = storageService.getPeakHoldDuration();
-    _breathOutDuration = storageService.getBreathOutDuration();
-    _baseHoldDuration = storageService.getBaseHoldDuration();
+    _repeats = storageService.readRepeats();
+    _breathInDuration = storageService.readBreathInDuration();
+    _peakHoldDuration = storageService.readPeakHoldDuration();
+    _breathOutDuration = storageService.readBreathOutDuration();
+    _baseHoldDuration = storageService.readBaseHoldDuration();
 
     _breathingInFraction = 1 / _breathInDuration;
     _breathingOutFraction = 1 / _breathOutDuration;
@@ -77,7 +77,7 @@ class BreathingExerciseNotifier extends ChangeNotifier {
       Constants.timerDuration,
       (_) {
         _timerCount--;
-        print('_timerCount $_timerCount');
+        loggerService.debug('_timerCount $_timerCount');
         switch (_breathingType) {
           case BreathingType.breathIn:
             if (_timerCount <= 0) {
