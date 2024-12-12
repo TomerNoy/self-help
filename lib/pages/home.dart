@@ -1,9 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:self_help/core/providers/user_provider.dart';
+import 'package:self_help/core/widgets/animated_background.dart';
+import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/measure_level.dart';
-import 'package:self_help/pages/widgets/large_app_bar.dart';
 import 'package:self_help/providers/page_route_provider.dart';
+import 'package:self_help/services/services.dart';
 import 'package:self_help/theme.dart';
 
 class Home extends ConsumerWidget {
@@ -13,48 +15,108 @@ class Home extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final flowController = ref.read(pageRouteProvider);
 
+    final statusBarHeight = MediaQuery.of(context).padding.top;
+
+    final topBarHeight =
+        MediaQuery.of(context).size.height * 0.39 - statusBarHeight;
+
+    final localizations = AppLocalizations.of(context)!;
+    final userProvider = ref.watch(currentUserProvider);
+    final userName = userProvider.value?.displayName ?? localizations.guest;
+
     return Scaffold(
-      appBar: LargeAppBar(),
-      body: Center(
-        child: Directionality(
-          textDirection: TextDirection.rtl,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const Text(
-                'פרוטוקול לטיפול עצמי\nהתמודדות עם לחץ וחרדה',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
+      body: Column(
+        children: [
+          SizedBox(
+            height: topBarHeight,
+            width: double.infinity,
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(50),
+                    bottomRight: Radius.circular(50),
+                  ),
+                  child: SizedBox.expand(
+                    child: AnimatedBackground(),
+                  ),
                 ),
-                textAlign: TextAlign.center,
-              ),
-              Spacer(),
-              SizedBox(
-                height: 150,
-                width: 150,
-                child: FloatingActionButton.large(
-                  // backgroundColor: mintGreen,
-                  shape: CircleBorder(),
-                  foregroundColor: Colors.grey,
-                  onPressed: () {
-                    flowController.startFlow(1);
-                    Navigator.pushNamed(context, flowController.currentRoute);
-                  },
-                  heroTag: 'exercise1',
-                  child: Text(
-                    'התחל תרגול',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 50 + statusBarHeight,
+                    left: 16,
+                    right: 16,
+                  ),
+                  child: SizedBox.expand(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          localizations.welcomeMessage(userName),
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          localizations.homeTitle,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        )
+                      ],
                     ),
                   ),
                 ),
-              ),
-              Spacer(),
-            ],
+              ],
+            ),
           ),
-        ),
+          Center(
+            child: Directionality(
+              textDirection: TextDirection.rtl,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  SizedBox(
+                    height: 150,
+                    width: 150,
+                    child: FloatingActionButton(
+                      onPressed: () {},
+                      shape: const CircleBorder(),
+                      child: Ink(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color(0xFF79c3dd),
+                              Color(0xFF6e79ed),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(80.0)),
+                        ),
+                        child: Container(
+                          constraints: const BoxConstraints(
+                              minWidth: 88.0,
+                              minHeight:
+                                  36.0), // min sizes for Material buttons
+                          alignment: Alignment.center,
+                          child: Text(
+                            localizations.startSosButtonTitle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () async {
+                        await userService.signOut();
+                      },
+                      icon: Icon(Icons.build)),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

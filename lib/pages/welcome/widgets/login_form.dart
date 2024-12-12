@@ -1,10 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:self_help/core/widgets/form_validators.dart';
 import 'package:self_help/core/widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
+import 'package:self_help/routes/router.dart';
 import 'package:self_help/services/services.dart';
 
 class LoginForm extends HookConsumerWidget {
@@ -22,8 +25,6 @@ class LoginForm extends HookConsumerWidget {
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
 
-    final FirebaseAuth auth = FirebaseAuth.instance;
-
     final formKey = useMemoized(() => GlobalKey<FormState>());
 
     final passwordVisible = useState(false);
@@ -32,6 +33,13 @@ class LoginForm extends HookConsumerWidget {
       'assets/icons/google.svg',
       height: 50,
     );
+
+    const List<String> scopes = <String>[
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ];
+
+    GoogleSignIn googleSignIn = GoogleSignIn(scopes: scopes);
 
     return Column(
       children: [
@@ -50,15 +58,7 @@ class LoginForm extends HookConsumerWidget {
                         labelText: localizations.email,
                       ),
                       keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Email is required';
-                        }
-                        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                          return 'Enter a valid email';
-                        }
-                        return null;
-                      },
+                      validator: FormValidators.emailValidator,
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
@@ -77,15 +77,7 @@ class LoginForm extends HookConsumerWidget {
                         ),
                       ),
                       obscureText: !passwordVisible.value,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Password is required';
-                        }
-                        if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
-                        }
-                        return null;
-                      },
+                      validator: FormValidators.passwordValidator,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -101,45 +93,8 @@ class LoginForm extends HookConsumerWidget {
                     const SizedBox(height: 16),
                     WideButton(
                       title: localizations.welcomeButtonTitle,
-                      onPressed: () async {
-                        if (formKey.currentState!.validate()) {
-                          try {
-                            loggerService.debug(
-                                'Login attempt with email: ${emailController.text.trim()} and password: ${passwordController.text.trim()}');
-
-                            final credential =
-                                await auth.signInWithEmailAndPassword(
-                              email: emailController.text.trim(),
-                              password: passwordController.text.trim(),
-                            );
-
-                            // Login successful
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Login successful')),
-                            );
-
-                            // Navigate to the home screen
-                            Navigator.pushReplacementNamed(context, '/home');
-                          } on FirebaseAuthException catch (e, st) {
-                            loggerService.error(
-                                'Login failed ${e.code}', e.message, st);
-                            // Handle login errors
-                            String errorMessage;
-                            if (e.code == 'user-not-found') {
-                              errorMessage = 'No user found for this email.';
-                            } else if (e.code == 'wrong-password') {
-                              errorMessage = 'Incorrect password.';
-                            } else {
-                              errorMessage = 'Login failed: ${e.message}';
-                            }
-
-                            // Show error message
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(errorMessage)),
-                            );
-                          }
-                        }
-                      },
+                      onPressed: () => _login(formKey, emailController,
+                          passwordController, context),
                     ),
                   ],
                 ),
@@ -147,8 +102,21 @@ class LoginForm extends HookConsumerWidget {
               const SizedBox(height: 32),
               Text(localizations.or),
               IconButton(
-                onPressed: () {
-                  // TODO: Add Google login functionality
+                onPressed: () async {
+                  try {
+                    final googleUser = await googleSignIn.signIn();
+                    if (googleUser == null) return;
+                    userService.loginWithGoogle(googleUser);
+                  } catch (e, st) {
+                    loggerService.error('Google sign in failed', e, st);
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('googleSignInFailed'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 },
                 icon: google,
               ),
@@ -157,9 +125,7 @@ class LoginForm extends HookConsumerWidget {
                 children: [
                   Text(localizations.dontHaveAccount),
                   TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/register');
-                    },
+                    onPressed: () => context.pushNamed(AppRoutes.register),
                     child: Row(
                       children: [
                         Text(localizations.registerNow),
@@ -174,5 +140,29 @@ class LoginForm extends HookConsumerWidget {
         ),
       ],
     );
+  }
+
+  void _login(
+    GlobalKey<FormState> formKey,
+    TextEditingController emailController,
+    TextEditingController passwordController,
+    BuildContext context,
+  ) async {
+    if (formKey.currentState!.validate()) {
+      final result = await userService.loginUser(
+        emailController.text.trim(),
+        passwordController.text.trim(),
+      );
+
+      if (result.isFailure) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result.error!),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }

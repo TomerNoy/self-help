@@ -46,4 +46,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get register => 'Register';
+
+  @override
+  String get backToLoing => 'Back to login';
+
+  @override
+  String get name => 'User Name';
+
+  @override
+  String welcomeMessage(String name) {
+    return 'Hello, $name!';
+  }
+
+  @override
+  String get homeTitle => 'The right place for self-treatment\nin dealing with stress and anxiety';
+
+  @override
+  String get guest => 'Guest';
+
+  @override
+  String get startSosButtonTitle => 'Start SOS exercise';
 }

@@ -172,6 +172,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Register'**
   String get register;
+
+  /// back to login link
+  ///
+  /// In en, this message translates to:
+  /// **'Back to login'**
+  String get backToLoing;
+
+  /// name field
+  ///
+  /// In en, this message translates to:
+  /// **'User Name'**
+  String get name;
+
+  /// A welcome message for the user
+  ///
+  /// In en, this message translates to:
+  /// **'Hello, {name}!'**
+  String welcomeMessage(String name);
+
+  /// home page title
+  ///
+  /// In en, this message translates to:
+  /// **'The right place for self-treatment\nin dealing with stress and anxiety'**
+  String get homeTitle;
+
+  /// guest
+  ///
+  /// In en, this message translates to:
+  /// **'Guest'**
+  String get guest;
+
+  /// start SOS exercise button title
+  ///
+  /// In en, this message translates to:
+  /// **'Start SOS exercise'**
+  String get startSosButtonTitle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

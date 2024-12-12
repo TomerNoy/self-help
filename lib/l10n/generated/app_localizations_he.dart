@@ -46,4 +46,24 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get register => 'הרשם';
+
+  @override
+  String get backToLoing => 'חזור להתחברות';
+
+  @override
+  String get name => 'שם משתמש';
+
+  @override
+  String welcomeMessage(String name) {
+    return 'היי $name!';
+  }
+
+  @override
+  String get homeTitle => 'המקום הנכון לטיפול באופן עצמאי\nבהתמודדות עם לחץ וחרדה';
+
+  @override
+  String get guest => 'אורח';
+
+  @override
+  String get startSosButtonTitle => 'להתחיל תרגיל SOS';
 }

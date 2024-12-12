@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:mesh_gradient/mesh_gradient.dart';
+import 'package:self_help/core/widgets/animated_background.dart';
 import 'package:self_help/core/widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/welcome/providers/is_expended_provider.dart';
@@ -23,31 +23,33 @@ class Welcome extends ConsumerWidget {
     final collapsedPanelHeight = screenHeight * 0.39 - statusBarHeight;
 
     return Scaffold(
-      body: Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          SingleChildScrollView(
-            child: LoginForm(
-              collapsedPanelHeight: collapsedPanelHeight,
+      body: SizedBox.expand(
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            SingleChildScrollView(
+              child: LoginForm(
+                collapsedPanelHeight: collapsedPanelHeight,
+              ),
             ),
-          ),
-          _buildExpandableContent(
-            context,
-            ref,
-            localizations,
-            isExpanded,
-            screenHeight,
-            collapsedPanelHeight,
-          ),
-          Positioned(
-            bottom: 0,
-            left: 30,
-            child: IconButton(
-              onPressed: () => ref.read(isExpendedProvider.notifier).toggle(),
-              icon: const Icon(Icons.build),
+            _buildExpandableContent(
+              context,
+              ref,
+              localizations,
+              isExpanded,
+              screenHeight,
+              collapsedPanelHeight,
             ),
-          ),
-        ],
+            Positioned(
+              bottom: 0,
+              left: 30,
+              child: IconButton(
+                onPressed: () => ref.read(isExpendedProvider.notifier).toggle(),
+                icon: const Icon(Icons.build),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -148,20 +150,8 @@ class Welcome extends ConsumerWidget {
     return AnimatedContainer(
       duration: scaleAnimationDuration,
       height: isExpanded ? screenHeight : collapsedPanelHeight,
-      width: MediaQuery.of(context).size.width,
-      child: AnimatedMeshGradient(
-        colors: const [
-          Color(0xFFEDDBC5),
-          Color(0xFFEDBFF3),
-          Color(0xFFE7BBCD),
-          Color(0xFFEFDDFD),
-        ],
-        options: AnimatedMeshGradientOptions(
-          speed: 2,
-          amplitude: 5,
-          frequency: 4,
-        ),
-      ),
+      width: double.infinity,
+      child: AnimatedBackground(),
     );
   }
 

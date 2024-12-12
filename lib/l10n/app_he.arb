@@ -12,5 +12,11 @@
   "dontHaveAccount": "אין לך משתמש?",
   "registerNow": "הירשם עכשיו",
   "registeration": "הרשמה",
-  "register": "הרשם"
+  "register": "הרשם",
+  "backToLoing": "חזור להתחברות",
+  "name": "שם משתמש",
+  "welcomeMessage": "היי {name}!",
+  "homeTitle": "המקום הנכון לטיפול באופן עצמאי\nבהתמודדות עם לחץ וחרדה",
+  "guest": "אורח",
+  "startSosButtonTitle": "להתחיל תרגיל SOS"
 }
