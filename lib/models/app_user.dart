@@ -18,4 +18,9 @@ class AppUser {
       displayName: user.displayName,
     );
   }
+
+  @override
+  String toString() {
+    return 'AppUser(uid: $uid, email: $email, displayName: $displayName)';
+  }
 }

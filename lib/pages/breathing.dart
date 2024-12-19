@@ -15,7 +15,7 @@ class Breathing extends ConsumerWidget {
   const Breathing({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final flowController = ref.read(pageRouteProvider);
+    // final flowController = ref.read(pageRouteProvider);
     final width = min(MediaQuery.of(context).size.width * 0.8, 400.0);
 
     final provider = ref.watch(breathingExerciseProvider);
@@ -174,7 +174,7 @@ class Breathing extends ConsumerWidget {
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
-          flowController.backNoPop();
+          // flowController.backNoPop();
         }
       },
       child: Scaffold(
@@ -216,7 +216,7 @@ class Breathing extends ConsumerWidget {
                 ),
               ),
             ),
-            StepNavigator(),
+            // StepNavigator(),
           ],
         ),
       ),

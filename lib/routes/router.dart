@@ -4,20 +4,22 @@ import 'package:self_help/pages/breathing.dart';
 import 'package:self_help/pages/butterfly.dart';
 import 'package:self_help/pages/connecting/connecting.dart';
 import 'package:self_help/pages/emergency_level.dart';
+import 'package:self_help/pages/enter_number.dart';
+import 'package:self_help/pages/enter_number_reversed.dart';
 import 'package:self_help/pages/home.dart';
+import 'package:self_help/pages/login/login.dart';
 import 'package:self_help/pages/measure_level.dart';
-import 'package:self_help/pages/protocol_landing.dart';
 import 'package:self_help/pages/register/register.dart';
-import 'package:self_help/pages/welcome/welcome.dart';
+import 'package:self_help/pages/sos.dart';
 
 GoRouter router({GoRouterRedirect? redirect}) => GoRouter(
       debugLogDiagnostics: true,
       redirect: redirect,
       routes: [
         GoRoute(
-          path: RoutPaths.welcome,
-          name: AppRoutes.welcome,
-          builder: (context, state) => const Welcome(),
+          path: RoutPaths.login,
+          name: AppRoutes.login,
+          builder: (context, state) => const Login(),
         ),
         GoRoute(
           path: RoutPaths.register,
@@ -35,9 +37,24 @@ GoRouter router({GoRouterRedirect? redirect}) => GoRouter(
           builder: (context, state) => const Home(),
         ),
         GoRoute(
-          path: RoutPaths.protocol,
-          name: AppRoutes.protocol,
-          builder: (context, state) => const ProtocolLanding(),
+          path: RoutPaths.sos,
+          name: AppRoutes.sos,
+          builder: (context, state) => const Sos(),
+        ),
+        GoRoute(
+          path: RoutPaths.enterNumber,
+          name: AppRoutes.enterNumber,
+          builder: (context, state) => const EnterNumber(),
+        ),
+        GoRoute(
+          path: RoutPaths.enterNumberReversed,
+          name: AppRoutes.enterNumberReversed,
+          builder: (context, state) {
+            final userNUmber = state.pathParameters['userNumber'] ?? '';
+            return EnterNumberReversed(
+              userNumber: userNUmber,
+            );
+          },
         ),
         GoRoute(
           path: RoutPaths.measure,
@@ -66,11 +83,14 @@ GoRouter router({GoRouterRedirect? redirect}) => GoRouter(
     );
 
 class AppRoutes {
-  static const welcome = 'welcome';
+  static const login = 'welcome';
   static const register = 'register';
+  static const enterNumber = 'enterNumber';
+  static const enterNumberReversed = 'enterNumberReversed';
   static const connecting = 'connecting';
   static const home = 'home';
-  static const protocol = 'protocol';
+  static const sos = 'sos';
+  // static const protocol = 'protocol';
   static const measure = 'measure';
   static const emergency = 'emergency';
   static const butterfly = 'butterfly';
@@ -78,11 +98,14 @@ class AppRoutes {
 }
 
 class RoutPaths {
-  static const welcome = '/';
+  static const login = '/';
   static const register = '/register';
+  static const enterNumber = '/enterNumber';
+  static const enterNumberReversed = '/enterNumberReversed:userNumber';
   static const connecting = '/connecting';
   static const home = '/home';
-  static const protocol = '/protocol';
+  static const sos = '/sos';
+  // static const protocol = '/protocol';
   static const measure = '/measure';
   static const emergency = '/emergency';
   static const butterfly = '/butterfly';

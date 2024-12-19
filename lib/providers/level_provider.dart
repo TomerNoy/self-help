@@ -20,12 +20,13 @@ class CounterNotifier extends ChangeNotifier {
   }
 
   void decrement() {
-    if (_state == 0) return;
+    if (_state == 1) return;
     _state--;
     notifyListeners();
   }
 
   set state(int value) {
+    if (value < 1 || value > 10) return;
     _state = value;
     notifyListeners();
   }

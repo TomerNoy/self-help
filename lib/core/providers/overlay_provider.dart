@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum PageOverayState { hidden, loading, offline }
+enum PageOverlayState { hidden, loading, offline }
 
-final pageOverlayStateProvider = StateProvider<PageOverayState>((ref) {
-  return PageOverayState.hidden;
+final pageOverlayStateProvider = StateProvider<PageOverlayState>((ref) {
+  return PageOverlayState.hidden;
 });

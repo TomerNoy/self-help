@@ -11,7 +11,7 @@ class AnimatedBackground extends StatelessWidget {
         Color(0xFFEDDBC5),
         Color(0xFFEDBFF3),
         Color(0xFFE7BBCD),
-        Color(0xFFEFDDFD),
+        Color(0xFFC1DAFF),
       ],
       options: AnimatedMeshGradientOptions(
         speed: 2,

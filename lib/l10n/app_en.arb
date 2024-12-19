@@ -52,8 +52,8 @@
   "@register": {
     "description": "register button"
   },
-  "backToLoing": "Back to login",
-  "@backToLoing": {
+  "backToLoging": "Back to login",
+  "@backToLoging": {
     "description": "back to login link"
   },
   "name": "User Name",
@@ -81,5 +81,77 @@
   "startSosButtonTitle": "Start SOS exercise",
   "@startSosButtonTitle": {
     "description": "start SOS exercise button title"
+  },
+  "sosMainInfo": "In the next exercise, we will learn to cope with feelings of stress and anxiety using deep breathing exercises, guided imagery, and body relaxation. Each step helps to release tension and experience inner calm. Dedicate a few minutes to yourself and let the tension dissipate.",
+  "@sosMainInfo": {
+    "description": "SOS exercise main information"
+  },
+  "sosMainTitle": "Treatment for dealing with stress and anxiety",
+  "@sosMainTitle": {
+    "description": "SOS exercise title"
+  },
+  "step1": "Step 1",
+  "@step1": {
+    "description": "step 1"
+  },
+  "startExercise": "Start exercise",
+  "@startExercise": {
+    "description": "start exercise button"
+  },
+  "measureTitle": "pressure measurement",
+  "@measureTitle": {
+    "description": "pressure measurement"
+  },
+  "measureSubtitle": "In order to start the exercise, we need you to share how you are feeling right now.",
+  "@measureSubtitle": {
+    "description": "pressure measurement subtitle"
+  },
+  "homeButtonTitle": "Home Page",
+  "@homeButtonTitle": {
+    "description": "home button title"
+  },
+  "continueButtonTitle": "Continue",
+  "@continueButtonTitle": {
+    "description": "continue button title"
+  },
+  "good": "Good",
+  "@good": {
+    "description": "good"
+  },
+  "ok": "Ok",
+  "@ok": {
+    "description": "ok"
+  },
+  "neutral": "Neutral",
+  "@neutral": {
+    "description": "neutral"
+  },
+  "sad": "Sad",
+  "@sad": {
+    "description": "sad"
+  },
+  "anxious": "Anxious",
+  "@anxious": {
+    "description": "anxious"
+  },
+  "enterNumber": "Enter a number",
+  "@enterNumber": {
+    "description": "enter number"
+  },
+  "enterNumberSubtitle": "At this stage, we will enter a phone number or any other 10-digit number that you know by heart and can repeat later in the exercise",
+  "@enterNumberSubtitle": {
+    "description": "enter number subtitle"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "go back button title"
+  },
+  "enterNumberBackwards": "Enter a number in reverse order",
+  "@enterNumberBackwards": {
+    "description": "enter number backwards"
+  },
+  "enterNumberBackwardsSubtitle": "At this stage, we will enter the number in reverse order that you entered on the previous screen",
+  "@enterNumberBackwardsSubtitle": {
+    "description": "enter number backwards subtitle"
   }
 }

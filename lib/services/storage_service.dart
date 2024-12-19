@@ -11,7 +11,7 @@ class StorageService {
   int readBaseHoldDuration() => _pref.getInt('BaseHoldDuration') ?? 2;
   int readRepeats() => _pref.getInt('Repeats') ?? 4;
 
-  String readPreferedLanguage() => _pref.getString('PreferedLanguage') ?? 'en';
+  String readPreferedLanguage() => _pref.getString('PreferedLanguage') ?? 'he';
 
   void writeBreathInDuration(int i) => _pref.setInt('BreathInDuration', i);
   void writePeakHoldDuration(int i) => _pref.setInt('PeakHoldDuration', i);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const textColor = Color(0xff263238);
+const textColor = Color(0xff4C4C4C);
 
 ThemeData generateTheme() {
   return ThemeData(
@@ -19,6 +19,10 @@ ThemeData generateTheme() {
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
       ),
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 16,
+      ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
         borderSide: BorderSide(color: Colors.grey, width: 1.0),
@@ -30,7 +34,6 @@ ThemeData generateTheme() {
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: Colors.black,
         textStyle: TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 16,
@@ -42,8 +45,30 @@ ThemeData generateTheme() {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(26),
         ),
+        padding: const EdgeInsets.all(0),
+        textStyle: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 16,
+          fontFamily: 'Rubik',
+          letterSpacing: 0.04,
+          height: 1,
+        ),
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+        textStyle: WidgetStatePropertyAll<TextStyle>(
+          const TextStyle(
+            fontFamily: 'Rubik',
+            height: 1,
+            letterSpacing: 0.04,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        foregroundColor: WidgetStatePropertyAll<Color>(textColor),
       ),
     ),
     textTheme: const TextTheme(
@@ -63,11 +88,28 @@ ThemeData generateTheme() {
         fontSize: 18,
       ),
       // regular
-      bodyMedium: TextStyle(color: textColor, fontFamily: 'Rubik'),
+      bodyMedium: TextStyle(
+        color: textColor,
+        fontFamily: 'Rubik',
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        height: 1.2,
+        letterSpacing: 0.04,
+      ),
       bodySmall: TextStyle(color: textColor),
       labelSmall: TextStyle(color: textColor),
       labelMedium: TextStyle(color: textColor),
-      labelLarge: TextStyle(color: textColor),
+
+      // step title
+      labelLarge: TextStyle(
+        color: Color(0xff999999),
+        fontFamily: 'Rubik',
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.04,
+        fontSize: 18,
+        height: 1.2,
+      ),
+
       displaySmall: TextStyle(color: textColor),
       displayMedium: TextStyle(color: textColor),
       displayLarge: TextStyle(color: textColor),
@@ -80,20 +122,6 @@ ThemeData generateTheme() {
         letterSpacing: 0.04,
       ),
       headlineSmall: TextStyle(color: textColor),
-    ),
-    outlinedButtonTheme: OutlinedButtonThemeData(
-      style: ButtonStyle(
-        textStyle: WidgetStatePropertyAll<TextStyle>(
-          const TextStyle(
-            fontFamily: 'Rubik',
-            letterSpacing: 0.04,
-            height: 1,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        foregroundColor: WidgetStatePropertyAll<Color>(textColor),
-      ),
     ),
   );
 }

@@ -31,7 +31,7 @@ class EmergencyLevel extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Graph(),
-                  const SizedBox(width: 30, child: Meter ()),
+                  const SizedBox(width: 30, child: Meter()),
                   const SizedBox(width: 60),
                   Column(
                     mainAxisSize: MainAxisSize.max,
@@ -44,25 +44,25 @@ class EmergencyLevel extends ConsumerWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Column(
-                        children: [
-                          IconButton.filled(
-                            iconSize: 40,
-                            onPressed: () {
-                              ref.read(levelProvider.notifier).increment();
-                            },
-                            icon: const Icon(Icons.arrow_upward),
-                          ),
-                          const SizedBox(height: 16),
-                          IconButton.filled(
-                            iconSize: 40,
-                            onPressed: () {
-                              ref.read(levelProvider.notifier).decrement();
-                            },
-                            icon: const Icon(Icons.arrow_downward),
-                          ),
-                        ],
-                      ),
+                      // Column(
+                      //   children: [
+                      //     IconButton.filled(
+                      //       iconSize: 40,
+                      //       onPressed: () {
+                      //         ref.read(levelProvider.notifier).increment();
+                      //       },
+                      //       icon: const Icon(Icons.arrow_upward),
+                      //     ),
+                      //     const SizedBox(height: 16),
+                      //     IconButton.filled(
+                      //       iconSize: 40,
+                      //       onPressed: () {
+                      //         ref.read(levelProvider.notifier).decrement();
+                      //       },
+                      //       icon: const Icon(Icons.arrow_downward),
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ],

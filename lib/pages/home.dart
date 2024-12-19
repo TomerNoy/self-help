@@ -1,163 +1,132 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:self_help/core/providers/collapsing_appbar.dart';
 import 'package:self_help/core/providers/user_provider.dart';
 import 'package:self_help/core/widgets/animated_background.dart';
+import 'package:self_help/core/widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
-import 'package:self_help/pages/measure_level.dart';
-import 'package:self_help/providers/page_route_provider.dart';
+import 'package:self_help/routes/router.dart';
 import 'package:self_help/services/services.dart';
-import 'package:self_help/theme.dart';
 
 class Home extends ConsumerWidget {
   const Home({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final flowController = ref.read(pageRouteProvider);
+    // final flowController = ref.read(pageRouteProvider);
 
-    final statusBarHeight = MediaQuery.of(context).padding.top;
-
-    final topBarHeight =
-        MediaQuery.of(context).size.height * 0.39 - statusBarHeight;
+    final collapsedPanelHeight = 150.0;
 
     final localizations = AppLocalizations.of(context)!;
-    final userProvider = ref.watch(currentUserProvider);
+    final userProvider = ref.watch(userStateProvider);
+
     final userName = userProvider.value?.displayName ?? localizations.guest;
 
+    loggerService.debug('userProvider value: ${userProvider.value}');
+    final test = MediaQuery.of(context).padding.top;
+    loggerService.debug('test: $test');
+
     return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(
-            height: topBarHeight,
-            width: double.infinity,
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(50),
-                    bottomRight: Radius.circular(50),
-                  ),
-                  child: SizedBox.expand(
-                    child: AnimatedBackground(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(collapsedPanelHeight),
+        child: Stack(
+          children: [
+            SizedBox.expand(
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(50),
+                  bottomRight: Radius.circular(50),
+                ),
+                child: AnimatedBackground(),
+              ),
+            ),
+            SizedBox.expand(
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 16),
+                      Text(
+                        localizations.welcomeMessage(userName),
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        localizations.homeTitle,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      )
+                    ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 50 + statusBarHeight,
-                    left: 16,
-                    right: 16,
-                  ),
-                  child: SizedBox.expand(
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // LargeButton(title: localizations.measureLevelButtonTitle),
+                // LargeButton(title: localizations.measureLevelButtonTitle),
+              ],
+            )
+          ],
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(32),
+              ),
+              color: Color(0xFFE6E6E6),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 32,
+                    ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          localizations.welcomeMessage(userName),
-                          style: Theme.of(context).textTheme.headlineMedium,
+                          'some text',
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
-                        const SizedBox(height: 16),
-                        Text(
-                          localizations.homeTitle,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        )
+                        SizedBox(height: 16),
+                        WideButton(
+                          title: localizations.startSosButtonTitle,
+                          onPressed: () {
+                            context.pushNamed(AppRoutes.sos);
+                          },
+                          type: ButtonType.gradient,
+                        ),
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          Center(
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    height: 150,
-                    width: 150,
-                    child: FloatingActionButton(
-                      onPressed: () {},
-                      shape: const CircleBorder(),
-                      child: Ink(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color(0xFF79c3dd),
-                              Color(0xFF6e79ed),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(80.0)),
-                        ),
-                        child: Container(
-                          constraints: const BoxConstraints(
-                              minWidth: 88.0,
-                              minHeight:
-                                  36.0), // min sizes for Material buttons
-                          alignment: Alignment.center,
-                          child: Text(
-                            localizations.startSosButtonTitle,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ),
+                  SvgPicture.asset(
+                    'assets/images/sos_girl.svg',
+                    height: 142,
+                    width: 106,
                   ),
-                  IconButton(
-                      onPressed: () async {
-                        await userService.signOut();
-                      },
-                      icon: Icon(Icons.build)),
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class LargeButton extends StatelessWidget {
-  const LargeButton({
-    super.key,
-    required this.title,
-  });
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Ink(
-      width: 150,
-      height: 150,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        // color: mintGreen,
-      ),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MeasureLevel(),
+            IconButton(
+              onPressed: () async {
+                ref.read(collapsingAppBarProvider.notifier).state =
+                    AppBarState.collapsed;
+                await userService.signOut();
+              },
+              icon: Icon(Icons.build),
             ),
-          );
-        },
-        child: Center(
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
-            textAlign: TextAlign.center,
-          ),
+          ],
         ),
       ),
     );

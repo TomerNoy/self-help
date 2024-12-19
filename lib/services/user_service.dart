@@ -1,12 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:self_help/models/app_user.dart';
 import 'package:self_help/models/result.dart';
 import 'package:self_help/services/services.dart';
 
 class UserService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  User? get currentUser => _auth.currentUser;
+  AppUser get currentUser => AppUser.fromFirebaseUser(_auth.currentUser!);
+
+  Stream<AppUser?> get userStateChanges {
+    return _auth.userChanges().map(
+      (user) {
+        return user == null ? null : AppUser.fromFirebaseUser(user);
+      },
+    );
+  }
 
   Stream<User?> authStateChanges() => _auth.authStateChanges();
 

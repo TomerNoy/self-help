@@ -53,4 +53,11 @@ firebase.json
 /linux/
 /macos/
 /windows/
-lib/firebase_options.dart
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+lib/l10n/generated/
+android/app/.cxx/
+android/build/
+
+/lib/pages/login/providers/is_expended_provider.g.dart
+/lib/firebase_options.dart

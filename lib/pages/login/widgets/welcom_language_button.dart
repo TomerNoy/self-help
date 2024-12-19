@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:self_help/providers/local_language_provider.dart';
 
-class WelcomeLenguageButton extends ConsumerWidget {
-  const WelcomeLenguageButton({super.key});
+class WelcomeLanguageButton extends ConsumerWidget {
+  const WelcomeLanguageButton({super.key});
 
   static const padding = EdgeInsets.symmetric(horizontal: 16.0);
 

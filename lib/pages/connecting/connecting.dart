@@ -14,25 +14,25 @@ class Connecting extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Hero(
-                tag: 'welcome',
-                child: AnimatedBackground(
-                  height: 200,
-                  child: SizedBox(
-                    height: 200,
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FaIcon(FontAwesomeIcons.seedling),
-                          Text('התחברות...'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              // Hero(
+              //   tag: 'welcome',
+              //   child: AnimatedBackground(
+              //     height: 200,
+              //     child: SizedBox(
+              //       height: 200,
+              //       child: Center(
+              //         child: Column(
+              //           mainAxisSize: MainAxisSize.max,
+              //           mainAxisAlignment: MainAxisAlignment.center,
+              //           children: [
+              //             FaIcon(FontAwesomeIcons.seedling),
+              //             Text('התחברות...'),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               Expanded(child: SingleChildScrollView()),
               SizedBox(height: 16),
               Text('Connecting...'),
