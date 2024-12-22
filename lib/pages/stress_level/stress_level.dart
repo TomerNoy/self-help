@@ -2,11 +2,11 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:self_help/core/constants.dart';
+import 'package:self_help/core/theme.dart';
 import 'package:self_help/pages/global_widgets/flow_appbar.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/stress_level/providers/stress_level_provider.dart';
-import 'package:self_help/theme.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class StressLevel extends ConsumerWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:self_help/core/providers/overlay_provider.dart';
+import 'package:self_help/pages/global_providers/overlay_provider.dart';
 
 class GlobalOverlay extends ConsumerWidget {
   const GlobalOverlay({super.key});

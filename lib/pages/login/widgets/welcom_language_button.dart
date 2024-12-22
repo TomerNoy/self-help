@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:self_help/core/providers/local_language_provider.dart';
+import 'package:self_help/pages/global_providers/local_language_provider.dart';
 
 class WelcomeLanguageButton extends ConsumerWidget {
   const WelcomeLanguageButton({super.key});

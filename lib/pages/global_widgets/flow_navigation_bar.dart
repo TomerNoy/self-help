@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:self_help/pages/global_providers/page_route_provider.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
-import 'package:self_help/core/providers/page_route_provider.dart';
 
 class FlowNavigationBar extends ConsumerWidget {
   const FlowNavigationBar({

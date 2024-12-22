@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:self_help/theme.dart';
+import 'package:self_help/core/theme.dart';
 
 enum ButtonType { transparent, gradient, black }
 

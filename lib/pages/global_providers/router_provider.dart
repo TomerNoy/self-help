@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:self_help/core/providers/collapsing_appbar_provider.dart';
-import 'package:self_help/core/providers/overlay_provider.dart';
-import 'package:self_help/core/providers/user_provider.dart';
+import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/core/router.dart';
+import 'package:self_help/pages/global_providers/overlay_provider.dart';
+import 'package:self_help/pages/global_providers/user_provider.dart';
 import 'package:self_help/services/services.dart';
 
 final routerProvider = Provider((ref) {

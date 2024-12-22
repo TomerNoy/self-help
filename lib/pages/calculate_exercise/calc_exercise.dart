@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:self_help/core/theme.dart';
 import 'package:self_help/pages/global_widgets/flow_appbar.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/calculate_exercise/providers/calc_exercise_provider.dart';
 import 'package:self_help/services/services.dart';
-import 'package:self_help/theme.dart';
 
 class CalcExercise extends HookConsumerWidget {
   const CalcExercise({super.key});

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:self_help/core/constants.dart';
+import 'package:self_help/core/theme.dart';
 import 'package:self_help/pages/global_widgets/animated_background.dart';
 import 'package:self_help/pages/global_widgets/flow_appbar.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/breathing/providers/breathing_notifier.dart';
 import 'package:self_help/services/services.dart';
-import 'package:self_help/theme.dart';
 
 class Breathing extends ConsumerWidget {
   const Breathing({super.key});
