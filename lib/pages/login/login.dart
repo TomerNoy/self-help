@@ -4,12 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:self_help/core/providers/collapsing_appbar.dart';
+import 'package:self_help/core/providers/collapsing_appbar_provider.dart';
 import 'package:self_help/core/providers/overlay_provider.dart';
 import 'package:self_help/core/form_validators.dart';
-import 'package:self_help/core/widgets/wide_button.dart';
+import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
-import 'package:self_help/routes/router.dart';
+import 'package:self_help/core/router.dart';
 import 'package:self_help/services/services.dart';
 
 class Login extends HookConsumerWidget {
@@ -126,7 +126,7 @@ class Login extends HookConsumerWidget {
               children: [
                 Text(localizations.dontHaveAccount),
                 TextButton(
-                  onPressed: () => context.pushNamed(AppRoutes.register),
+                  onPressed: () => context.pushNamed(RouteNames.register),
                   child: Row(
                     children: [
                       Text(localizations.registerNow),

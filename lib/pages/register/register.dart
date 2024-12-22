@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/providers/overlay_provider.dart';
 import 'package:self_help/core/form_validators.dart';
-import 'package:self_help/core/widgets/wide_button.dart';
+import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/services/services.dart';
 

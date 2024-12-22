@@ -153,5 +153,37 @@
   "enterNumberBackwardsSubtitle": "At this stage, we will enter the number in reverse order that you entered on the previous screen",
   "@enterNumberBackwardsSubtitle": {
     "description": "enter number backwards subtitle"
-  }
+  },
+  "breathingExercise": "Breathing exercise",
+  "@breathingExercise": {
+    "description": "breathing exercise"
+  },
+  "breathingExerciseSubtitle": "In the next exercise, we will practice stable and calm breathing after the instructions on the screen",
+  "@breathingExerciseSubtitle": {
+    "description": "breathing exercise subtitle"
+  },
+  "skip": "Skip",
+  "@skip": {
+    "description": "skip button title"
+  },
+  "breathIn": "Breathe in",
+  "@breathIn": {
+    "description": "breathe in"
+  },
+  "breathOut": "Breathe out",
+  "@breathOut": {
+    "description": "breathe out"
+  },
+  "holdBreath": "Hold your breath",
+  "@holdBreath": {
+    "description": "hold breath"
+  },
+    "calcExercise": "Calc exercises",
+    "@calcExercise": {
+      "description": "calc exercises"
+    },
+    "calcExerciseSubtitle": "In the next exercise, we will practice simple and quick calculations in order to activate the brain and redirect thoughts from stress",
+    "@calcExerciseSubtitle": {
+      "description": "calc exercises subtitle"
+    }
 }

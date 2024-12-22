@@ -13,7 +13,6 @@ dependencies:
   get_it: ^8.0.2
   logger: ^2.5.0
   shared_preferences: ^2.3.3
-  syncfusion_flutter_gauges: ^28.1.33
   pulsator: ^1.0.0+2
   avatar_glow: ^3.0.1
   glowy_borders: ^1.0.2
@@ -35,6 +34,7 @@ dependencies:
   go_router: ^14.6.2
   google_sign_in: ^6.2.2
   community_material_icon: ^5.9.55
+  sleek_circular_slider: ^2.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

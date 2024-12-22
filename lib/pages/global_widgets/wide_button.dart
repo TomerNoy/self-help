@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:self_help/theme.dart';
 
 enum ButtonType { transparent, gradient, black }
 
@@ -33,8 +34,8 @@ class WideButton extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Color(0xFF79C3DD),
-                          Color(0xFF6E79ED),
+                          gradientStartColor,
+                          gradientEndColor,
                         ],
                       ),
                       borderRadius: BorderRadius.circular(26.0),
@@ -56,7 +57,7 @@ class WideButton extends StatelessWidget {
                     ButtonType.black =>
                       Theme.of(context).outlinedButtonTheme.style!.copyWith(
                             backgroundColor:
-                                WidgetStateProperty.all(Color(0xFF1A1A1A)),
+                                WidgetStateProperty.all(buttonBackgroundBlack),
                             foregroundColor:
                                 WidgetStateProperty.all(Colors.white),
                           ),

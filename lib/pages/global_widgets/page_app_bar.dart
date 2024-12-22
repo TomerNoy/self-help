@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:self_help/providers/page_route_provider.dart';
 
 class PageAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const PageAppBar({

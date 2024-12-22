@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:self_help/core/widgets/animated_background.dart';
-import 'package:self_help/core/widgets/wide_button.dart';
+import 'package:self_help/pages/global_widgets/animated_background.dart';
+import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
-import 'package:self_help/routes/router.dart';
+import 'package:self_help/core/providers/page_route_provider.dart';
 
-class Sos extends ConsumerWidget {
-  const Sos({super.key});
+class SosLanding extends ConsumerWidget {
+  const SosLanding({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -76,7 +76,12 @@ class Sos extends ConsumerWidget {
                   ),
                   WideButton(
                     title: localizations.startExercise,
-                    onPressed: () => context.pushNamed(AppRoutes.measure),
+                    onPressed: () {
+                      final provider = ref.read(pageRouteProvider);
+                      provider.startFlow(FlowType.sos);
+                      provider.next(context);
+                      // context.pushNamed(RouteNames.stressLevel);
+                    },
                     type: ButtonType.gradient,
                   ),
                 ],

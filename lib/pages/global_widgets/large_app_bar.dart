@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:self_help/core/strings.dart';
-import 'package:self_help/core/widgets/animated_background.dart';
 
 class LargeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const LargeAppBar({super.key});

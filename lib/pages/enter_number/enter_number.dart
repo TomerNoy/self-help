@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:self_help/core/widgets/flow_appbar.dart';
-import 'package:self_help/core/widgets/flow_navigation_bar.dart';
+import 'package:self_help/pages/global_widgets/flow_appbar.dart';
+import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
-import 'package:self_help/routes/router.dart';
 
 class EnterNumber extends HookConsumerWidget {
   const EnterNumber({
@@ -21,9 +19,6 @@ class EnterNumber extends HookConsumerWidget {
 
     final isValid = useState(false);
 
-    final title = localizations.enterNumber;
-    final subtitles = localizations.enterNumberSubtitle;
-
     final controller = useTextEditingController();
     final focusNode = useFocusNode();
 
@@ -36,8 +31,8 @@ class EnterNumber extends HookConsumerWidget {
 
     return Scaffold(
       appBar: FlowAppBar(
-        title: title,
-        subtitle: subtitles,
+        title: localizations.enterNumber,
+        subtitle: localizations.enterNumberSubtitle,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -78,12 +73,8 @@ class EnterNumber extends HookConsumerWidget {
       ),
       bottomNavigationBar: FlowNavigationBar(
         title: localizations.continueButtonTitle,
-        onPressed: isValid.value
-            ? () => context.pushNamed(
-                  AppRoutes.enterNumberReversed,
-                  pathParameters: {'userNumber': controller.text},
-                )
-            : null,
+        disabled: !isValid.value,
+        routeParams: {'userNumber': controller.text},
       ),
     );
   }

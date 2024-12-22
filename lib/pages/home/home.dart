@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:self_help/core/providers/collapsing_appbar.dart';
+import 'package:self_help/core/providers/collapsing_appbar_provider.dart';
 import 'package:self_help/core/providers/user_provider.dart';
-import 'package:self_help/core/widgets/animated_background.dart';
-import 'package:self_help/core/widgets/wide_button.dart';
+import 'package:self_help/pages/global_widgets/animated_background.dart';
+import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
-import 'package:self_help/routes/router.dart';
+import 'package:self_help/core/router.dart';
 import 'package:self_help/services/services.dart';
+import 'package:self_help/theme.dart';
 
 class Home extends ConsumerWidget {
   const Home({super.key});
@@ -81,7 +82,7 @@ class Home extends ConsumerWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(32),
               ),
-              color: Color(0xFFE6E6E6),
+              color: greyBackgroundColor,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -103,7 +104,7 @@ class Home extends ConsumerWidget {
                         WideButton(
                           title: localizations.startSosButtonTitle,
                           onPressed: () {
-                            context.pushNamed(AppRoutes.sos);
+                            context.pushNamed(RouteNames.sosLanding);
                           },
                           type: ButtonType.gradient,
                         ),

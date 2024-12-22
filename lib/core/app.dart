@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:self_help/core/providers/router_provider.dart';
-import 'package:self_help/core/widgets/collapsing_appbar.dart';
+import 'package:self_help/pages/global_widgets/collapsing_appbar.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/overlay/global_overlay.dart';
-import 'package:self_help/providers/local_language_provider.dart';
+import 'package:self_help/core/providers/local_language_provider.dart';
 import 'package:self_help/theme.dart';
 
 class App extends ConsumerWidget {

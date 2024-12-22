@@ -36,5 +36,13 @@
   "enterNumberSubtitle": "בשלב הזה נזין מספר טלפון או כל מספר אחר בעל 10 ספרות שאתה מכיר אותו בעל פה ותוכל לחזור עליו גם בהמשך התרגיל",
   "back": "חזרה",
   "enterNumberBackwards": "הזמנת מספר בסדר הפוך ",
-  "enterNumberBackwardsSubtitle": "בשלב הזה נזין בסדר הפוך את המספר שהנת במסך הקודם"
+  "enterNumberBackwardsSubtitle": "בשלב הזה נזין בסדר הפוך את המספר שהנת במסך הקודם",
+  "breathingExercise": "תרגול נשימה",
+  "breathingExerciseSubtitle": "בתרגיל הבא נתרגל נשימה יציבה ורגוע אחרי ההוראות על המסך",
+  "skip": "לדלג",
+  "breathIn": "הכנס אוויר",
+  "breathOut": "הוצא אוויר",
+  "holdBreath": "החזק אוויר",
+  "calcExercise": "תרגילי חישוב ",
+  "calcExerciseSubtitle": "בתרגיל הבא נתרגל חישובים פשוטים ומהירים על מנת להפעיל את המוח ולהפנות את המחשבות מהלחץ"
 }

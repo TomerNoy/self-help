@@ -59,10 +59,9 @@ firebase.json
 lib/l10n/generated/
 android/app/.cxx/
 android/build/
+*.g.dart
 
-/lib/pages/login/providers/is_expended_provider.g.dart
 /lib/firebase_options.dart
-/lib/providers/local_language_provider.g.dart
 
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
