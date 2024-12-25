@@ -6,29 +6,28 @@ import 'package:self_help/services/services.dart';
 
 final pageRouteProvider = Provider((ref) => FlowController());
 
-enum FlowType { flow1, flow2, sos }
+enum FlowType { sos, gainControll }
 
 class FlowController extends StateNotifier<int> {
   FlowController() : super(0);
 
-  final List<String> flow1 = [
-    RouteNames.stressLevel,
-    RouteNames.breathing,
-    RouteNames.stressLevel,
-    RouteNames.butterfly,
-    RouteNames.stressLevel,
-  ];
-
-  final List<String> flow2 = [
-    RouteNames.stressLevel,
-    RouteNames.butterfly,
-    RouteNames.stressLevel,
-    RouteNames.breathing,
-    RouteNames.stressLevel,
-  ];
-
   final List<String> sosFlow = [
     RouteNames.sosLanding,
+    RouteNames.stressLevel,
+    RouteNames.enterNumber,
+    RouteNames.enterNumberReversed,
+    RouteNames.breathing,
+    RouteNames.stressLevel,
+    RouteNames.calculateExercise,
+    RouteNames.lookAroundExercise,
+    RouteNames.stressLevel,
+    RouteNames.gainControllLanding,
+    RouteNames.thoughtRelease,
+  ];
+
+  final List<String> gainControll = [
+    RouteNames.gainControllLanding,
+    RouteNames.lookAroundExercise,
     RouteNames.calculateExercise,
     RouteNames.stressLevel,
     RouteNames.enterNumber,
@@ -40,19 +39,17 @@ class FlowController extends StateNotifier<int> {
 
   late List<String> currentFlow;
 
-  void startFlow(FlowType flow) {
+  void startFlow(FlowType flow, BuildContext context) {
     switch (flow) {
-      case FlowType.flow1:
-        currentFlow = flow1;
-        break;
-      case FlowType.flow2:
-        currentFlow = flow2;
-        break;
       case FlowType.sos:
         currentFlow = sosFlow;
         break;
+      case FlowType.gainControll:
+        currentFlow = gainControll;
+        break;
     }
     state = 0;
+    context.pushNamed(currentFlow[state]);
   }
 
   bool get isLast => state == currentFlow.length - 1;
@@ -70,10 +67,7 @@ class FlowController extends StateNotifier<int> {
 
     if (state < currentFlow.length - 1) {
       state++;
-      context.pushNamed(
-        currentFlow[state],
-        pathParameters: params,
-      );
+      context.pushNamed(currentFlow[state], pathParameters: params);
       loggerService.debug('push to state: $state');
     }
   }
@@ -83,6 +77,8 @@ class FlowController extends StateNotifier<int> {
     if (state > 0) {
       state--;
       context.pop();
+    } else {
+      context.goNamed(RouteNames.home);
     }
   }
 

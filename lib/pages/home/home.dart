@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:self_help/core/theme.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
+import 'package:self_help/pages/global_providers/page_route_provider.dart';
 import 'package:self_help/pages/global_providers/user_provider.dart';
 import 'package:self_help/pages/global_widgets/animated_background.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
-import 'package:self_help/core/router.dart';
 import 'package:self_help/services/services.dart';
 
 class Home extends ConsumerWidget {
@@ -16,8 +15,6 @@ class Home extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final flowController = ref.read(pageRouteProvider);
-
     final collapsedPanelHeight = 150.0;
 
     final localizations = AppLocalizations.of(context)!;
@@ -104,7 +101,8 @@ class Home extends ConsumerWidget {
                         WideButton(
                           title: localizations.startSosButtonTitle,
                           onPressed: () {
-                            context.pushNamed(RouteNames.sosLanding);
+                            final provider = ref.read(pageRouteProvider);
+                            provider.startFlow(FlowType.sos, context);
                           },
                           type: ButtonType.gradient,
                         ),

@@ -74,7 +74,9 @@ class CollapsingAppbar extends ConsumerWidget {
                   borderRadius: radius,
                   child: Stack(
                     children: [
-                      SizedBox.expand(child: const AnimatedBackground()),
+                      SizedBox.expand(
+                        child: const AnimatedBackground(),
+                      ),
                       Center(
                         child: Material(
                           color: Colors.transparent,

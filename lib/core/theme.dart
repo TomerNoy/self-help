@@ -21,7 +21,7 @@ ThemeData generateTheme() {
   return ThemeData(
     useMaterial3: true,
     colorScheme: const ColorScheme.light(
-      primary: Colors.deepPurple,
+      primary: gradientEndColor,
     ),
     sliderTheme: const SliderThemeData(
       inactiveTrackColor: Colors.transparent,

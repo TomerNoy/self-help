@@ -6,8 +6,8 @@ import 'package:self_help/pages/global_widgets/animated_background.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 
-class SosLanding extends ConsumerWidget {
-  const SosLanding({super.key});
+class GainControllLanding extends ConsumerWidget {
+  const GainControllLanding({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,30 +59,31 @@ class SosLanding extends ConsumerWidget {
                   Column(
                     children: [
                       Text(
-                        localizations.step1,
+                        localizations.step2,
                         style: Theme.of(context).textTheme.labelLarge,
                       ),
                       SizedBox(height: 24),
                       Text(
-                        localizations.sosMainTitle,
+                        localizations.gainControllLandingTitle,
                         style: Theme.of(context).textTheme.headlineMedium,
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 16),
                       Text(
-                        localizations.sosMainInfo,
+                        localizations.gainControllLandingSubtitle,
                         style: Theme.of(context).textTheme.bodyLarge,
                         textAlign: TextAlign.center,
                       ),
                     ],
                   ),
                   WideButton(
-                    title: localizations.startExercise,
+                    title: localizations.letsContinueButtonTitle,
                     onPressed: () {
                       final provider = ref.read(pageRouteProvider);
                       provider.next(context);
                     },
-                    type: ButtonType.gradient,
+                    type: ButtonType.transparent,
+                    width: double.infinity,
                   ),
                 ],
               ),

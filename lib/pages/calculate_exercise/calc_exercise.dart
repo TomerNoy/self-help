@@ -93,8 +93,6 @@ class CalcExercise extends HookConsumerWidget {
                             style: Theme.of(context).textTheme.headlineLarge,
                             focusNode: focusNodes.value[index],
                             onChanged: (value) {
-                              controllers.value[index].text = value;
-
                               controllers.value = List.from(controllers.value);
 
                               if (provider[index].result ==

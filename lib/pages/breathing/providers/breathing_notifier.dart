@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:self_help/core/constants.dart';
 import 'package:self_help/services/services.dart';
 
+// todo change to riverpod annotations
 final breathingExerciseProvider =
     ChangeNotifierProvider.autoDispose<BreathingExerciseNotifier>(
   (ref) => BreathingExerciseNotifier(),

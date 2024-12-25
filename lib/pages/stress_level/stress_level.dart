@@ -23,93 +23,90 @@ class StressLevel extends ConsumerWidget {
         subtitle: localizations.measureSubtitle,
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Center(
           child: Column(
             children: [
               SizedBox(
                 width: width,
                 height: width,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: SleekCircularSlider(
-                    min: 1,
-                    max: 10,
-                    initialValue: 5,
-                    appearance: CircularSliderAppearance(
-                      startAngle: 180,
-                      angleRange: 180,
-                      customWidths: CustomSliderWidths(
-                        progressBarWidth: 50,
-                        trackWidth: 50,
-                        shadowWidth: 0,
-                        handlerSize: 20,
-                      ),
-                      customColors: CustomSliderColors(
-                        progressBarColors: [
-                          gradientStartColor,
-                          gradientEndColor,
-                        ],
-                        trackColor: greyBackgroundColor,
-                        shadowColor: Colors.transparent,
-                      ),
-                      infoProperties: InfoProperties(
-                        mainLabelStyle: TextStyle(
-                          fontSize: 40,
-                          color: Colors.black,
-                        ),
+                child: SleekCircularSlider(
+                  min: 1,
+                  max: 10,
+                  initialValue: 5,
+                  appearance: CircularSliderAppearance(
+                    startAngle: 180,
+                    angleRange: 180,
+                    customWidths: CustomSliderWidths(
+                      progressBarWidth: 50,
+                      trackWidth: 50,
+                      shadowWidth: 0,
+                      handlerSize: 20,
+                    ),
+                    customColors: CustomSliderColors(
+                      progressBarColors: [
+                        gradientStartColor,
+                        gradientEndColor,
+                      ],
+                      trackColor: greyBackgroundColor,
+                      shadowColor: Colors.transparent,
+                    ),
+                    infoProperties: InfoProperties(
+                      mainLabelStyle: TextStyle(
+                        fontSize: 40,
+                        color: Colors.black,
                       ),
                     ),
-                    onChange: (value) {
-                      ref.read(stressLevelProvider.notifier).state =
-                          value.round();
-                    },
-                    innerWidget: (_) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            switch (level) {
-                              1 ||
-                              2 =>
-                                CommunityMaterialIcons.emoticon_excited_outline,
-                              3 ||
-                              4 =>
-                                CommunityMaterialIcons.emoticon_happy_outline,
-                              5 ||
-                              6 =>
-                                CommunityMaterialIcons.emoticon_neutral_outline,
-                              7 ||
-                              8 =>
-                                CommunityMaterialIcons.emoticon_sad_outline,
-                              9 ||
-                              10 =>
-                                CommunityMaterialIcons.emoticon_cry_outline,
-                              _ => CommunityMaterialIcons.minus
-                            },
-                            size: 80,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'לחוץ',
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              ),
-                              Text(
-                                '$level/10',
-                                style:
-                                    Theme.of(context).textTheme.headlineMedium,
-                              ),
-                              Text(
-                                'רגוע',
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              )
-                            ],
-                          ),
-                        ],
-                      );
-                    },
                   ),
+                  onChange: (value) {
+                    ref.read(stressLevelProvider.notifier).state =
+                        value.round();
+                  },
+                  innerWidget: (_) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          switch (level) {
+                            1 ||
+                            2 =>
+                              CommunityMaterialIcons.emoticon_excited_outline,
+                            3 ||
+                            4 =>
+                              CommunityMaterialIcons.emoticon_happy_outline,
+                            5 ||
+                            6 =>
+                              CommunityMaterialIcons.emoticon_neutral_outline,
+                            7 ||
+                            8 =>
+                              CommunityMaterialIcons.emoticon_sad_outline,
+                            9 ||
+                            10 =>
+                              CommunityMaterialIcons.emoticon_cry_outline,
+                            _ => CommunityMaterialIcons.minus
+                          },
+                          size: 80,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'לחוץ',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            Text(
+                              '$level/10',
+                              style: Theme.of(context).textTheme.headlineMedium,
+                            ),
+                            Text(
+                              'רגוע',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            )
+                          ],
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ],

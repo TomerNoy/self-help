@@ -178,12 +178,72 @@
   "@holdBreath": {
     "description": "hold breath"
   },
-    "calcExercise": "Calc exercises",
-    "@calcExercise": {
-      "description": "calc exercises"
-    },
-    "calcExerciseSubtitle": "In the next exercise, we will practice simple and quick calculations in order to activate the brain and redirect thoughts from stress",
-    "@calcExerciseSubtitle": {
-      "description": "calc exercises subtitle"
-    }
+  "calcExercise": "Calc exercises",
+  "@calcExercise": {
+    "description": "calc exercises"
+  },
+  "calcExerciseSubtitle": "In the next exercise, we will practice simple and quick calculations in order to activate the brain and redirect thoughts from stress",
+  "@calcExerciseSubtitle": {
+    "description": "calc exercises subtitle"
+  },
+  "lookAroundExercise": "Look around",
+  "@lookAroundExercise": {
+    "description": "look around"
+  },
+  "lookAroundExerciseSubtitle": "In the next exercise, we will practice looking around and identifying colors and shapes in order to redirect thoughts from stress",
+  "@lookAroundExerciseSubtitle": {
+    "description": "look around subtitle"
+  },
+  "colors": "Colors",
+  "@colors": {
+    "description": "colors"
+  },
+  "colorsExamples": "For example: blue, purple, red, green, etc.",
+  "@colorsExamples": {
+    "description": "colors examples"
+  },
+  "textures": "Textures",
+  "@textures": {
+    "description": "textures"
+  },
+  "texturesExamples": "For example: smooth, hard, soft, hot, etc.",
+  "@texturesExamples": {
+    "description": "textures examples"
+  },
+  "sounds": "Sounds",
+  "@sounds": {
+    "description": "sounds"
+  },
+  "soundsExamples": "For example: noise, knock sound, chirping sound, etc.",
+  "@soundsExamples": {
+    "description": "sounds examples"
+  },
+  "gainControllLandingTitle": "Returning to control thought",
+  "@gainControllLandingTitle": {
+    "description": "gain thought control landing title"
+  },
+  "gainControllLandingSubtitle": "After we have lowered the stress level to a state where rational thought has returned, we can manage the thoughts that created stress and anxiety. The physiological responses to stress stem from a perception, belief, or thought that we are in danger when in fact there is no real danger. In this situation, we want to identify the thought that activated the physiological system and check if it is correct.",
+  "@gainControllLandingSubtitle": {
+    "description": "gain thought control landing subtitle"
+  },
+  "step2": "Step 2",
+  "@step2": {
+    "description": "step 2"
+  },
+  "letsContinueButtonTitle": "Let's continue",
+  "@letsContinueButtonTitle": {
+    "description": "lets continue button title"
+  },
+  "thoughtReleaseTitle": "Releasing the thought",
+  "@thoughtReleaseTitle": {
+    "description": "thought release title"
+  },
+  "thoughtReleaseSubtitle": "Click on the cloud, type the non-positive thought, and then you can send it and release it",
+  "@thoughtReleaseSubtitle": {
+    "description": "thought release subtitle"
+  },
+  "addThoughtButtonTitle": "Add thought",
+  "@addThoughtButtonTitle": {
+    "description": "add thought button title"
+  }
 }
