@@ -1,33 +1,14 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final stressLevelProvider =
-    ChangeNotifierProvider.autoDispose<CounterNotifier>((ref) {
-  return CounterNotifier();
-});
+part 'stress_level_provider.g.dart';
 
-class CounterNotifier extends ChangeNotifier {
-  CounterNotifier();
+@riverpod
+class StressLevel extends _$StressLevel {
+  @override
+  int build() => 5;
 
-  int _state = 5;
-
-  int get state => _state;
-
-  void increment() {
-    if (_state == 10) return;
-    _state++;
-    notifyListeners();
-  }
-
-  void decrement() {
-    if (_state == 1) return;
-    _state--;
-    notifyListeners();
-  }
-
-  set state(int value) {
+  void updateState(int value) {
     if (value < 1 || value > 10) return;
-    _state = value;
-    notifyListeners();
+    state = value;
   }
 }

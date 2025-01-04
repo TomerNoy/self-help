@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:self_help/core/routes_constants.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/core/form_validators.dart';
 import 'package:self_help/pages/global_providers/overlay_provider.dart';
@@ -28,6 +29,9 @@ class Login extends HookConsumerWidget {
     final formKey = useMemoized(() => GlobalKey<FormState>());
 
     final passwordVisible = useState(false);
+
+    final appBarProvider = ref.watch(collapsingAppBarProvider);
+    final appBarNotifier = ref.watch(collapsingAppBarProvider.notifier);
 
     // todo: can be contant and shared
     final google = SvgPicture.asset(
@@ -126,7 +130,14 @@ class Login extends HookConsumerWidget {
               children: [
                 Text(localizations.dontHaveAccount),
                 TextButton(
-                  onPressed: () => context.pushNamed(RouteNames.register),
+                  onPressed: () {
+                    // ref
+                    //     .read(collapsingAppBarProvider.notifier)
+                    //     .updateState(AppBarType.register);
+
+
+                    context.pushNamed(RoutNames.register);
+                  },
                   child: Row(
                     children: [
                       Text(localizations.registerNow),
@@ -137,32 +148,6 @@ class Login extends HookConsumerWidget {
               ],
             ),
             // todo remove after testing
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    ref.read(collapsingAppBarProvider.notifier).state =
-                        AppBarState.expanded;
-                  },
-                  icon: const Icon(Icons.add),
-                ),
-                IconButton(
-                  onPressed: () {
-                    ref.read(collapsingAppBarProvider.notifier).state =
-                        AppBarState.hidden;
-                  },
-                  icon: const Icon(Icons.build),
-                ),
-                IconButton(
-                  onPressed: () {
-                    ref.read(collapsingAppBarProvider.notifier).state =
-                        AppBarState.collapsed;
-                  },
-                  icon: const Icon(Icons.ad_units_outlined),
-                ),
-              ],
-            )
           ],
         ),
       ),
@@ -177,12 +162,12 @@ class Login extends HookConsumerWidget {
     WidgetRef ref,
   ) async {
     if (formKey.currentState!.validate()) {
-      final overlayState = ref.read(pageOverlayStateProvider.notifier);
-      overlayState.state = PageOverlayState.loading;
+      final notifier = ref.read(pageOverlayProvider.notifier);
+      notifier.updateState(PageOverlayState.loading);
 
       final result = await userService.loginUser(email.trim(), password.trim());
 
-      overlayState.state = PageOverlayState.hidden;
+      notifier.updateState(PageOverlayState.hidden);
 
       if (result.isFailure) {
         if (!context.mounted) return;
@@ -204,12 +189,12 @@ class Login extends HookConsumerWidget {
     try {
       final googleUser = await googleSignIn.signIn();
       if (googleUser == null) return;
-      final overlayState = ref.read(pageOverlayStateProvider.notifier);
-      overlayState.state = PageOverlayState.loading;
+      final notifier = ref.read(pageOverlayProvider.notifier);
+      notifier.updateState(PageOverlayState.loading);
 
       final result = await userService.loginWithGoogle(googleUser);
 
-      overlayState.state = PageOverlayState.hidden;
+      notifier.updateState(PageOverlayState.hidden);
 
       if (result.isFailure) {
         if (!context.mounted) return;

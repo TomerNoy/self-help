@@ -1,62 +1,70 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:self_help/core/router.dart';
+import 'package:self_help/core/routes_constants.dart';
 import 'package:self_help/services/services.dart';
 
-final pageRouteProvider = Provider((ref) => FlowController());
+part 'page_route_provider.g.dart';
 
-enum FlowType { sos, gainControll }
+enum FlowType { sos, gainControl }
 
-class FlowController extends StateNotifier<int> {
-  FlowController() : super(0);
-
+@Riverpod(keepAlive: true)
+class PageFlow extends _$PageFlow {
   final List<String> sosFlow = [
-    RouteNames.sosLanding,
-    RouteNames.stressLevel,
-    RouteNames.enterNumber,
-    RouteNames.enterNumberReversed,
-    RouteNames.breathing,
-    RouteNames.stressLevel,
-    RouteNames.calculateExercise,
-    RouteNames.lookAroundExercise,
-    RouteNames.stressLevel,
-    RouteNames.gainControllLanding,
-    RouteNames.thoughtRelease,
+    RoutNames.home,
+    RoutNames.stressLevel,
+    RoutNames.enterNumber,
+    RoutNames.enterNumberReversed,
+    RoutNames.breathing,
+    RoutNames.stressLevel,
+    RoutNames.calculateExercise,
+    RoutNames.lookAroundExercise,
+    RoutNames.stressLevel,
+    RoutNames.gainControlLanding,
+    RoutNames.thoughtRelease,
   ];
 
-  final List<String> gainControll = [
-    RouteNames.gainControllLanding,
-    RouteNames.lookAroundExercise,
-    RouteNames.calculateExercise,
-    RouteNames.stressLevel,
-    RouteNames.enterNumber,
-    RouteNames.enterNumberReversed,
-    RouteNames.stressLevel,
-    RouteNames.breathing,
-    RouteNames.stressLevel,
+  final List<String> gainControl = [
+    RoutNames.gainControlLanding,
+    RoutNames.lookAroundExercise,
+    RoutNames.calculateExercise,
+    RoutNames.stressLevel,
+    RoutNames.enterNumber,
+    RoutNames.enterNumberReversed,
+    RoutNames.stressLevel,
+    RoutNames.breathing,
+    RoutNames.stressLevel,
   ];
 
   late List<String> currentFlow;
-
-  void startFlow(FlowType flow, BuildContext context) {
-    switch (flow) {
-      case FlowType.sos:
-        currentFlow = sosFlow;
-        break;
-      case FlowType.gainControll:
-        currentFlow = gainControll;
-        break;
-    }
-    state = 0;
-    context.pushNamed(currentFlow[state]);
-  }
 
   bool get isLast => state == currentFlow.length - 1;
 
   String get currentRoute => currentFlow[state];
 
   int get currentState => state;
+
+  @override
+  int build() {
+    return 0;
+  }
+
+  void startFlow(FlowType flow, BuildContext context) {
+    switch (flow) {
+      case FlowType.sos:
+        currentFlow = sosFlow;
+        break;
+      case FlowType.gainControl:
+        currentFlow = gainControl;
+        break;
+    }
+    state = 1;
+    loggerService.debug(
+      'Starting flow: $flow with state: $state, route: ${currentFlow[state]}',
+    );
+    context.pushNamed(currentFlow[state]);
+  }
 
   void next(
     BuildContext context, [
@@ -78,7 +86,7 @@ class FlowController extends StateNotifier<int> {
       state--;
       context.pop();
     } else {
-      context.goNamed(RouteNames.home);
+      context.goNamed(RoutNames.home);
     }
   }
 
@@ -87,6 +95,6 @@ class FlowController extends StateNotifier<int> {
   void goToHome(BuildContext context) {
     loggerService.debug('Ending flow, resetting state to 0');
     state = 0;
-    context.goNamed(RouteNames.home);
+    context.goNamed(RoutNames.home);
   }
 }

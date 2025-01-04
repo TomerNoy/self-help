@@ -1,44 +1,86 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:self_help/core/router.dart';
-import 'package:self_help/pages/global_providers/overlay_provider.dart';
-import 'package:self_help/pages/global_providers/user_provider.dart';
+import 'package:self_help/core/routes_constants.dart';
+import 'package:self_help/pages/global_providers/user_auth_provider.dart';
 import 'package:self_help/services/services.dart';
 
-final routerProvider = Provider((ref) {
-  final pageOverlayProvider = ref.watch(pageOverlayStateProvider);
-  loggerService.info('pageOverlayProvider: $pageOverlayProvider');
+part 'router_provider.g.dart';
 
-  return router(redirect: (context, state) {
-    final authState = ref.watch(userAuthStateProvider);
+@Riverpod(keepAlive: true)
+GoRouter routerState(Ref ref) {
+  final appRouter = router(
+    redirect: (context, state) async {
+      final location = state.matchedLocation;
 
-    if (authState.isLoading || authState.hasError) return null;
+      final isOnRestrictedPage =
+          location != RoutPaths.login && location != RoutPaths.register;
 
-    final isAuthenticated = authState.valueOrNull != null;
-    final isAuthenticating = state.matchedLocation == RoutPaths.login;
+      final authProvider = ref.watch(userAuthProvider);
+      return await authProvider.when(
+        data: (data) {
+          loggerService
+              .debug('§ userAuthStream data: $data, location: $location');
 
-    if (!isAuthenticated && state.matchedLocation == RoutPaths.register) {
-      return null;
-    }
-
-    if (!isAuthenticated) {
-      return RoutPaths.login;
-    }
-
-    if (isAuthenticating) {
-      return RoutPaths.home;
-    }
-
-    if (isAuthenticated) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) {
-          ref.read(collapsingAppBarProvider.notifier).state =
-              AppBarState.hidden;
+          if (data == UserAuthState.authenticated) {
+            if (!isOnRestrictedPage) {
+              loggerService.debug('§ Redirecting to home');
+              return RoutPaths.home;
+            }
+          } else {
+            if (isOnRestrictedPage) {
+              loggerService.debug('§ Redirecting to login');
+              return RoutPaths.login;
+            }
+          }
+          return null;
+        },
+        error: (error, stackTrace) {
+          loggerService.error('§ userAuthStream error: $error', stackTrace);
+          return null;
+        },
+        loading: () {
+          loggerService.debug('§ userAuthStream loading');
+          return null;
         },
       );
-    }
+    },
+  );
 
-    return null;
-  });
-});
+  appRouter.routerDelegate.addListener(
+    () {
+      final newRoute =
+          appRouter.routerDelegate.currentConfiguration.lastOrNull?.route.path;
+
+      loggerService.info('§ RouterProvider: route changed to $newRoute');
+
+      if (newRoute == null) {
+        loggerService.warning('§ Route changed to null');
+      }
+
+      ref.read(routerListenerProvider.notifier).updateState(newRoute!);
+    },
+  );
+
+  ref.onDispose(
+    () {
+      loggerService.info('§ RouterProvider: disposed');
+      appRouter.dispose();
+    },
+  );
+  return appRouter;
+}
+
+@Riverpod(keepAlive: true)
+class RouterListener extends _$RouterListener {
+  @override
+  String build() {
+    return RoutPaths.login;
+  }
+
+  void updateState(String newState) {
+    if (newState == state) return;
+    state = newState;
+  }
+}

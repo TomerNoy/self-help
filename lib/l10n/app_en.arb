@@ -44,16 +44,22 @@
   "@registerNow": {
     "description": "register link"
   },
-  "registeration": "Registration",
-  "@registeration": {
+  "registration": "Registration",
+  "@registration": {
     "description": "register page title"
   },
   "register": "Register",
   "@register": {
     "description": "register button"
   },
-  "backToLoging": "Back to login",
-  "@backToLoging": {
+
+  "registering": "Registering",
+  "@registering": {
+    "description": "registering"
+  },
+
+  "backToLogging": "Back to login",
+  "@backToLogging": {
     "description": "back to login link"
   },
   "name": "User Name",
@@ -70,9 +76,9 @@
       }
     }
   },
-  "homeTitle": "The right place for self-treatment\nin dealing with stress and anxiety",
-  "@homeTitle": {
-    "description": "home page title"
+  "homeSubtitle": "The right place for self-treatment\nin dealing with stress and anxiety",
+  "@homeSubtitle": {
+    "description": "home page subtitle"
   },
   "guest": "Guest",
   "@guest": {
@@ -218,12 +224,12 @@
   "@soundsExamples": {
     "description": "sounds examples"
   },
-  "gainControllLandingTitle": "Returning to control thought",
-  "@gainControllLandingTitle": {
+  "gainControlLandingTitle": "Returning to control thought",
+  "@gainControlLandingTitle": {
     "description": "gain thought control landing title"
   },
-  "gainControllLandingSubtitle": "After we have lowered the stress level to a state where rational thought has returned, we can manage the thoughts that created stress and anxiety. The physiological responses to stress stem from a perception, belief, or thought that we are in danger when in fact there is no real danger. In this situation, we want to identify the thought that activated the physiological system and check if it is correct.",
-  "@gainControllLandingSubtitle": {
+  "gainControlLandingSubtitle": "After we have lowered the stress level to a state where rational thought has returned, we can manage the thoughts that created stress and anxiety. The physiological responses to stress stem from a perception, belief, or thought that we are in danger when in fact there is no real danger. In this situation, we want to identify the thought that activated the physiological system and check if it is correct.",
+  "@gainControlLandingSubtitle": {
     "description": "gain thought control landing subtitle"
   },
   "step2": "Step 2",

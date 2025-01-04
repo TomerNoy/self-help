@@ -14,7 +14,7 @@ class StressLevel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final level = ref.watch(stressLevelProvider.select((value) => value.state));
+    final level = ref.watch(stressLevelProvider);
     final localizations = AppLocalizations.of(context)!;
     final width = Constants.minimumScreenWidth;
     return Scaffold(
@@ -22,9 +22,9 @@ class StressLevel extends ConsumerWidget {
         title: localizations.measureTitle,
         subtitle: localizations.measureSubtitle,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Center(
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
               SizedBox(
@@ -59,8 +59,9 @@ class StressLevel extends ConsumerWidget {
                     ),
                   ),
                   onChange: (value) {
-                    ref.read(stressLevelProvider.notifier).state =
-                        value.round();
+                    ref
+                        .read(stressLevelProvider.notifier)
+                        .updateState(value.round());
                   },
                   innerWidget: (_) {
                     return Column(

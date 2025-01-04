@@ -13,23 +13,26 @@ class FlowAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final topPadding = 60 + MediaQuery.of(context).padding.top;
-
     loggerService.debug('${MediaQuery.of(context).padding.top}');
+
     return Padding(
-      padding: EdgeInsets.only(top: topPadding, left: 16, right: 16),
+      padding: EdgeInsets.all(16),
       child: Column(
         children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.headlineMedium,
+          SafeArea(
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
           ),
           SizedBox(height: 16),
-          Text(
-            subtitle,
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.center,
-            softWrap: true,
+          Flexible(
+            child: Text(
+              subtitle,
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.center,
+              softWrap: true,
+            ),
           ),
         ],
       ),

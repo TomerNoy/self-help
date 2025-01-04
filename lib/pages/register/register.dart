@@ -4,6 +4,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/form_validators.dart';
+import 'package:self_help/core/routes_constants.dart';
+import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/overlay_provider.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
@@ -104,11 +106,16 @@ class Register extends HookConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
-                    onPressed: () => context.pop(),
+                    onPressed: () {
+                      // ref
+                      //     .read(collapsingAppBarProvider.notifier)
+                      //     .updateState(AppBarType.login);
+                      context.pop(RoutNames.login);
+                    },
                     child: Row(
                       children: [
                         const Icon(Icons.arrow_back_ios),
-                        Text(localizations.backToLoging),
+                        Text(localizations.backToLogging),
                       ],
                     ),
                   ),
@@ -131,11 +138,11 @@ class Register extends HookConsumerWidget {
   ) async {
     loggerService.debug('user name is: $name');
     if (formKey.currentState!.validate()) {
-      final overlayState = ref.read(pageOverlayStateProvider.notifier);
-      overlayState.state = PageOverlayState.loading;
+      final notifier = ref.read(pageOverlayProvider.notifier);
+      notifier.updateState(PageOverlayState.loading);
 
       final result = await userService.registerUser(email, password, name);
-      overlayState.state = PageOverlayState.hidden;
+      notifier.updateState(PageOverlayState.hidden);
       if (result.isFailure) {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(

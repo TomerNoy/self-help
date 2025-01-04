@@ -10,13 +10,13 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.6.1
   font_awesome_flutter: ^10.8.0
-  get_it: ^8.0.2
+  get_it: ^8.0.3
   logger: ^2.5.0
-  shared_preferences: ^2.3.3
+  shared_preferences: ^2.3.4
   pulsator: ^1.0.0+2
   avatar_glow: ^3.0.1
   glowy_borders: ^1.0.2
-  firebase_core: ^3.8.1
+  firebase_core: ^3.9.0
   animate_gradient: ^0.0.3
   flutter_localizations:
     sdk: flutter
@@ -35,14 +35,18 @@ dependencies:
   google_sign_in: ^6.2.2
   community_material_icon: ^5.9.55
   sleek_circular_slider: ^2.0.1
+  rxdart: ^0.28.0
+  json_annotation: ^4.9.0
+  animations: ^2.0.11
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
   riverpod_generator: ^2.6.3
-  build_runner: ^2.4.13
+  build_runner: ^2.4.14
   custom_lint: ^0.7.0
   riverpod_lint: ^2.6.3
+  json_serializable: ^6.9.0
 flutter:
   uses-material-design: true
 

@@ -29,7 +29,9 @@ class ServiceProvider {
       );
 
       // register service
-      _getIt.registerSingleton<UserService>(UserService());
+      _getIt.registerSingleton<UserService>(UserService(), dispose: (service) {
+        service.dispose;
+      });
     } catch (e, st) {
       loggerService.error('services error', e, st);
     }

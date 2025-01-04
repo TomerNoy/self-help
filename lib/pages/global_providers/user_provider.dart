@@ -1,12 +1,19 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:self_help/models/app_user.dart';
 import 'package:self_help/services/services.dart';
+part 'user_provider.g.dart';
 
-final userAuthStateProvider = StreamProvider<User?>((ref) {
-  return userService.authStateChanges();
-});
+@riverpod
+class User extends _$User {
+  @override
+  AppUser? build() {
+    state = null;
 
-final userStateProvider = StreamProvider<AppUser?>((ref) {
-  return userService.userStateChanges;
-});
+    final subscription = userService.userChanges.listen(
+          (user) => state = user,
+          onError: (_) => state = null,
+        );
+    ref.onDispose(() => subscription.cancel());
+    return null;
+  }
+}

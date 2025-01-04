@@ -30,7 +30,7 @@ class FlowNavigationBar extends ConsumerWidget {
               Expanded(
                 child: WideButton(
                   onPressed: () {
-                    final provider = ref.read(pageRouteProvider);
+                    final provider = ref.read(pageFlowProvider.notifier);
                     provider.back(context);
                   },
                   title: localizations.back,
@@ -43,7 +43,7 @@ class FlowNavigationBar extends ConsumerWidget {
                   onPressed: disabled
                       ? null
                       : () {
-                          final provider = ref.read(pageRouteProvider);
+                          final provider = ref.read(pageFlowProvider.notifier);
                           provider.next(context, routeParams);
                         },
                   title: title,

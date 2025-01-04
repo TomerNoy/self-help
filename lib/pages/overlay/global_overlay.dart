@@ -7,7 +7,7 @@ class GlobalOverlay extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final overlayState = ref.watch(pageOverlayStateProvider);
+    final overlayState = ref.watch(pageOverlayProvider);
 
     return switch (overlayState) {
       PageOverlayState.hidden => SizedBox.shrink(),

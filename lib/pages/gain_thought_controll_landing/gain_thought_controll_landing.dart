@@ -6,8 +6,8 @@ import 'package:self_help/pages/global_widgets/animated_background.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 
-class GainControllLanding extends ConsumerWidget {
-  const GainControllLanding({super.key});
+class GainControlLanding extends ConsumerWidget {
+  const GainControlLanding({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,7 +42,8 @@ class GainControllLanding extends ConsumerWidget {
                             ),
                             child: IconButton(
                               onPressed: () {
-                                final provider = ref.read(pageRouteProvider);
+                                final provider =
+                                    ref.read(pageFlowProvider.notifier);
                                 provider.back(context);
                               },
                               icon: const Icon(
@@ -64,13 +65,13 @@ class GainControllLanding extends ConsumerWidget {
                       ),
                       SizedBox(height: 24),
                       Text(
-                        localizations.gainControllLandingTitle,
+                        localizations.gainControlLandingTitle,
                         style: Theme.of(context).textTheme.headlineMedium,
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 16),
                       Text(
-                        localizations.gainControllLandingSubtitle,
+                        localizations.gainControlLandingSubtitle,
                         style: Theme.of(context).textTheme.bodyLarge,
                         textAlign: TextAlign.center,
                       ),
@@ -79,7 +80,7 @@ class GainControllLanding extends ConsumerWidget {
                   WideButton(
                     title: localizations.letsContinueButtonTitle,
                     onPressed: () {
-                      final provider = ref.read(pageRouteProvider);
+                      final provider = ref.read(pageFlowProvider.notifier);
                       provider.next(context);
                     },
                     type: ButtonType.transparent,

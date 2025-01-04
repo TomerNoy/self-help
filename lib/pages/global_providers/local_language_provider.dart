@@ -8,7 +8,7 @@ part 'local_language_provider.g.dart';
 class LocaleNotifier extends _$LocaleNotifier {
   @override
   Locale build() {
-    return Locale(storageService.readPreferedLanguage());
+    return Locale(storageService.readPreferredLanguage());
   }
 
   void updateLocal(int i) {
@@ -20,6 +20,6 @@ class LocaleNotifier extends _$LocaleNotifier {
         state = const Locale('en');
         break;
     }
-    storageService.writePreferedLanguage(state.languageCode);
+    storageService.writePreferredLanguage(state.languageCode);
   }
 }

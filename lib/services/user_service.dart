@@ -1,23 +1,39 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:self_help/models/app_user.dart';
 import 'package:self_help/models/result.dart';
 import 'package:self_help/services/services.dart';
 
 class UserService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  UserService() {
+    _authChangesSub = _auth
+        .authStateChanges()
+        .map((user) => user == null ? null : AppUser.fromFirebaseUser(user))
+        .distinct()
+        .listen(_authStateChanges.add);
 
-  AppUser get currentUser => AppUser.fromFirebaseUser(_auth.currentUser!);
-
-  Stream<AppUser?> get userStateChanges {
-    return _auth.userChanges().map(
-      (user) {
-        return user == null ? null : AppUser.fromFirebaseUser(user);
-      },
-    );
+    _userChangesSub = _auth
+        .userChanges()
+        .map((user) => user == null ? null : AppUser.fromFirebaseUser(user))
+        .distinct()
+        .listen(_userChanges.add);
   }
 
-  Stream<User?> authStateChanges() => _auth.authStateChanges();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  final _userChanges = BehaviorSubject<AppUser?>();
+  final _authStateChanges = BehaviorSubject<AppUser?>();
+
+  late final StreamSubscription<AppUser?> _userChangesSub;
+  late final StreamSubscription<AppUser?> _authChangesSub;
+
+  Stream<AppUser?> get userChanges => _userChanges.stream;
+  Stream<AppUser?> get authStateChanges => _authStateChanges.stream;
+
+  AppUser get currentUser => AppUser.fromFirebaseUser(_auth.currentUser!);
 
   Future<Result<User>> registerUser(
       String email, String password, String name) async {
@@ -97,5 +113,10 @@ class UserService {
 
   Future<void> signOut() async {
     await _auth.signOut();
+  }
+
+  void dispose() {
+    _userChangesSub.cancel();
+    _authChangesSub.cancel();
   }
 }
