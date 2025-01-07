@@ -31,7 +31,7 @@ class FlowNavigationBar extends ConsumerWidget {
                 child: WideButton(
                   onPressed: () {
                     final provider = ref.read(pageFlowProvider.notifier);
-                    provider.back(context);
+                    provider.back();
                   },
                   title: localizations.back,
                   type: ButtonType.transparent,
@@ -44,7 +44,7 @@ class FlowNavigationBar extends ConsumerWidget {
                       ? null
                       : () {
                           final provider = ref.read(pageFlowProvider.notifier);
-                          provider.next(context, routeParams);
+                          provider.next(routeParams);
                         },
                   title: title,
                   type: ButtonType.gradient,

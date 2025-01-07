@@ -50,9 +50,7 @@ class SosLanding extends ConsumerWidget {
                               ),
                               child: IconButton(
                                 onPressed: () {
-                                  ref
-                                      .read(pageFlowProvider.notifier)
-                                      .back(context);
+                                  ref.read(pageFlowProvider.notifier).back();
                                 },
                                 icon: const Icon(
                                   Icons.arrow_back_ios_new,
@@ -89,7 +87,7 @@ class SosLanding extends ConsumerWidget {
                       title: localizations.startExercise,
                       onPressed: () {
                         final provider = ref.read(pageFlowProvider.notifier);
-                        provider.next(context);
+                        provider.next();
                       },
                       type: ButtonType.gradient,
                     ),

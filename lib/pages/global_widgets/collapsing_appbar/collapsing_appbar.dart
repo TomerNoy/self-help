@@ -5,6 +5,7 @@ import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart
 import 'package:self_help/pages/global_widgets/animated_background.dart';
 import 'package:self_help/pages/global_widgets/collapsing_appbar/collapsing_appbar_config.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
+import 'package:self_help/pages/loading.dart';
 import 'package:self_help/services/services.dart';
 
 class CollapsingAppbar extends ConsumerWidget {
@@ -21,6 +22,10 @@ class CollapsingAppbar extends ConsumerWidget {
     if (appBarType == AppBarType.hidden) {
       return const SizedBox.shrink();
     }
+    if (appBarType == AppBarType.loading) {
+      return Loading();
+    }
+
     loggerService.debug('CollapsingAppbar: appBarType: $appBarType');
     final isExpanded = [
       AppBarType.welcome,

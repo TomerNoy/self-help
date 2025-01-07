@@ -44,7 +44,7 @@ class GainControlLanding extends ConsumerWidget {
                               onPressed: () {
                                 final provider =
                                     ref.read(pageFlowProvider.notifier);
-                                provider.back(context);
+                                provider.back();
                               },
                               icon: const Icon(
                                 Icons.arrow_back_ios_new,
@@ -81,7 +81,7 @@ class GainControlLanding extends ConsumerWidget {
                     title: localizations.letsContinueButtonTitle,
                     onPressed: () {
                       final provider = ref.read(pageFlowProvider.notifier);
-                      provider.next(context);
+                      provider.next();
                     },
                     type: ButtonType.transparent,
                     width: double.infinity,

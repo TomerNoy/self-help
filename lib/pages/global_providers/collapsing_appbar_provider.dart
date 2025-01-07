@@ -5,7 +5,7 @@ import 'package:self_help/services/services.dart';
 
 part 'collapsing_appbar_provider.g.dart';
 
-enum AppBarType { welcome, login, register, home, sos, hidden }
+enum AppBarType { welcome, login, register, home, sos, hidden, loading, error }
 
 @riverpod
 class CollapsingAppBar extends _$CollapsingAppBar {

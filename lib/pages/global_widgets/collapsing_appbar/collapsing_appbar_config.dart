@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:self_help/core/constants.dart';
-import 'package:self_help/core/router.dart';
-import 'package:self_help/core/routes_constants.dart';
+import 'package:self_help/core/flow_route_constant.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
-import 'package:self_help/pages/global_providers/router_provider.dart';
+import 'package:self_help/pages/global_providers/page_route_provider.dart';
 import 'package:self_help/pages/global_providers/user_provider.dart';
 import 'package:self_help/services/services.dart';
 
@@ -65,11 +64,8 @@ class AppBarContent {
           collapsedPanelHeight: collapsedPanelHeight,
           localizations: localizations,
           cb: () {
-            final provider = ref.read(routerStateProvider);
-            provider.pushNamed(RoutNames.stressLevel);
-            ref
-                .read(collapsingAppBarProvider.notifier)
-                .updateState(AppBarType.hidden);
+            final provider = ref.read(pageFlowProvider.notifier);
+            provider.startFlow(FlowType.sos);
           }),
       _ => AppBarContent.hidden(),
     };
@@ -134,9 +130,9 @@ class AppBarContent {
   }) =>
       AppBarContent._(
         title: localizations.welcomeMessage(
-            ref.watch(userProvider)?.displayName ?? localizations.guest),
+            ref.watch(userProvider).valueOrNull?.displayName ?? ''),
         subtitle: localizations.homeSubtitle,
-        subtitleHeight: 50.0,
+        subtitleHeight: 45.0,
         animationHeight: collapsedPanelHeight,
         opacity: 1.0,
       );

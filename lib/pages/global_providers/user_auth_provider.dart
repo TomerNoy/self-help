@@ -4,7 +4,7 @@ import 'package:self_help/services/services.dart';
 
 part 'user_auth_provider.g.dart';
 
-enum UserAuthState { authenticated, unauthenticated, hasError }
+enum UserAuthState { authenticated, unauthenticated, hasError, loading }
 
 @riverpod
 Stream<UserAuthState> userAuth(Ref ref) async* {

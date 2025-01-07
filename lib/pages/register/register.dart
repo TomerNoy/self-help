@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/form_validators.dart';
 import 'package:self_help/core/routes_constants.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
-import 'package:self_help/pages/global_providers/overlay_provider.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/services/services.dart';
@@ -138,11 +137,11 @@ class Register extends HookConsumerWidget {
   ) async {
     loggerService.debug('user name is: $name');
     if (formKey.currentState!.validate()) {
-      final notifier = ref.read(pageOverlayProvider.notifier);
-      notifier.updateState(PageOverlayState.loading);
+      ref
+          .read(collapsingAppBarProvider.notifier)
+          .updateState(AppBarType.loading);
 
       final result = await userService.registerUser(email, password, name);
-      notifier.updateState(PageOverlayState.hidden);
       if (result.isFailure) {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(

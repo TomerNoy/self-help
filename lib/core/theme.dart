@@ -5,8 +5,8 @@ const textSubtitleColor = Color(0xff4C4C4C);
 const textAboveAnimationColor = Color(0xff263238);
 const textStepColor = Color(0xff999999);
 
-const gradientStartColor = Color(0xff79C3DD);
-const gradientEndColor = Color(0xff6E79ED);
+const gradientEndColor = Color(0xff7E57C2);
+const gradientStartColor = Color(0xff7FCCEE);
 
 const breathStepIndicatorColor = Color(0xff92E3A9);
 
@@ -44,7 +44,7 @@ ThemeData generateTheme() {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: Colors.deepPurple, width: 2.0),
+        borderSide: BorderSide(color: gradientEndColor, width: 2.0),
       ),
     ),
     textButtonTheme: TextButtonThemeData(

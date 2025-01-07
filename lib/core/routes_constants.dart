@@ -1,4 +1,5 @@
 class RoutNames {
+  static const loading = 'loading';
   static const login = 'login';
   static const register = 'register';
   static const enterNumber = 'enterNumber';
@@ -17,7 +18,8 @@ class RoutNames {
 }
 
 class RoutPaths {
-  static const login = '/';
+  static const loading = '/';
+  static const login = '/login';
   static const register = '/register';
   static const enterNumber = '/enterNumber';
   static const enterNumberReversed = '/enterNumberReversed:userNumber';

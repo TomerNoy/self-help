@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/routes_constants.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/core/form_validators.dart';
-import 'package:self_help/pages/global_providers/overlay_provider.dart';
+import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/core/router.dart';
@@ -135,7 +135,6 @@ class Login extends HookConsumerWidget {
                     //     .read(collapsingAppBarProvider.notifier)
                     //     .updateState(AppBarType.register);
 
-
                     context.pushNamed(RoutNames.register);
                   },
                   child: Row(
@@ -162,12 +161,11 @@ class Login extends HookConsumerWidget {
     WidgetRef ref,
   ) async {
     if (formKey.currentState!.validate()) {
-      final notifier = ref.read(pageOverlayProvider.notifier);
-      notifier.updateState(PageOverlayState.loading);
+      ref
+          .read(collapsingAppBarProvider.notifier)
+          .updateState(AppBarType.loading);
 
       final result = await userService.loginUser(email.trim(), password.trim());
-
-      notifier.updateState(PageOverlayState.hidden);
 
       if (result.isFailure) {
         if (!context.mounted) return;
@@ -189,12 +187,12 @@ class Login extends HookConsumerWidget {
     try {
       final googleUser = await googleSignIn.signIn();
       if (googleUser == null) return;
-      final notifier = ref.read(pageOverlayProvider.notifier);
-      notifier.updateState(PageOverlayState.loading);
+      ref
+          .read(collapsingAppBarProvider.notifier)
+          .updateState(AppBarType.loading);
+      ref.read(routerListenerProvider.notifier).updateState(RoutPaths.loading);
 
       final result = await userService.loginWithGoogle(googleUser);
-
-      notifier.updateState(PageOverlayState.hidden);
 
       if (result.isFailure) {
         if (!context.mounted) return;

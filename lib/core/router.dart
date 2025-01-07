@@ -7,20 +7,33 @@ import 'package:self_help/pages/connecting/connecting.dart';
 import 'package:self_help/pages/enter_number/enter_number.dart';
 import 'package:self_help/pages/enter_number_reversed/enter_number_reversed.dart';
 import 'package:self_help/pages/gain_thought_controll_landing/gain_thought_controll_landing.dart';
+import 'package:self_help/pages/global_providers/user_auth_provider.dart';
 import 'package:self_help/pages/home/home.dart';
+import 'package:self_help/pages/loading.dart';
 import 'package:self_help/pages/login/login.dart';
 import 'package:self_help/pages/look_around_exercise/look_around_exercise.dart';
 import 'package:self_help/pages/register/register.dart';
 import 'package:self_help/pages/sos_landing/sos_landing.dart';
 import 'package:self_help/pages/stress_level/stress_level.dart';
 import 'package:self_help/pages/thought_release/thought_release.dart';
-import 'package:self_help/services/services.dart';
 
-GoRouter router({GoRouterRedirect? redirect}) {
+GoRouter router({
+  GoRouterRedirect? redirect,
+  GlobalKey<NavigatorState>? routerKey,
+  required ValueNotifier<UserAuthState> refreshListenable,
+}) {
   return GoRouter(
     debugLogDiagnostics: true,
     redirect: redirect,
+    navigatorKey: routerKey,
+    initialLocation: RoutPaths.loading,
+    refreshListenable: refreshListenable,
     routes: [
+      GoRoute(
+        path: RoutPaths.loading,
+        name: RoutNames.loading,
+        builder: (context, state) => const Loading(),
+      ),
       GoRoute(
         path: RoutPaths.login,
         name: RoutNames.login,

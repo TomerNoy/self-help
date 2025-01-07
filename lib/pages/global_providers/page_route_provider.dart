@@ -1,100 +1,104 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:self_help/core/flow_route_constant.dart';
 import 'package:self_help/core/router.dart';
 import 'package:self_help/core/routes_constants.dart';
+import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/services/services.dart';
 
 part 'page_route_provider.g.dart';
 
-enum FlowType { sos, gainControl }
+@immutable
+class PageFlowState {
+  final int index;
+  final FlowType flowType;
+
+  const PageFlowState({
+    required this.index,
+    required this.flowType,
+  });
+
+  PageFlowState copyWith({
+    int? index,
+    FlowType? flowType,
+  }) {
+    return PageFlowState(
+      index: index ?? this.index,
+      flowType: flowType ?? this.flowType,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'PageFlowState{index: $index, flowType: $flowType}';
+  }
+}
 
 @Riverpod(keepAlive: true)
 class PageFlow extends _$PageFlow {
-  final List<String> sosFlow = [
-    RoutNames.home,
-    RoutNames.stressLevel,
-    RoutNames.enterNumber,
-    RoutNames.enterNumberReversed,
-    RoutNames.breathing,
-    RoutNames.stressLevel,
-    RoutNames.calculateExercise,
-    RoutNames.lookAroundExercise,
-    RoutNames.stressLevel,
-    RoutNames.gainControlLanding,
-    RoutNames.thoughtRelease,
-  ];
-
-  final List<String> gainControl = [
-    RoutNames.gainControlLanding,
-    RoutNames.lookAroundExercise,
-    RoutNames.calculateExercise,
-    RoutNames.stressLevel,
-    RoutNames.enterNumber,
-    RoutNames.enterNumberReversed,
-    RoutNames.stressLevel,
-    RoutNames.breathing,
-    RoutNames.stressLevel,
-  ];
-
-  late List<String> currentFlow;
-
-  bool get isLast => state == currentFlow.length - 1;
-
-  String get currentRoute => currentFlow[state];
-
-  int get currentState => state;
-
   @override
-  int build() {
-    return 0;
-  }
-
-  void startFlow(FlowType flow, BuildContext context) {
-    switch (flow) {
-      case FlowType.sos:
-        currentFlow = sosFlow;
-        break;
-      case FlowType.gainControl:
-        currentFlow = gainControl;
-        break;
-    }
-    state = 1;
-    loggerService.debug(
-      'Starting flow: $flow with state: $state, route: ${currentFlow[state]}',
+  PageFlowState build() {
+    return const PageFlowState(
+      index: 0,
+      flowType: FlowType.none,
     );
-    context.pushNamed(currentFlow[state]);
   }
 
-  void next(
-    BuildContext context, [
+  void startFlow(FlowType flowType) {
+    final router = ref.read(routerStateProvider);
+    final routeToGo = FlowLists.flowListsMap[flowType]!.first;
+    router.pushNamed(routeToGo);
+    state = PageFlowState(
+      flowType: flowType,
+      index: 0,
+    );
+    loggerService.debug('flow state started for $flowType');
+  }
+
+  void next([
     Map<String, String> params = const {},
   ]) {
-    loggerService
-        .debug('state: $state, currentFlow.length: ${currentFlow.length}');
-
-    if (state < currentFlow.length - 1) {
-      state++;
-      context.pushNamed(currentFlow[state], pathParameters: params);
-      loggerService.debug('push to state: $state');
+    if (FlowLists.flowListsMap[state.flowType]!.length > state.index + 1) {
+      state = state.copyWith(index: state.index + 1);
+      final router = ref.read(routerStateProvider);
+      final routeToGo = FlowLists.flowListsMap[state.flowType]![state.index];
+      router.pushNamed(routeToGo, pathParameters: params);
+      loggerService.debug('flow state changed to: $state');
     }
   }
 
-  void back(BuildContext context) {
-    loggerService.debug('state: $state');
-    if (state > 0) {
-      state--;
-      context.pop();
+  void back() {
+    final router = ref.read(routerStateProvider);
+    if (state.index > 0) {
+      state = state.copyWith(index: state.index - 1);
+      final routeToGo = FlowLists.flowListsMap[state.flowType]![state.index];
+      router.pushNamed(routeToGo);
+      loggerService.debug('flow state changed to: $state');
     } else {
-      context.goNamed(RoutNames.home);
+      resetBackToHome();
+    }
+
+    loggerService.debug('flow state changed to: $state');
+  }
+
+  void backNoPop() {
+    if (state.index > 0) {
+      state = state.copyWith(index: state.index - 1);
+    } else if (state.index == 0) {
+      resetBackToHome();
     }
   }
 
-  void backNoPop() => state--;
+  void resetBackToHome() {
+    loggerService.debug('Ending flow state, resetting state to 0');
+    final router = ref.read(routerStateProvider);
+    router.goNamed(RoutNames.home);
+    state = const PageFlowState(
+      index: 0,
+      flowType: FlowType.none,
+    );
 
-  void goToHome(BuildContext context) {
-    loggerService.debug('Ending flow, resetting state to 0');
-    state = 0;
-    context.goNamed(RoutNames.home);
+    // todo dispose this provider
   }
 }

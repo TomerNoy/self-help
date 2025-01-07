@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,41 +11,55 @@ part 'router_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 GoRouter routerState(Ref ref) {
+  // final authProvider = ref.watch(userAuthProvider);
+
+  final routerKey = GlobalKey<NavigatorState>(debugLabel: 'routerKey');
+  var authState = ValueNotifier<UserAuthState>(UserAuthState.loading);
+
+  authState.addListener(() {
+    loggerService.debug('§ authState listener triggered: ${authState.value}');
+  });
+
+  ref
+    ..onDispose(() {
+      loggerService.info('§ RouterProvider: disposed');
+      authState.dispose();
+    })
+    ..listen<AsyncValue<UserAuthState>>(
+      userAuthProvider,
+      (previous, next) {
+        loggerService.debug('§ userAuthProvider next: $next');
+        if (next.hasValue) {
+          authState.value = next.value!;
+          loggerService.debug('§ authState updated to: ${authState.value}');
+        }
+      },
+    );
+
   final appRouter = router(
+    refreshListenable: authState,
+    routerKey: routerKey,
     redirect: (context, state) async {
       final location = state.matchedLocation;
 
       final isOnRestrictedPage =
           location != RoutPaths.login && location != RoutPaths.register;
 
-      final authProvider = ref.watch(userAuthProvider);
-      return await authProvider.when(
-        data: (data) {
-          loggerService
-              .debug('§ userAuthStream data: $data, location: $location');
+      final isLoadingRoute = location == RoutPaths.loading;
 
-          if (data == UserAuthState.authenticated) {
-            if (!isOnRestrictedPage) {
-              loggerService.debug('§ Redirecting to home');
-              return RoutPaths.home;
-            }
-          } else {
-            if (isOnRestrictedPage) {
-              loggerService.debug('§ Redirecting to login');
-              return RoutPaths.login;
-            }
-          }
-          return null;
-        },
-        error: (error, stackTrace) {
-          loggerService.error('§ userAuthStream error: $error', stackTrace);
-          return null;
-        },
-        loading: () {
-          loggerService.debug('§ userAuthStream loading');
-          return null;
-        },
-      );
+      final shouldRedirectToLogin = isOnRestrictedPage || isLoadingRoute;
+      final shouldRedirectToHome = !isOnRestrictedPage || isLoadingRoute;
+
+      loggerService.debug('§ authState: ${authState.value}');
+
+      return switch (authState.value) {
+        UserAuthState.authenticated =>
+          shouldRedirectToHome ? RoutPaths.home : null,
+        UserAuthState.unauthenticated =>
+          shouldRedirectToLogin ? RoutPaths.login : null,
+        UserAuthState.hasError => null,
+        UserAuthState.loading => isLoadingRoute ? null : RoutPaths.loading,
+      };
     },
   );
 
@@ -76,7 +91,7 @@ GoRouter routerState(Ref ref) {
 class RouterListener extends _$RouterListener {
   @override
   String build() {
-    return RoutPaths.login;
+    return RoutPaths.loading;
   }
 
   void updateState(String newState) {
