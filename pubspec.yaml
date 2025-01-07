@@ -38,6 +38,7 @@ dependencies:
   rxdart: ^0.28.0
   json_annotation: ^4.9.0
   animations: ^2.0.11
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -52,9 +53,12 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+
+
   assets:
     - assets/images/
     - assets/icons/
+    - .env
 
   fonts:
     - family: Rubik
