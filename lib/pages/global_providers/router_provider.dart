@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:self_help/core/router.dart';
-import 'package:self_help/core/routes_constants.dart';
+import 'package:self_help/core/constants/routes_constants.dart';
+import 'package:self_help/pages/global_providers/page_route_provider.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
 import 'package:self_help/services/services.dart';
 
@@ -42,10 +43,10 @@ GoRouter routerState(Ref ref) {
     redirect: (context, state) async {
       final location = state.matchedLocation;
 
-      final isOnRestrictedPage =
-          location != RoutPaths.login && location != RoutPaths.register;
+      final isOnRestrictedPage = location != RoutePaths.login.path &&
+          location != RoutePaths.register.path;
 
-      final isLoadingRoute = location == RoutPaths.loading;
+      final isLoadingRoute = location == RoutePaths.loading.path;
 
       final shouldRedirectToLogin = isOnRestrictedPage || isLoadingRoute;
       final shouldRedirectToHome = !isOnRestrictedPage || isLoadingRoute;
@@ -54,11 +55,12 @@ GoRouter routerState(Ref ref) {
 
       return switch (authState.value) {
         UserAuthState.authenticated =>
-          shouldRedirectToHome ? RoutPaths.home : null,
+          shouldRedirectToHome ? RoutePaths.home.path : null,
         UserAuthState.unauthenticated =>
-          shouldRedirectToLogin ? RoutPaths.login : null,
+          shouldRedirectToLogin ? RoutePaths.login.path : null,
         UserAuthState.hasError => null,
-        UserAuthState.loading => isLoadingRoute ? null : RoutPaths.loading,
+        UserAuthState.loading =>
+          isLoadingRoute ? null : RoutePaths.loading.path,
       };
     },
   );
@@ -74,7 +76,11 @@ GoRouter routerState(Ref ref) {
         loggerService.warning('§ Route changed to null');
       }
 
-      ref.read(routerListenerProvider.notifier).updateState(newRoute!);
+      final path = RoutePaths.fromPath(newRoute!);
+
+      if (path != null) {
+        ref.read(routerListenerProvider.notifier).updateState(path);
+      }
     },
   );
 
@@ -90,12 +96,13 @@ GoRouter routerState(Ref ref) {
 @Riverpod(keepAlive: true)
 class RouterListener extends _$RouterListener {
   @override
-  String build() {
-    return RoutPaths.loading;
+  RoutePaths build() {
+    return RoutePaths.loading;
   }
 
-  void updateState(String newState) {
+  void updateState(RoutePaths newState) {
     if (newState == state) return;
+    ref.read(pageFlowProvider.notifier).updatePageIndex(newState);
     state = newState;
   }
 }

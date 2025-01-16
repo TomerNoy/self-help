@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:self_help/core/debug_overlay.dart';
 import 'package:self_help/core/theme.dart';
 import 'package:self_help/pages/global_providers/local_language_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
@@ -28,7 +29,7 @@ class App extends ConsumerWidget {
           children: [
             child ?? const SizedBox.shrink(),
             CollapsingAppbar(),
-            // DebugOverlay(),
+            DebugOverlay(),
           ],
         );
       },

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_widgets/animated_background.dart';
 import 'package:self_help/pages/global_widgets/collapsing_appbar/collapsing_appbar_config.dart';
@@ -16,17 +16,15 @@ class CollapsingAppbar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appBarType = ref.watch(collapsingAppBarProvider);
-    final logo = SvgPicture.asset('assets/icons/logo.svg');
+    final logo = Image.asset(AssetsConstants.selfHelpNoBk);
     final config = AppBarContent(context: context, state: appBarType, ref: ref);
 
-    if (appBarType == AppBarType.hidden) {
-      return const SizedBox.shrink();
-    }
     if (appBarType == AppBarType.loading) {
       return Loading();
     }
 
     loggerService.debug('CollapsingAppbar: appBarType: $appBarType');
+
     final isExpanded = [
       AppBarType.welcome,
       AppBarType.sos,
@@ -126,58 +124,72 @@ class CollapsingAppbar extends ConsumerWidget {
       ),
     );
 
-    return AnimatedContainer(
+    return AnimatedOpacity(
       duration: animationDuration,
-      width: double.infinity,
-      height: config.animationHeight,
-      child: TweenAnimationBuilder<BorderRadius>(
+      opacity: appBarType == AppBarType.hidden ? 0.0 : 1.0,
+      child: AnimatedContainer(
         duration: animationDuration,
-        curve: Curves.easeInOut,
-        tween: Tween(
-          begin: BorderRadius.vertical(
-            bottom: Radius.circular(isExpanded ? 50 : 0),
+        width: double.infinity,
+        height: config.animationHeight,
+        child: TweenAnimationBuilder<BorderRadius>(
+          duration: animationDuration,
+          curve: Curves.easeInOut,
+          tween: Tween(
+            begin: BorderRadius.vertical(
+              bottom: Radius.circular(isExpanded ? 50 : 0),
+            ),
+            end: BorderRadius.vertical(
+              bottom: Radius.circular(isExpanded ? 0 : 50),
+            ),
           ),
-          end: BorderRadius.vertical(
-            bottom: Radius.circular(isExpanded ? 0 : 50),
-          ),
-        ),
-        builder: (context, radius, child) {
-          return ClipRRect(
-            borderRadius: radius,
-            child: Stack(
-              children: [
-                SizedBox.expand(
-                  child: const AnimatedBackground(),
-                ),
-                Center(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: logoWidget,
-                          ),
-                          Column(
-                            children: [
-                              titleWidget,
-                              const SizedBox(height: 16),
-                              subtitleWidget,
-                            ],
-                          ),
-                          buttonWidget,
-                        ],
+          builder: (context, radius, child) {
+            return ClipRRect(
+              borderRadius: radius,
+              child: Stack(
+                children: [
+                  SizedBox.expand(
+                    child: const AnimatedBackground(),
+                  ),
+                  Center(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          return SingleChildScrollView(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                minHeight: constraints.maxHeight,
+                              ),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: logoWidget,
+                                  ),
+                                  Column(
+                                    children: [
+                                      titleWidget,
+                                      const SizedBox(height: 16),
+                                      subtitleWidget,
+                                    ],
+                                  ),
+                                  buttonWidget,
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:self_help/core/flow_route_constant.dart';
+import 'package:self_help/core/constants/flow_route_constant.dart';
 import 'package:self_help/core/router.dart';
-import 'package:self_help/core/routes_constants.dart';
+import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/services/services.dart';
 
@@ -93,12 +93,34 @@ class PageFlow extends _$PageFlow {
   void resetBackToHome() {
     loggerService.debug('Ending flow state, resetting state to 0');
     final router = ref.read(routerStateProvider);
-    router.goNamed(RoutNames.home);
+    router.goNamed(RoutePaths.home.name);
+    _reset();
+
+    // todo dispose this provider
+  }
+
+  void _reset() {
     state = const PageFlowState(
       index: 0,
       flowType: FlowType.none,
     );
+  }
 
-    // todo dispose this provider
+  void updatePageIndex(RoutePaths path) {
+    if (state.flowType == FlowType.none) return;
+
+    final currentFlow = FlowLists.flowListsMap[state.flowType]!;
+    final index = currentFlow[state.index];
+    loggerService.debug('§§ routeChange: $path, flow $index');
+
+    if (path == RoutePaths.home) {
+      _reset();
+    } else {
+      final newIndex = currentFlow.indexOf(path.name);
+      loggerService.debug('§§ routeChange: $newIndex');
+      if (newIndex != -1) {
+        state = state.copyWith(index: newIndex);
+      }
+    }
   }
 }

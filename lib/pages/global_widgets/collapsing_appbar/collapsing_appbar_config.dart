@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:self_help/core/constants.dart';
-import 'package:self_help/core/flow_route_constant.dart';
+import 'package:self_help/core/constants/constants.dart';
+import 'package:self_help/core/constants/flow_route_constant.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/page_route_provider.dart';

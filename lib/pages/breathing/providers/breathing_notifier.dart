@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:self_help/core/constants.dart';
+import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/services/services.dart';
 
 part 'breathing_notifier.g.dart';

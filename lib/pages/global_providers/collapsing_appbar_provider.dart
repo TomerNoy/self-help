@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:self_help/core/routes_constants.dart';
+import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/services/services.dart';
 
@@ -18,11 +18,11 @@ class CollapsingAppBar extends _$CollapsingAppBar {
         .debug('CollapsingAppBar: build: $route, $routerProviderWasInit');
 
     return switch (route) {
-      RoutPaths.login =>
+      RoutePaths.login =>
         routerProviderWasInit ? AppBarType.login : AppBarType.welcome,
-      RoutPaths.register => AppBarType.register,
-      RoutPaths.home => AppBarType.home,
-      RoutPaths.sosLanding => AppBarType.sos,
+      RoutePaths.register => AppBarType.register,
+      RoutePaths.home => AppBarType.home,
+      RoutePaths.sosLanding => AppBarType.sos,
       _ => AppBarType.hidden,
     };
   }

@@ -2,7 +2,7 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:self_help/core/constants.dart';
+import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/core/theme.dart';
 import 'package:self_help/pages/global_widgets/animated_background.dart';
 import 'package:self_help/pages/global_widgets/flow_appbar.dart';

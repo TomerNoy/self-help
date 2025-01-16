@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:self_help/core/routes_constants.dart';
+import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/core/form_validators.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
@@ -135,7 +135,7 @@ class Login extends HookConsumerWidget {
                     //     .read(collapsingAppBarProvider.notifier)
                     //     .updateState(AppBarType.register);
 
-                    context.pushNamed(RoutNames.register);
+                    context.pushNamed(RoutePaths.register.name);
                   },
                   child: Row(
                     children: [
@@ -190,7 +190,7 @@ class Login extends HookConsumerWidget {
       ref
           .read(collapsingAppBarProvider.notifier)
           .updateState(AppBarType.loading);
-      ref.read(routerListenerProvider.notifier).updateState(RoutPaths.loading);
+      ref.read(routerListenerProvider.notifier).updateState(RoutePaths.loading);
 
       final result = await userService.loginWithGoogle(googleUser);
 

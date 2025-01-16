@@ -84,7 +84,7 @@
   "@guest": {
     "description": "guest"
   },
-  "startSosButtonTitle": "Start SOS exercise",
+  "startSosButtonTitle": "SOS",
   "@startSosButtonTitle": {
     "description": "start SOS exercise button title"
   },
@@ -104,11 +104,11 @@
   "@startExercise": {
     "description": "start exercise button"
   },
-  "measureTitle": "pressure measurement",
+  "measureTitle": "pressure measure",
   "@measureTitle": {
     "description": "pressure measurement"
   },
-  "measureSubtitle": "In order to start the exercise, we need you to share how you are feeling right now.",
+  "measureSubtitle": "Mark the level that best describes your feeling right now.",
   "@measureSubtitle": {
     "description": "pressure measurement subtitle"
   },
@@ -144,7 +144,7 @@
   "@enterNumber": {
     "description": "enter number"
   },
-  "enterNumberSubtitle": "At this stage, we will enter a phone number or any other 10-digit number that you know by heart and can repeat later in the exercise",
+  "enterNumberSubtitle": "Back to control: This simple action anchors you back in the present and allows you to return to a feeling of calm and control.",
   "@enterNumberSubtitle": {
     "description": "enter number subtitle"
   },
@@ -152,19 +152,19 @@
   "@back": {
     "description": "go back button title"
   },
-  "enterNumberBackwards": "Enter a number in reverse order",
+  "enterNumberBackwards": "This time, write your phone number from end to beginning.",
   "@enterNumberBackwards": {
     "description": "enter number backwards"
   },
-  "enterNumberBackwardsSubtitle": "At this stage, we will enter the number in reverse order that you entered on the previous screen",
+  "enterNumberBackwardsSubtitle": "At this stage, you can calm down even more",
   "@enterNumberBackwardsSubtitle": {
     "description": "enter number backwards subtitle"
   },
-  "breathingExercise": "Breathing exercise",
+  "breathingExercise": "Breathe deeply",
   "@breathingExercise": {
     "description": "breathing exercise"
   },
-  "breathingExerciseSubtitle": "In the next exercise, we will practice stable and calm breathing after the instructions on the screen",
+  "breathingExerciseSubtitle": "Click the button and start a 30-second breathing exercise.\nLet the animation guide you and feel the tension disappear. Deep breaths will help you relax and focus on the present moment.",
   "@breathingExerciseSubtitle": {
     "description": "breathing exercise subtitle"
   },
@@ -251,5 +251,13 @@
   "addThoughtButtonTitle": "Add thought",
   "@addThoughtButtonTitle": {
     "description": "add thought button title"
-  }
+  },
+    "startResilienceButtonTitle": "Resilience",
+    "@startResilienceButtonTitle": {
+        "description": "start resilience button title"
+    },
+  "startFindATherapistButtonTitle": "Find a therapist",
+    "@startFindATherapistButtonTitle": {
+        "description": "find a therapist button title"
+    }
 }
