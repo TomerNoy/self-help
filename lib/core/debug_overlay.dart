@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
-import 'package:self_help/pages/global_providers/page_route_provider.dart';
+import 'package:self_help/pages/global_providers/page_flow_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
 import 'package:invert_colors/invert_colors.dart';
@@ -90,18 +90,19 @@ class DebugOverlay extends HookConsumerWidget {
                 ),
               ],
             ),
-          SafeArea(
-            child: Material(
-              shape: const CircleBorder(),
-              color: Colors.black.withAlpha(100),
-              child: IconButton(
-                onPressed: () {
-                  print('debugOn.value: ${debugOn.value}');
-                  debugOn.value = !debugOn.value;
-                },
-                color: Colors.white,
-                icon: Icon(
-                  debugOn.value ? Icons.build : Icons.highlight_off,
+          Positioned(
+            right: 100,
+            top: 0,
+            child: SafeArea(
+              child: Material(
+                shape: const CircleBorder(),
+                color: Colors.black.withAlpha(50),
+                child: IconButton(
+                  onPressed: () => debugOn.value = !debugOn.value,
+                  color: Colors.white,
+                  icon: Icon(
+                    debugOn.value ? Icons.build : Icons.highlight_off,
+                  ),
                 ),
               ),
             ),

@@ -28,7 +28,7 @@ class ServiceProvider {
         AppLifeCycleService(),
       );
 
-      // register service
+      // user service
       _getIt.registerSingleton<UserService>(UserService(), dispose: (service) {
         service.dispose;
       });

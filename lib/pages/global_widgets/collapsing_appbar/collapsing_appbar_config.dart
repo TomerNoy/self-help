@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/core/constants/flow_route_constant.dart';
+import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
-import 'package:self_help/pages/global_providers/page_route_provider.dart';
+import 'package:self_help/pages/global_providers/page_flow_provider.dart';
+import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_providers/user_provider.dart';
 import 'package:self_help/services/services.dart';
 
@@ -17,7 +19,8 @@ class AppBarContent {
   final double buttonHeight;
   final double animationHeight;
   final double opacity;
-  final void Function()? cb;
+  final void Function()? startPressed;
+  final void Function()? backPressed;
 
   factory AppBarContent({
     required BuildContext context,
@@ -38,7 +41,7 @@ class AppBarContent {
       AppBarType.welcome => AppBarContent._welcome(
           screenHeight: screenHeight,
           localizations: localizations,
-          cb: () {
+          startPressed: () {
             ref
                 .read(collapsingAppBarProvider.notifier)
                 .updateState(AppBarType.login);
@@ -58,15 +61,56 @@ class AppBarContent {
           localizations: localizations,
           ref: ref,
         ),
+      AppBarType.profile => AppBarContent._profile(
+          collapsedPanelHeight: collapsedPanelHeight,
+          localizations: localizations,
+          backPressed: () {
+            ref
+              ..read(collapsingAppBarProvider.notifier)
+                  .updateState(AppBarType.home)
+              ..read(routerStateProvider).goNamed(RoutePaths.home.name);
+          },
+        ),
+      AppBarType.settings => AppBarContent._settings(
+          collapsedPanelHeight: collapsedPanelHeight,
+          localizations: localizations,
+          backPressed: () {
+            ref
+              ..read(collapsingAppBarProvider.notifier)
+                  .updateState(AppBarType.home)
+              ..read(routerStateProvider).goNamed(RoutePaths.home.name);
+          },
+        ),
       AppBarType.sos => AppBarContent._sos(
           screenHeight: screenHeight,
           topPadding: topPadding,
           collapsedPanelHeight: collapsedPanelHeight,
           localizations: localizations,
-          cb: () {
+          startPressed: () {
             final provider = ref.read(pageFlowProvider.notifier);
             provider.startFlow(FlowType.sos);
-          }),
+          },
+          backPressed: () {
+            ref
+                .read(collapsingAppBarProvider.notifier)
+                .updateState(AppBarType.home);
+          },
+        ),
+      AppBarType.gainControl => AppBarContent._gainControl(
+          screenHeight: screenHeight,
+          topPadding: topPadding,
+          collapsedPanelHeight: collapsedPanelHeight,
+          localizations: localizations,
+          startPressed: () {
+            final provider = ref.read(pageFlowProvider.notifier);
+            provider.startFlow(FlowType.gainControl);
+          },
+          backPressed: () {
+            ref
+                .read(collapsingAppBarProvider.notifier)
+                .updateState(AppBarType.home);
+          },
+        ),
       _ => AppBarContent.hidden(),
     };
   }
@@ -79,7 +123,8 @@ class AppBarContent {
     this.buttonHeight = 0.0,
     this.animationHeight = 0.0,
     this.opacity = 0.0,
-    this.cb,
+    this.startPressed,
+    this.backPressed,
   });
 
   factory AppBarContent.hidden() => const AppBarContent._();
@@ -87,7 +132,7 @@ class AppBarContent {
   factory AppBarContent._welcome({
     required double screenHeight,
     required AppLocalizations localizations,
-    void Function()? cb,
+    void Function()? startPressed,
   }) =>
       AppBarContent._(
         title: localizations.welcomeTitle,
@@ -98,7 +143,7 @@ class AppBarContent {
         buttonHeight: 150.0,
         animationHeight: screenHeight,
         opacity: 1.0,
-        cb: cb,
+        startPressed: startPressed,
       );
 
   factory AppBarContent._login({
@@ -123,6 +168,32 @@ class AppBarContent {
         opacity: 1.0,
       );
 
+  factory AppBarContent._profile({
+    required double collapsedPanelHeight,
+    required AppLocalizations localizations,
+    void Function()? backPressed,
+  }) =>
+      AppBarContent._(
+        title: 'Profile',
+        logoHeight: 70.0,
+        animationHeight: collapsedPanelHeight,
+        opacity: 1.0,
+        backPressed: backPressed,
+      );
+
+  factory AppBarContent._settings({
+    required double collapsedPanelHeight,
+    required AppLocalizations localizations,
+    void Function()? backPressed,
+  }) =>
+      AppBarContent._(
+        title: 'Settings',
+        logoHeight: 70.0,
+        animationHeight: collapsedPanelHeight,
+        opacity: 1.0,
+        backPressed: backPressed,
+      );
+
   factory AppBarContent._home({
     required double collapsedPanelHeight,
     required AppLocalizations localizations,
@@ -142,7 +213,8 @@ class AppBarContent {
     required double topPadding,
     required double collapsedPanelHeight,
     required AppLocalizations localizations,
-    void Function()? cb,
+    void Function()? startPressed,
+    void Function()? backPressed,
   }) =>
       AppBarContent._(
         title: localizations.sosMainTitle,
@@ -153,6 +225,28 @@ class AppBarContent {
         buttonHeight: 150.0,
         animationHeight: screenHeight,
         opacity: 1.0,
-        cb: cb,
+        startPressed: startPressed,
+        backPressed: backPressed,
+      );
+
+  factory AppBarContent._gainControl({
+    required double screenHeight,
+    required double topPadding,
+    required double collapsedPanelHeight,
+    required AppLocalizations localizations,
+    void Function()? startPressed,
+    void Function()? backPressed,
+  }) =>
+      AppBarContent._(
+        title: localizations.gainControlLandingTitle,
+        subtitle: localizations.gainControlLandingSubtitle,
+        buttonTitle: localizations.startExercise,
+        logoHeight: 70.0,
+        subtitleHeight: 100.0,
+        buttonHeight: 150.0,
+        animationHeight: screenHeight,
+        opacity: 1.0,
+        startPressed: startPressed,
+        backPressed: backPressed,
       );
 }

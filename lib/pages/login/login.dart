@@ -4,13 +4,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/core/form_validators.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
-import 'package:self_help/core/router.dart';
 import 'package:self_help/services/services.dart';
 
 class Login extends HookConsumerWidget {
@@ -30,12 +30,9 @@ class Login extends HookConsumerWidget {
 
     final passwordVisible = useState(false);
 
-    final appBarProvider = ref.watch(collapsingAppBarProvider);
-    final appBarNotifier = ref.watch(collapsingAppBarProvider.notifier);
-
-    // todo: can be contant and shared
+    // todo: can be constant and shared
     final google = SvgPicture.asset(
-      'assets/icons/google.svg',
+      AssetsConstants.googleIcon,
       height: 50,
     );
 
@@ -190,6 +187,7 @@ class Login extends HookConsumerWidget {
       ref
           .read(collapsingAppBarProvider.notifier)
           .updateState(AppBarType.loading);
+      //todo: is this needed? if so why isn't it on the other login method?
       ref.read(routerListenerProvider.notifier).updateState(RoutePaths.loading);
 
       final result = await userService.loginWithGoogle(googleUser);

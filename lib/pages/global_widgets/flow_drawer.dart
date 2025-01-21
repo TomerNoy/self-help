@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
-// import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 
 class FlowDrawer extends ConsumerWidget {
@@ -10,6 +10,7 @@ class FlowDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final localization = AppLocalizations.of(context)!;
+    final logo = Image.asset(AssetsConstants.selfHelpIcon, width: 70);
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -18,9 +19,20 @@ class FlowDrawer extends ConsumerWidget {
             decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
             ),
-            child: Text(
-              'Self Help',
-              style: Theme.of(context).textTheme.headlineMedium,
+            child: Column(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: logo,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Self Help',
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        color: Colors.white,
+                      ),
+                ),
+              ],
             ),
           ),
           ListTile(

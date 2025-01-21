@@ -28,6 +28,8 @@ class CollapsingAppbar extends ConsumerWidget {
     final isExpanded = [
       AppBarType.welcome,
       AppBarType.sos,
+      AppBarType.gainControl,
+      AppBarType.loading,
     ].contains(appBarType);
 
     // logo
@@ -43,7 +45,14 @@ class CollapsingAppbar extends ConsumerWidget {
               AnimatedContainer(
                 duration: animationDuration,
                 width: 50,
-                height: appBarType == AppBarType.sos ? 50 : 0,
+                height: [
+                  AppBarType.sos,
+                  AppBarType.gainControl,
+                  AppBarType.profile,
+                  AppBarType.settings,
+                ].contains(appBarType)
+                    ? 50
+                    : 0,
                 child: FittedBox(
                   child: Center(
                     child: Container(
@@ -52,11 +61,7 @@ class CollapsingAppbar extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: IconButton(
-                        onPressed: () {
-                          ref
-                              .read(collapsingAppBarProvider.notifier)
-                              .updateState(AppBarType.home);
-                        },
+                        onPressed: config.backPressed,
                         icon: const Icon(
                           Icons.arrow_back_ios_new,
                         ),
@@ -115,7 +120,7 @@ class CollapsingAppbar extends ConsumerWidget {
         child: Align(
           alignment: Alignment.topCenter,
           child: WideButton(
-            onPressed: config.cb,
+            onPressed: config.startPressed,
             title: config.buttonTitle,
             type: ButtonType.transparent,
             width: double.infinity,

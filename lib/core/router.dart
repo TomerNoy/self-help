@@ -6,16 +6,15 @@ import 'package:self_help/pages/calculate_exercise/calc_exercise.dart';
 import 'package:self_help/pages/connecting/connecting.dart';
 import 'package:self_help/pages/enter_number/enter_number.dart';
 import 'package:self_help/pages/enter_number_reversed/enter_number_reversed.dart';
-import 'package:self_help/pages/gain_thought_controll_landing/gain_thought_controll_landing.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
 import 'package:self_help/pages/home/home.dart';
 import 'package:self_help/pages/loading.dart';
 import 'package:self_help/pages/login/login.dart';
 import 'package:self_help/pages/look_around_exercise/look_around_exercise.dart';
+import 'package:self_help/pages/magic_touch/magic_touch.dart';
 import 'package:self_help/pages/profile/profile.dart';
 import 'package:self_help/pages/register/register.dart';
 import 'package:self_help/pages/settings/settings.dart';
-import 'package:self_help/pages/sos_landing/sos_landing.dart';
 import 'package:self_help/pages/stress_level/stress_level.dart';
 import 'package:self_help/pages/thought_release/thought_release.dart';
 
@@ -66,16 +65,16 @@ GoRouter router({
         name: RoutePaths.settings.name,
         builder: (context, state) => const Settings(),
       ),
-      GoRoute(
-        path: RoutePaths.sosLanding.path,
-        name: RoutePaths.sosLanding.name,
-        builder: (context, state) => const SosLanding(),
-      ),
-      GoRoute(
-        path: RoutePaths.gainControlLanding.path,
-        name: RoutePaths.gainControlLanding.name,
-        builder: (context, state) => const GainControlLanding(),
-      ),
+      // GoRoute(
+      //   path: RoutePaths.sosLanding.path,
+      //   name: RoutePaths.sosLanding.name,
+      //   builder: (context, state) => const SosLanding(),
+      // ),
+      // GoRoute(
+      //   path: RoutePaths.gainControlLanding.path,
+      //   name: RoutePaths.gainControlLanding.name,
+      //   builder: (context, state) => const GainControlLanding(),
+      // ),
       GoRoute(
         path: RoutePaths.thoughtRelease.path,
         name: RoutePaths.thoughtRelease.name,
@@ -110,6 +109,11 @@ GoRouter router({
         path: RoutePaths.stressLevel.path,
         name: RoutePaths.stressLevel.name,
         builder: (context, state) => const StressLevel(),
+      ),
+      GoRoute(
+        path: RoutePaths.magicTouch.path,
+        name: RoutePaths.magicTouch.name,
+        builder: (context, state) => const MagicTouch(),
       ),
       GoRoute(
         path: RoutePaths.breathing.path,

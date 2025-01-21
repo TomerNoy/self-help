@@ -5,7 +5,19 @@ import 'package:self_help/services/services.dart';
 
 part 'collapsing_appbar_provider.g.dart';
 
-enum AppBarType { welcome, login, register, home, sos, hidden, loading, error }
+enum AppBarType {
+  welcome,
+  login,
+  register,
+  home,
+  sos,
+  hidden,
+  loading,
+  error,
+  gainControl,
+  profile,
+  settings,
+}
 
 @riverpod
 class CollapsingAppBar extends _$CollapsingAppBar {
@@ -22,7 +34,8 @@ class CollapsingAppBar extends _$CollapsingAppBar {
         routerProviderWasInit ? AppBarType.login : AppBarType.welcome,
       RoutePaths.register => AppBarType.register,
       RoutePaths.home => AppBarType.home,
-      RoutePaths.sosLanding => AppBarType.sos,
+      RoutePaths.profile => AppBarType.profile,
+      RoutePaths.settings => AppBarType.settings,
       _ => AppBarType.hidden,
     };
   }

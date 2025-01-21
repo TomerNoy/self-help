@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:self_help/core/constants/flow_route_constant.dart';
-import 'package:self_help/core/router.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/services/services.dart';
 
-part 'page_route_provider.g.dart';
+part 'page_flow_provider.g.dart';
 
 @immutable
 class PageFlowState {
@@ -23,6 +21,8 @@ class PageFlowState {
     int? index,
     FlowType? flowType,
   }) {
+    loggerService.debug(
+        '§ flow state changing to: ${index ?? this.index}, ${flowType ?? this.flowType}');
     return PageFlowState(
       index: index ?? this.index,
       flowType: flowType ?? this.flowType,
@@ -39,13 +39,18 @@ class PageFlowState {
 class PageFlow extends _$PageFlow {
   @override
   PageFlowState build() {
+    // default state
     return const PageFlowState(
       index: 0,
       flowType: FlowType.none,
     );
   }
 
+  List<String> get currentFlowList => FlowLists.flowListsMap[state.flowType]!;
+
+  // init flow by type
   void startFlow(FlowType flowType) {
+    loggerService.debug('§ flow state started for $flowType');
     final router = ref.read(routerStateProvider);
     final routeToGo = FlowLists.flowListsMap[flowType]!.first;
     router.pushNamed(routeToGo);
@@ -53,44 +58,49 @@ class PageFlow extends _$PageFlow {
       flowType: flowType,
       index: 0,
     );
-    loggerService.debug('flow state started for $flowType');
   }
 
+  // next with router control
   void next([
     Map<String, String> params = const {},
   ]) {
-    if (FlowLists.flowListsMap[state.flowType]!.length > state.index + 1) {
+    if (currentFlowList.length > state.index + 1) {
       state = state.copyWith(index: state.index + 1);
-      final router = ref.read(routerStateProvider);
-      final routeToGo = FlowLists.flowListsMap[state.flowType]![state.index];
-      router.pushNamed(routeToGo, pathParameters: params);
       loggerService.debug('flow state changed to: $state');
+      final router = ref.read(routerStateProvider);
+      final routeToGo = currentFlowList[state.index];
+      loggerService.debug('routeToGo: $routeToGo');
+      router.pushNamed(routeToGo, pathParameters: params);
     }
   }
 
+  // back with router control
   void back() {
     final router = ref.read(routerStateProvider);
     if (state.index > 0) {
       state = state.copyWith(index: state.index - 1);
-      final routeToGo = FlowLists.flowListsMap[state.flowType]![state.index];
+      final routeToGo = currentFlowList[state.index];
       router.pushNamed(routeToGo);
       loggerService.debug('flow state changed to: $state');
     } else {
-      resetBackToHome();
+      backToHome();
     }
 
     loggerService.debug('flow state changed to: $state');
   }
 
-  void backNoPop() {
+  // back without router control
+  void didPop() {
+    // if index is 0, then back to home is
+    // handled by resetFlowIfNeeded - triggered by RouterListenerProvider
     if (state.index > 0) {
       state = state.copyWith(index: state.index - 1);
-    } else if (state.index == 0) {
-      resetBackToHome();
+      loggerService.debug('flow state changed to: $state');
     }
   }
 
-  void resetBackToHome() {
+  // back to home
+  void backToHome() {
     loggerService.debug('Ending flow state, resetting state to 0');
     final router = ref.read(routerStateProvider);
     router.goNamed(RoutePaths.home.name);
@@ -99,6 +109,7 @@ class PageFlow extends _$PageFlow {
     // todo dispose this provider
   }
 
+  // internal reset
   void _reset() {
     state = const PageFlowState(
       index: 0,
@@ -106,21 +117,14 @@ class PageFlow extends _$PageFlow {
     );
   }
 
-  void updatePageIndex(RoutePaths path) {
-    if (state.flowType == FlowType.none) return;
+  // reset flow in case user exits flow
+  void resetFlowIfNeeded(RoutePaths path) {
+    loggerService.debug(
+      '§ updatePageIndex with path: $path, current state: $state',
+    );
 
-    final currentFlow = FlowLists.flowListsMap[state.flowType]!;
-    final index = currentFlow[state.index];
-    loggerService.debug('§§ routeChange: $path, flow $index');
-
-    if (path == RoutePaths.home) {
+    if (!currentFlowList.contains(path.name)) {
       _reset();
-    } else {
-      final newIndex = currentFlow.indexOf(path.name);
-      loggerService.debug('§§ routeChange: $newIndex');
-      if (newIndex != -1) {
-        state = state.copyWith(index: newIndex);
-      }
     }
   }
 }

@@ -22,51 +22,65 @@ class HomeCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(32),
-      ),
-      color: backgroundColor,
-      child: SizedBox(
-        height: 180,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 32,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      description,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
+    return Container(
+      margin: EdgeInsets.only(bottom: 16),
+      height: 180,
+      child: Stack(
+        alignment: Alignment.bottomLeft,
+        children: [
+          SizedBox(
+            height: 160,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(32),
+              ),
+              color: backgroundColor,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                description,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                overflow: TextOverflow.visible,
+                                maxLines: 2,
+                              ),
+                            ),
                           ),
-                      overflow: TextOverflow.visible,
-                      maxLines: 2,
+                          SizedBox(height: 16),
+                          WideButton(
+                            width: 160,
+                            title: buttonTitle,
+                            onPressed: onPressed,
+                            type: ButtonType.gradient,
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 16),
-                    WideButton(
-                      width: 180,
-                      title: buttonTitle,
-                      onPressed: onPressed,
-                      type: ButtonType.gradient,
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(width: 176),
+                ],
               ),
             ),
-            SvgPicture.asset(
-              imagePath,
-              height: 142,
-              width: 106,
-            ),
-          ],
-        ),
+          ),
+          Positioned(
+            top: 0,
+            left: 16,
+            child: SvgPicture.asset(imagePath, width: 160),
+          ),
+        ],
       ),
     );
   }

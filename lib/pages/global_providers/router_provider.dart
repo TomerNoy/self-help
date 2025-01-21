@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:self_help/core/constants/flow_route_constant.dart';
 import 'package:self_help/core/router.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
-import 'package:self_help/pages/global_providers/page_route_provider.dart';
+import 'package:self_help/pages/global_providers/page_flow_provider.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
 import 'package:self_help/services/services.dart';
 
@@ -18,21 +19,21 @@ GoRouter routerState(Ref ref) {
   var authState = ValueNotifier<UserAuthState>(UserAuthState.loading);
 
   authState.addListener(() {
-    loggerService.debug('§ authState listener triggered: ${authState.value}');
+    loggerService.debug('authState listener triggered: ${authState.value}');
   });
 
   ref
     ..onDispose(() {
-      loggerService.info('§ RouterProvider: disposed');
+      loggerService.info('RouterProvider: disposed');
       authState.dispose();
     })
     ..listen<AsyncValue<UserAuthState>>(
       userAuthProvider,
       (previous, next) {
-        loggerService.debug('§ userAuthProvider next: $next');
+        loggerService.debug('userAuthProvider next: $next');
         if (next.hasValue) {
           authState.value = next.value!;
-          loggerService.debug('§ authState updated to: ${authState.value}');
+          loggerService.debug('authState updated to: ${authState.value}');
         }
       },
     );
@@ -51,7 +52,7 @@ GoRouter routerState(Ref ref) {
       final shouldRedirectToLogin = isOnRestrictedPage || isLoadingRoute;
       final shouldRedirectToHome = !isOnRestrictedPage || isLoadingRoute;
 
-      loggerService.debug('§ authState: ${authState.value}');
+      loggerService.debug('authState: ${authState.value}');
 
       return switch (authState.value) {
         UserAuthState.authenticated =>
@@ -70,10 +71,10 @@ GoRouter routerState(Ref ref) {
       final newRoute =
           appRouter.routerDelegate.currentConfiguration.lastOrNull?.route.path;
 
-      loggerService.info('§ RouterProvider: route changed to $newRoute');
+      loggerService.info('RouterProvider: route changed to $newRoute');
 
       if (newRoute == null) {
-        loggerService.warning('§ Route changed to null');
+        loggerService.warning('Route changed to null');
       }
 
       final path = RoutePaths.fromPath(newRoute!);
@@ -86,7 +87,7 @@ GoRouter routerState(Ref ref) {
 
   ref.onDispose(
     () {
-      loggerService.info('§ RouterProvider: disposed');
+      loggerService.info('RouterProvider: disposed');
       appRouter.dispose();
     },
   );
@@ -102,7 +103,11 @@ class RouterListener extends _$RouterListener {
 
   void updateState(RoutePaths newState) {
     if (newState == state) return;
-    ref.read(pageFlowProvider.notifier).updatePageIndex(newState);
+
     state = newState;
+
+    // update flow if needed
+    if (ref.read(pageFlowProvider).flowType == FlowType.none) return;
+    ref.read(pageFlowProvider.notifier).resetFlowIfNeeded(newState);
   }
 }

@@ -6,6 +6,7 @@ import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/core/theme.dart';
 import 'package:self_help/pages/global_widgets/animated_background.dart';
 import 'package:self_help/pages/global_widgets/flow_appbar.dart';
+import 'package:self_help/pages/global_widgets/flow_drawer.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/breathing/providers/breathing_notifier.dart';
@@ -238,6 +239,7 @@ class Breathing extends ConsumerWidget {
             bottomNavigationBar: FlowNavigationBar(
               title: localizations.skip,
             ),
+            drawer: FlowDrawer(),
           ),
         ],
       ),

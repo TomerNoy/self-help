@@ -36,13 +36,17 @@ class UserService {
   AppUser get currentUser => AppUser.fromFirebaseUser(_auth.currentUser!);
 
   Future<Result<User>> registerUser(
-      String email, String password, String name) async {
+    String email,
+    String password,
+    String name,
+  ) async {
     try {
       final userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       await userCredential.user!.updateProfile(displayName: name);
+      //todo add validation
       await userCredential.user!.reload();
       final updatedUser = _auth.currentUser;
       loggerService
@@ -114,6 +118,52 @@ class UserService {
   Future<void> signOut() async {
     await _auth.signOut();
   }
+
+  Future<Result<String>> updateUserName({required String name}) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return Result.failure('User not found');
+
+      await user.updateProfile(displayName: name);
+      await user.reload();
+      loggerService.info('User name updated: ${user.displayName}');
+      return Result.success('updated successfully');
+    } catch (e) {
+      loggerService.error('Failed to update user name: $e');
+      return Result.failure('Failed to update user');
+    }
+  }
+
+  // Future<Result<String>> updateUserEmail({
+  //   required String email,
+  //   required String password,
+  // }) async {
+  //   try {
+  //     final user = FirebaseAuth.instance.currentUser;
+  //     if (user == null || user.email == email) {
+  //       return Result.failure('User data not found');
+  //     }
+  //
+  //     AuthCredential credential = EmailAuthProvider.credential(
+  //       email: user.email!,
+  //       password: password,
+  //     );
+  //
+  //     final update = await user.reauthenticateWithCredential(credential);
+  //
+  //     loggerService.info('User reauthenticated: ${update.user}');
+  //
+  //     await user.verifyBeforeUpdateEmail(email);
+  //
+  //     await user.reload();
+  //
+  //     loggerService.info('User updated: ${user.displayName} ${user.email}');
+  //     return Result.success('updated successfully');
+  //   } catch (e) {
+  //     loggerService.error('Failed to update user: $e');
+  //     return Result.failure('Failed to update user');
+  //   }
+  // }
 
   void dispose() {
     _userChangesSub.cancel();

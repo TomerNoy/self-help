@@ -14,6 +14,7 @@ enum RoutePaths {
   calculateExercise('/calculateExercise'),
   lookAroundExercise('/lookAroundExercise'),
   stressLevel('/stressLevel'),
+  magicTouch('/magicTouch'),
   emergency('/emergency'),
   butterfly('/butterfly'),
   breathing('/breathing');

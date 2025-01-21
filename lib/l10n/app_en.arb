@@ -52,12 +52,10 @@
   "@register": {
     "description": "register button"
   },
-
   "registering": "Registering",
   "@registering": {
     "description": "registering"
   },
-
   "backToLogging": "Back to login",
   "@backToLogging": {
     "description": "back to login link"
@@ -252,12 +250,29 @@
   "@addThoughtButtonTitle": {
     "description": "add thought button title"
   },
-    "startResilienceButtonTitle": "Resilience",
-    "@startResilienceButtonTitle": {
-        "description": "start resilience button title"
+  "startResilienceButtonTitle": "Resilience",
+  "@startResilienceButtonTitle": {
+    "description": "start resilience button title"
+  },
+  "startFindATherapistButtonTitle": "Therapist",
+  "@startFindATherapistButtonTitle": {
+    "description": "find a therapist button title"
+  },
+  "magicTouch": "Magic touch",
+  "@magicTouch": {
+    "description": "magic touch"
+  },
+  "magicTouchSubtitle": "In the exercise before us, we can perform self-relaxation through a hug or touch with breathing.\nYou can choose one of the exercises, or do both as needed",
+  "@magicTouchSubtitle": {
+    "description": "magic touch subtitle"
+  },
+    "calmingTouch": "Place one hand on your chest and the other hand on your stomach. Focus your attention on the touch between your hands and your body\nYou may notice the warmth that is created there. In addition, focus on the air that enters and exits.\nThis exercise will help you focus your attention and another step in the ability to calm down and return to balance even more.\nClick start and practice for about 30 seconds.",
+    "@calmingTouch": {
+      "description": "calming touch"
     },
-  "startFindATherapistButtonTitle": "Find a therapist",
-    "@startFindATherapistButtonTitle": {
-        "description": "find a therapist button title"
+    "butterflyHug": "Hug yourself tightly and calm your nervous system. Cross your arms over your chest and gently tap your shoulders. A simple and effective exercise for relaxation. Focus on deep breathing and feel the tension melt away.\\nPress start and practice for about 30 seconds.",
+    "@butterflyHug": {
+      "description": "butterfly hug"
     }
+
 }

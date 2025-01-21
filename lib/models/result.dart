@@ -11,4 +11,9 @@ class Result<T> {
   bool get isSuccess => data != null;
 
   bool get isFailure => error != null;
+
+  @override
+  String toString() {
+    return 'Result{data: $data, error: $error}';
+  }
 }
