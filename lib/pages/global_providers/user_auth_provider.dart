@@ -8,19 +8,12 @@ enum UserAuthState { authenticated, unauthenticated, hasError, loading }
 
 @riverpod
 Stream<UserAuthState> userAuth(Ref ref) async* {
-  yield* userService.authStateChanges
-      .map<UserAuthState>(
-        (user) {
-          if (user == null) {
-            return UserAuthState.unauthenticated;
-          } else {
-            return UserAuthState.authenticated;
-          }
-        },
-      )
-      .distinct()
-      .handleError((error, stackTrace) {
-        loggerService.error("Error in userAuth stream: $error", stackTrace);
-        return UserAuthState.hasError;
-      });
+  yield UserAuthState.loading;
+
+  yield* userService.authStateChanges.distinct().handleError(
+    (error, stackTrace) {
+      loggerService.error("Error in userAuth stream: $error", stackTrace);
+      return UserAuthState.hasError;
+    },
+  );
 }

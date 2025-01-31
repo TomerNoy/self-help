@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/debug_overlay.dart';
 import 'package:self_help/core/theme.dart';
+import 'package:self_help/pages/global_pages/app_overlay.dart';
 import 'package:self_help/pages/global_providers/local_language_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
-import 'package:self_help/pages/global_widgets/collapsing_appbar/collapsing_appbar.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 
 class App extends ConsumerWidget {
@@ -28,7 +28,8 @@ class App extends ConsumerWidget {
         return Stack(
           children: [
             child ?? const SizedBox.shrink(),
-            CollapsingAppbar(),
+            // CollapsingAppbar(),
+            AppOverlay(),
             DebugOverlay(),
           ],
         );

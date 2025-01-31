@@ -13,14 +13,10 @@ part 'router_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 GoRouter routerState(Ref ref) {
-  // final authProvider = ref.watch(userAuthProvider);
-
   final routerKey = GlobalKey<NavigatorState>(debugLabel: 'routerKey');
   var authState = ValueNotifier<UserAuthState>(UserAuthState.loading);
 
-  authState.addListener(() {
-    loggerService.debug('authState listener triggered: ${authState.value}');
-  });
+  var hasSeenWelcome = false;
 
   ref
     ..onDispose(() {
@@ -30,7 +26,6 @@ GoRouter routerState(Ref ref) {
     ..listen<AsyncValue<UserAuthState>>(
       userAuthProvider,
       (previous, next) {
-        loggerService.debug('userAuthProvider next: $next');
         if (next.hasValue) {
           authState.value = next.value!;
           loggerService.debug('authState updated to: ${authState.value}');
@@ -44,25 +39,41 @@ GoRouter routerState(Ref ref) {
     redirect: (context, state) async {
       final location = state.matchedLocation;
 
-      final isOnRestrictedPage = location != RoutePaths.login.path &&
-          location != RoutePaths.register.path;
+      final unrestrictedRoutes = [
+        RoutePaths.welcome.path,
+        RoutePaths.login.path,
+        RoutePaths.register.path,
+      ];
 
-      final isLoadingRoute = location == RoutePaths.loading.path;
+      final authValue = authState.value;
 
-      final shouldRedirectToLogin = isOnRestrictedPage || isLoadingRoute;
-      final shouldRedirectToHome = !isOnRestrictedPage || isLoadingRoute;
+      final onUnrestrictedPage = unrestrictedRoutes.contains(location);
 
-      loggerService.debug('authState: ${authState.value}');
+      loggerService.debug('authState: $authValue, location: $location');
 
-      return switch (authState.value) {
-        UserAuthState.authenticated =>
-          shouldRedirectToHome ? RoutePaths.home.path : null,
-        UserAuthState.unauthenticated =>
-          shouldRedirectToLogin ? RoutePaths.login.path : null,
-        UserAuthState.hasError => null,
-        UserAuthState.loading =>
-          isLoadingRoute ? null : RoutePaths.loading.path,
-      };
+      // authenticated
+      if (authValue == UserAuthState.authenticated) {
+        hasSeenWelcome = true;
+        if (onUnrestrictedPage) {
+          return RoutePaths.home.path;
+        }
+        return null;
+      }
+
+      // unauthenticated
+      if (authValue == UserAuthState.unauthenticated) {
+        // on restricted page
+        if (!onUnrestrictedPage) {
+          if (hasSeenWelcome) {
+            return RoutePaths.login.path;
+          } else {
+            hasSeenWelcome = true;
+            return RoutePaths.welcome.path;
+          }
+        }
+        return null;
+      }
+      return null;
     },
   );
 
@@ -98,7 +109,7 @@ GoRouter routerState(Ref ref) {
 class RouterListener extends _$RouterListener {
   @override
   RoutePaths build() {
-    return RoutePaths.loading;
+    return RoutePaths.home;
   }
 
   void updateState(RoutePaths newState) {

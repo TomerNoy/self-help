@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/models/app_user.dart';
-import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
-// import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/user_provider.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/services/services.dart';
-// import 'package:self_help/pages/global_widgets/wide_button.dart';
-// import 'package:self_help/pages/profile/widgets/profile_dialog_button.dart';
-// import 'package:self_help/services/services.dart';
 
 class Profile extends HookConsumerWidget {
   const Profile({super.key});
@@ -26,17 +20,9 @@ class Profile extends HookConsumerWidget {
       }
     }, []);
 
-    final topPadding = MediaQuery.of(context).padding.top;
-    final appBarHeight = Constants.collapsedAppBarHeight;
-    final pageStartFrom = appBarHeight + topPadding + 16;
-
     return Scaffold(
       body: ListView(
-        padding: EdgeInsets.only(
-          top: pageStartFrom,
-          left: 16,
-          right: 16,
-        ),
+        padding: EdgeInsets.all(16),
         children: [
           ListTile(
             title: const Text('Name'),
@@ -107,18 +93,18 @@ class Profile extends HookConsumerWidget {
                     return;
                   }
 
-                  ref
-                      .read(collapsingAppBarProvider.notifier)
-                      .updateState(AppBarType.loading);
+                  // ref
+                  //     .read(collapsingAppBarProvider.notifier)
+                  //     .updateState(AppBarType.loading);
 
                   final result =
                       await userService.updateUserName(name: newValue!);
 
                   loggerService.debug('result: $result');
 
-                  ref
-                      .read(collapsingAppBarProvider.notifier)
-                      .updateState(AppBarType.hidden);
+                  // ref
+                  //     .read(collapsingAppBarProvider.notifier)
+                  //     .updateState(AppBarType.hidden);
 
                   final message = result.isSuccess ? result.data : result.error;
                   loggerService.debug('message: $message');

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
+import 'package:self_help/core/constants/routes_constants.dart';
+import 'package:self_help/pages/global_providers/app_overlay_provider.dart';
 import 'package:self_help/pages/global_providers/page_flow_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
+// ignore: depend_on_referenced_packages
 import 'package:invert_colors/invert_colors.dart';
+import 'package:self_help/services/services.dart';
 
 class DebugOverlay extends HookConsumerWidget {
   const DebugOverlay({super.key});
@@ -16,7 +19,6 @@ class DebugOverlay extends HookConsumerWidget {
 
     final authProvider = ref.watch(userAuthProvider);
     final route = ref.watch(routerListenerProvider);
-    final appBarType = ref.watch(collapsingAppBarProvider);
     final pageFlow = ref.watch(pageFlowProvider);
 
     return Directionality(
@@ -35,49 +37,72 @@ class DebugOverlay extends HookConsumerWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Row(
-                            children: [
-                              Text('auth: '),
-                              Text('${authProvider.value?.name}'),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text('route: '),
-                              Text(route.name),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text('flow route: '),
-                              Text('${pageFlow.flowType}, ${pageFlow.index}'),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text('animated appBar: '),
-                              Text(appBarType.name),
-                            ],
-                          ),
-                          Divider(),
+                          // Row(
+                          //   children: [
+                          //     Text('auth: '),
+                          //     Text('${authProvider.value?.name}'),
+                          //   ],
+                          // ),
+                          // Row(
+                          //   children: [
+                          //     Text('route: '),
+                          //     Text(route.name),
+                          //   ],
+                          // ),
+                          // Row(
+                          //   children: [
+                          //     Text('flow route: '),
+                          //     Text('${pageFlow.flowType}, ${pageFlow.index}'),
+                          //   ],
+                          // ),
+                          // Divider(),
+                          // Wrap(
+                          //   alignment: WrapAlignment.center,
+                          //   crossAxisAlignment: WrapCrossAlignment.center,
+                          //   runSpacing: 4,
+                          //   spacing: 8,
+                          //   children: List.generate(
+                          //     AppOverlayType.values.length,
+                          //     (index) {
+                          //       return InkWell(
+                          //         onTap: () {
+                          //           ref
+                          //               .read(appOverlayProvider.notifier)
+                          //               .updateState(
+                          //                 AppOverlayState(
+                          //                   type: AppOverlayType.values[index],
+                          //                 ),
+                          //               );
+                          //         },
+                          //         child: Container(
+                          //           color: Colors.white.withAlpha(100),
+                          //           child: Text(
+                          //             AppOverlayType.values[index].name,
+                          //           ),
+                          //         ),
+                          //       );
+                          //     },
+                          //   ),
+                          // ),
+                          // Divider(),
                           Wrap(
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            runSpacing: 4,
+                            spacing: 8,
                             children: List.generate(
-                              AppBarType.values.length,
+                              RoutePaths.values.length,
                               (index) {
-                                return OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.all(0),
-                                  ),
-                                  onPressed: () {
-                                    ref
-                                        .watch(
-                                            collapsingAppBarProvider.notifier)
-                                        .updateState(AppBarType.values[index]);
+                                final route = RoutePaths.values[index];
+                                return InkWell(
+                                  onTap: () {
+                                    ref.read(routerStateProvider).pushNamed(
+                                          route.name,
+                                        );
                                   },
-                                  child: Text(
-                                    AppBarType.values[index].name.toString(),
-                                    style:
-                                        Theme.of(context).textTheme.labelSmall,
+                                  child: Container(
+                                    color: Colors.white.withAlpha(100),
+                                    child: Text(route.name),
                                   ),
                                 );
                               },

@@ -14,5 +14,9 @@ Future<void> main() async {
   );
 
   await ServiceProvider.init();
-  runApp(ProviderScope(child: const App()));
+  runApp(
+    ProviderScope(
+      child: const App(),
+    ),
+  );
 }

@@ -5,13 +5,17 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:self_help/models/app_user.dart';
 import 'package:self_help/models/result.dart';
+import 'package:self_help/pages/global_providers/user_auth_provider.dart';
 import 'package:self_help/services/services.dart';
 
 class UserService {
   UserService() {
+    _authStateChanges.add(UserAuthState.loading);
     _authChangesSub = _auth
         .authStateChanges()
-        .map((user) => user == null ? null : AppUser.fromFirebaseUser(user))
+        .map((user) => user == null
+            ? UserAuthState.unauthenticated
+            : UserAuthState.authenticated)
         .distinct()
         .listen(_authStateChanges.add);
 
@@ -25,13 +29,13 @@ class UserService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final _userChanges = BehaviorSubject<AppUser?>();
-  final _authStateChanges = BehaviorSubject<AppUser?>();
+  final _authStateChanges = BehaviorSubject<UserAuthState>();
 
   late final StreamSubscription<AppUser?> _userChangesSub;
-  late final StreamSubscription<AppUser?> _authChangesSub;
+  late final StreamSubscription<UserAuthState> _authChangesSub;
 
   Stream<AppUser?> get userChanges => _userChanges.stream;
-  Stream<AppUser?> get authStateChanges => _authStateChanges.stream;
+  Stream<UserAuthState> get authStateChanges => _authStateChanges.stream;
 
   AppUser get currentUser => AppUser.fromFirebaseUser(_auth.currentUser!);
 
@@ -41,6 +45,7 @@ class UserService {
     String name,
   ) async {
     try {
+      _authStateChanges.add(UserAuthState.loading);
       final userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -73,6 +78,8 @@ class UserService {
   }
 
   Future<Result<User>> loginUser(String email, String password) async {
+    _authStateChanges.add(UserAuthState.loading);
+    loggerService.info('Logging in user with email: $email');
     try {
       final userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -80,23 +87,17 @@ class UserService {
       );
       loggerService.info('User logged in ${userCredential.user}');
       return Result.success(userCredential.user!);
-    } on FirebaseAuthException catch (e) {
-      loggerService.error('Login failed', e);
-      switch (e.code) {
-        case 'user-not-found':
-          return Result.failure('No user found for this email.');
-        case 'wrong-password':
-          return Result.failure('Incorrect password.');
-        default:
-          return Result.failure('Login failed. Please try again.');
-      }
     } catch (e, st) {
       loggerService.error('Login failed', e, st);
+      if (e.toString().contains('credential is incorrect')) {
+        return Result.failure('Invalid email or password.');
+      }
       return Result.failure('An unexpected error occurred. Please try again.');
     }
   }
 
   Future<Result<User>> loginWithGoogle(GoogleSignInAccount googleUser) async {
+    _authStateChanges.add(UserAuthState.loading);
     try {
       final googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
@@ -116,6 +117,7 @@ class UserService {
   }
 
   Future<void> signOut() async {
+    _authStateChanges.add(UserAuthState.loading);
     await _auth.signOut();
   }
 
@@ -133,37 +135,6 @@ class UserService {
       return Result.failure('Failed to update user');
     }
   }
-
-  // Future<Result<String>> updateUserEmail({
-  //   required String email,
-  //   required String password,
-  // }) async {
-  //   try {
-  //     final user = FirebaseAuth.instance.currentUser;
-  //     if (user == null || user.email == email) {
-  //       return Result.failure('User data not found');
-  //     }
-  //
-  //     AuthCredential credential = EmailAuthProvider.credential(
-  //       email: user.email!,
-  //       password: password,
-  //     );
-  //
-  //     final update = await user.reauthenticateWithCredential(credential);
-  //
-  //     loggerService.info('User reauthenticated: ${update.user}');
-  //
-  //     await user.verifyBeforeUpdateEmail(email);
-  //
-  //     await user.reload();
-  //
-  //     loggerService.info('User updated: ${user.displayName} ${user.email}');
-  //     return Result.success('updated successfully');
-  //   } catch (e) {
-  //     loggerService.error('Failed to update user: $e');
-  //     return Result.failure('Failed to update user');
-  //   }
-  // }
 
   void dispose() {
     _userChangesSub.cancel();

@@ -79,15 +79,12 @@ class MagicTouch extends HookConsumerWidget {
                     style: OutlinedButton.styleFrom(
                       padding: EdgeInsets.symmetric(horizontal: 28),
                     ),
-                    onPressed: () {
-                      provider != null
-                          ? notifier.stop()
-                          : notifier.startTimer();
-                    },
+                    // toggle timer
+                    onPressed: () => notifier.toggleTimer(),
                     child: Row(
                       children: [
                         Expanded(
-                          child: provider == null
+                          child: !provider.isActive
                               ? Text(
                                   'התחל',
                                   textAlign: TextAlign.center,
@@ -105,7 +102,7 @@ class MagicTouch extends HookConsumerWidget {
                         Transform.flip(
                           flipX: true,
                           child: Icon(
-                            provider != null ? Icons.stop : Icons.play_arrow,
+                            provider.isActive ? Icons.stop : Icons.play_arrow,
                             size: 24,
                           ),
                         )
@@ -119,7 +116,7 @@ class MagicTouch extends HookConsumerWidget {
         ),
         bottomNavigationBar: FlowNavigationBar(
           title: localizations.continueButtonTitle,
-          disabled: !notifier.isFinished,
+          disabled: provider.isFinished,
         ),
         drawer: FlowDrawer(),
       ),

@@ -6,13 +6,41 @@ import 'package:self_help/services/services.dart';
 
 part 'magic_touch_provider.g.dart';
 
+class TimerState {
+  final int count;
+  final bool isFinished;
+  final bool isActive;
+
+  TimerState({
+    this.count = 0,
+    this.isFinished = false,
+    this.isActive = false,
+  });
+
+  TimerState copyWith({
+    int? count,
+    bool? isFinished,
+    bool? isActive,
+  }) {
+    return TimerState(
+      count: count ?? this.count,
+      isFinished: isFinished ?? this.isFinished,
+      isActive: isActive ?? this.isActive,
+    );
+  }
+
+  @override
+  toString() {
+    return 'TimerState(count: $count, isFinished: $isFinished, isActive: $isActive)';
+  }
+}
+
 @riverpod
 class MagicTouch extends _$MagicTouch {
   Timer? _timer;
-  bool isFinished = false;
 
   @override
-  int? build() {
+  TimerState build() {
     ref.onDispose(
       () {
         loggerService.debug('disposing magic touch notifier');
@@ -20,29 +48,52 @@ class MagicTouch extends _$MagicTouch {
         _timer = null;
       },
     );
-    return null;
+    return TimerState();
   }
 
   void startTimer() {
-    if (state != null) return;
+    if (state.isActive) return;
 
-    state = 0;
+    state = state.copyWith(isActive: true);
 
     _timer = Timer.periodic(
       Constants.timerDuration,
       (ticker) {
-        if (state == 30) {
-          stop();
-          isFinished = true;
+        if (state.count == 30) {
+          _cancelTimer();
+          state = state.copyWith(
+            isFinished: true,
+            count: 0,
+            isActive: false,
+          );
+
           return;
         }
-        state = ticker.tick;
+        state = state.copyWith(
+          count: ticker.tick,
+        );
       },
     );
   }
 
-  void stop() {
+  void toggleTimer() {
+    if (state.isActive) {
+      _cancelTimer();
+    } else {
+      startTimer();
+    }
+  }
+
+  void _cancelTimer() {
     _timer?.cancel();
-    state = null;
+    _timer = null;
+  }
+
+  void stop() {
+    _cancelTimer();
+    state = state.copyWith(
+      isActive: false,
+      count: 0,
+    );
   }
 }
