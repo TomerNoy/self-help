@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:self_help/core/constants/constants.dart';
+import 'package:self_help/l10n/generated/app_localizations.dart';
+import 'package:self_help/pages/login/widgets/welcom_language_button.dart';
 
 class Settings extends ConsumerWidget {
   const Settings({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final topPadding = MediaQuery.of(context).padding.top;
-    final appBarHeight = Constants.collapsedAppBarHeight;
-    final pageStartFrom = appBarHeight + topPadding + 16;
+    final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: ListView(
-        padding: EdgeInsets.only(
-          top: pageStartFrom,
-          left: 16,
-          right: 16,
-        ),
+        padding: EdgeInsets.all(16),
         children: [
           ListTile(
-            title: const Text('_'),
-            subtitle: Text('_'),
+            leading: const Icon(Icons.language),
+            title: Text(localizations.language),
+            trailing: WelcomeLanguageButton(),
           ),
         ],
       ),

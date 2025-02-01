@@ -266,13 +266,24 @@
   "@magicTouchSubtitle": {
     "description": "magic touch subtitle"
   },
-    "calmingTouch": "Place one hand on your chest and the other hand on your stomach. Focus your attention on the touch between your hands and your body\nYou may notice the warmth that is created there. In addition, focus on the air that enters and exits.\nThis exercise will help you focus your attention and another step in the ability to calm down and return to balance even more.\nClick start and practice for about 30 seconds.",
-    "@calmingTouch": {
-      "description": "calming touch"
-    },
-    "butterflyHug": "Hug yourself tightly and calm your nervous system. Cross your arms over your chest and gently tap your shoulders. A simple and effective exercise for relaxation. Focus on deep breathing and feel the tension melt away.\\nPress start and practice for about 30 seconds.",
-    "@butterflyHug": {
-      "description": "butterfly hug"
-    }
-
+  "calmingTouch": "Place one hand on your chest and the other hand on your stomach. Focus your attention on the touch between your hands and your body\nYou may notice the warmth that is created there. In addition, focus on the air that enters and exits.\nThis exercise will help you focus your attention and another step in the ability to calm down and return to balance even more.\nClick start and practice for about 30 seconds.",
+  "@calmingTouch": {
+    "description": "calming touch"
+  },
+  "butterflyHug": "Hug yourself tightly and calm your nervous system. Cross your arms over your chest and gently tap your shoulders. A simple and effective exercise for relaxation. Focus on deep breathing and feel the tension melt away.\\nPress start and practice for about 30 seconds.",
+  "@butterflyHug": {
+    "description": "butterfly hug"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "language"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "settings"
+  },
+  "profile": "Profile",
+  "@profile": {
+    "description": "profile"
+  }
 }

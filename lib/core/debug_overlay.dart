@@ -49,12 +49,12 @@ class DebugOverlay extends HookConsumerWidget {
                           //     Text(route.name),
                           //   ],
                           // ),
-                          // Row(
-                          //   children: [
-                          //     Text('flow route: '),
-                          //     Text('${pageFlow.flowType}, ${pageFlow.index}'),
-                          //   ],
-                          // ),
+                          Row(
+                            children: [
+                              Text('flow route: '),
+                              Text('${pageFlow.flowType}, ${pageFlow.index}'),
+                            ],
+                          ),
                           // Divider(),
                           // Wrap(
                           //   alignment: WrapAlignment.center,
@@ -85,29 +85,29 @@ class DebugOverlay extends HookConsumerWidget {
                           //   ),
                           // ),
                           // Divider(),
-                          Wrap(
-                            alignment: WrapAlignment.center,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            runSpacing: 4,
-                            spacing: 8,
-                            children: List.generate(
-                              RoutePaths.values.length,
-                              (index) {
-                                final route = RoutePaths.values[index];
-                                return InkWell(
-                                  onTap: () {
-                                    ref.read(routerStateProvider).pushNamed(
-                                          route.name,
-                                        );
-                                  },
-                                  child: Container(
-                                    color: Colors.white.withAlpha(100),
-                                    child: Text(route.name),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                          // Wrap(
+                          //   alignment: WrapAlignment.center,
+                          //   crossAxisAlignment: WrapCrossAlignment.center,
+                          //   runSpacing: 4,
+                          //   spacing: 8,
+                          //   children: List.generate(
+                          //     RoutePaths.values.length,
+                          //     (index) {
+                          //       final route = RoutePaths.values[index];
+                          //       return InkWell(
+                          //         onTap: () {
+                          //           ref.read(routerStateProvider).pushNamed(
+                          //                 route.name,
+                          //               );
+                          //         },
+                          //         child: Container(
+                          //           color: Colors.white.withAlpha(100),
+                          //           child: Text(route.name),
+                          //         ),
+                          //       );
+                          //     },
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

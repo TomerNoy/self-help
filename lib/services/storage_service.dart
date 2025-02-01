@@ -11,8 +11,9 @@ class StorageService {
   int readBaseHoldDuration() => _pref.getInt('BaseHoldDuration') ?? 2;
   int readRepeats() => _pref.getInt('Repeats') ?? 4;
 
-  String readPreferredLanguage() =>
-      _pref.getString('PreferredLanguage') ?? 'he';
+  String readPreferredLanguage() {
+    return _pref.getString('PreferredLanguage') ?? 'he';
+  }
 
   void writeBreathInDuration(int i) => _pref.setInt('BreathInDuration', i);
   void writePeakHoldDuration(int i) => _pref.setInt('PeakHoldDuration', i);
@@ -20,6 +21,7 @@ class StorageService {
   void writeBaseHoldDuration(int i) => _pref.setInt('BaseHoldDuration', i);
   void writeRepeats(int i) => _pref.setInt('Repeats', i);
 
-  void writePreferredLanguage(String language) =>
-      _pref.setString('PreferredLanguage', language);
+  void writePreferredLanguage(String language) {
+    _pref.setString('PreferredLanguage', language);
+  }
 }

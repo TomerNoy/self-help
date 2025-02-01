@@ -19,10 +19,15 @@ class WelcomeLanguageButton extends ConsumerWidget {
           locale.languageCode == 'en',
         ],
         borderRadius: BorderRadius.circular(10),
-        selectedColor: Theme.of(context).colorScheme.onPrimary,
         children: [
-          Padding(padding: padding, child: Text('עברית')),
-          Padding(padding: padding, child: Text('English')),
+          Padding(
+            padding: padding,
+            child: Text('עברית'),
+          ),
+          Padding(
+            padding: padding,
+            child: Text('English'),
+          ),
         ],
         onPressed: (i) {
           ref.read(localeNotifierProvider.notifier).updateLocal(i);
