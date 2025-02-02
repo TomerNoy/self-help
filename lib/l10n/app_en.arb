@@ -285,5 +285,9 @@
   "profile": "Profile",
   "@profile": {
     "description": "profile"
+  },
+  "home": "Home",
+  "@home": {
+    "description": "home"
   }
 }

@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/core/form_validators.dart';
-import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/services/services.dart';

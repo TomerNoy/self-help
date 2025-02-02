@@ -3,12 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/pages/breathing/breathing.dart';
 import 'package:self_help/pages/calculate_exercise/calc_exercise.dart';
-import 'package:self_help/pages/connecting/connecting.dart';
 import 'package:self_help/pages/enter_number/enter_number.dart';
 import 'package:self_help/pages/enter_number_reversed/enter_number_reversed.dart';
 import 'package:self_help/pages/frame/frame.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
 import 'package:self_help/pages/home/home.dart';
+import 'package:self_help/pages/home_shell/home_frame.dart';
 import 'package:self_help/pages/login/login.dart';
 import 'package:self_help/pages/look_around_exercise/look_around_exercise.dart';
 import 'package:self_help/pages/magic_touch/magic_touch.dart';
@@ -55,20 +55,28 @@ GoRouter router({
               name: RoutePaths.register.name,
               builder: (context, state) => const Register(),
             ),
-            GoRoute(
-              path: RoutePaths.home.path,
-              name: RoutePaths.home.name,
-              builder: (context, state) => const Home(),
-            ),
-            GoRoute(
-              path: RoutePaths.profile.path,
-              name: RoutePaths.profile.name,
-              builder: (context, state) => const Profile(),
-            ),
-            GoRoute(
-              path: RoutePaths.settings.path,
-              name: RoutePaths.settings.name,
-              builder: (context, state) => const Settings(),
+            ShellRoute(
+              builder: (context, state, child) {
+                final page = RoutePaths.fromPath(state.fullPath ?? '');
+                return HomeFrame(page: page, child: child);
+              },
+              routes: [
+                GoRoute(
+                  path: RoutePaths.home.path,
+                  name: RoutePaths.home.name,
+                  builder: (context, state) => const Home(),
+                ),
+                GoRoute(
+                  path: RoutePaths.profile.path,
+                  name: RoutePaths.profile.name,
+                  builder: (context, state) => const Profile(),
+                ),
+                GoRoute(
+                  path: RoutePaths.settings.path,
+                  name: RoutePaths.settings.name,
+                  builder: (context, state) => const Settings(),
+                ),
+              ],
             ),
             GoRoute(
               path: RoutePaths.thoughtRelease.path,

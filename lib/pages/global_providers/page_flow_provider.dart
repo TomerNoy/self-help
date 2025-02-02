@@ -22,7 +22,7 @@ class PageFlowState {
     FlowType? flowType,
   }) {
     loggerService.debug(
-        '§ flow state changing to: ${index ?? this.index}, ${flowType ?? this.flowType}');
+        'flow state changing to: ${index ?? this.index}, ${flowType ?? this.flowType}');
     return PageFlowState(
       index: index ?? this.index,
       flowType: flowType ?? this.flowType,
@@ -50,7 +50,7 @@ class PageFlow extends _$PageFlow {
 
   // init flow by type
   void startFlow(FlowType flowType) {
-    loggerService.debug('§ flow state started for $flowType');
+    loggerService.debug('flow state started for $flowType');
     final router = ref.read(routerStateProvider);
     final routeToGo = FlowLists.flowListsMap[flowType]!.first;
     router.pushNamed(routeToGo);
@@ -120,7 +120,7 @@ class PageFlow extends _$PageFlow {
   // reset flow in case user exits flow
   void resetFlowIfNeeded(RoutePaths path) {
     loggerService.debug(
-      '§ updatePageIndex with path: $path, current state: $state',
+      'updatePageIndex with path: $path, current state: $state',
     );
 
     if (!currentFlowList.contains(path.name)) {

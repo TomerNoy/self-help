@@ -82,7 +82,7 @@ GoRouter routerState(Ref ref) {
       final newRoute =
           appRouter.routerDelegate.currentConfiguration.lastOrNull?.route.path;
 
-      loggerService.info('RouterProvider: route changed to $newRoute');
+      loggerService.info('§ RouterProvider: route changed to $newRoute');
 
       if (newRoute == null) {
         loggerService.warning('Route changed to null');

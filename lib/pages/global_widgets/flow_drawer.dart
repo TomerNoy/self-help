@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
+import 'package:self_help/core/theme.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 
 class FlowDrawer extends ConsumerWidget {
@@ -17,7 +18,7 @@ class FlowDrawer extends ConsumerWidget {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              color: gradientEndColor,
             ),
             child: Column(
               children: [

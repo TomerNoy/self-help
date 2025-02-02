@@ -46,19 +46,16 @@ class Profile extends HookConsumerWidget {
             subtitle: Text('${user?.email}'),
             leading: Icon(Icons.email, size: 32),
           ),
+          SizedBox(height: 32),
+          Center(
+            child: WideButton(
+              onPressed: () async => await userService.signOut(),
+              title: 'Sign Out',
+              type: ButtonType.transparent,
+              width: 200,
+            ),
+          )
         ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        height: 100,
-        color: Colors.transparent,
-        child: Center(
-          child: WideButton(
-            onPressed: () async => await userService.signOut(),
-            title: 'Sign Out',
-            type: ButtonType.transparent,
-            width: 200,
-          ),
-        ),
       ),
     );
   }

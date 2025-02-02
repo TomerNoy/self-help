@@ -6,7 +6,6 @@ import 'package:self_help/core/theme.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/home/widgets/home_card.dart';
-import 'package:self_help/pages/home/widgets/home_route.dart';
 
 class Home extends HookConsumerWidget {
   const Home({super.key});
@@ -20,29 +19,6 @@ class Home extends HookConsumerWidget {
         padding: const EdgeInsets.all(16),
         shrinkWrap: true,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              HomeRoute(
-                label: 'פרופיל',
-                icon: Icons.person,
-                onPressed: () {
-                  final provider = ref.read(routerStateProvider);
-                  provider.pushNamed(RoutePaths.profile.name);
-                },
-              ),
-              HomeRoute(
-                label: 'הגדרות',
-                icon: Icons.settings,
-                onPressed: () {
-                  final provider = ref.read(routerStateProvider);
-                  provider.pushNamed(RoutePaths.settings.name);
-                },
-              ),
-            ],
-          ),
-          SizedBox(height: 16),
           HomeCard(
             backgroundColor: greyBackgroundColor,
             description: 'פרוטוקול להתמודדות עם לחץ/חרדה',
