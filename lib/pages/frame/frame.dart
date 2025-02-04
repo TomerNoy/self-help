@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:self_help/core/constants/assets_constants.dart';
+import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/core/constants/flow_route_constant.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
@@ -11,7 +12,7 @@ import 'package:self_help/pages/global_widgets/animated_background.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/services/services.dart';
 
-enum AnimatedScreenType { expanded, collapsed, hidden }
+enum AnimatedScreenType { expanded, collapsedLong, collapsedShort, hidden }
 
 class Frame extends ConsumerWidget {
   const Frame({
@@ -27,47 +28,41 @@ class Frame extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     loggerService.info('page $page');
 
-    final animatedScreenClipBehavior = Clip.antiAlias;
-    final animatedPageKey = ValueKey('${page?.name}');
-    final localizations = AppLocalizations.of(context)!;
-    final animatedScreenPadding = const EdgeInsets.all(16);
-    final animatiodDuration = Duration(milliseconds: 500);
-    final expandedHeight = MediaQuery.of(context).size.height;
+    final animatedScreenType = switch (page) {
+      // expanded
+      RoutePaths.welcome ||
+      RoutePaths.sosLanding ||
+      RoutePaths.gainControlLanding =>
+        AnimatedScreenType.expanded,
+      // collapsed long
+      RoutePaths.home => AnimatedScreenType.collapsedLong,
+      // collapsed short
+      RoutePaths.login ||
+      RoutePaths.register ||
+      RoutePaths.settings ||
+      RoutePaths.profile =>
+        AnimatedScreenType.collapsedShort,
+      // hidden
+      _ => AnimatedScreenType.hidden,
+    };
 
-    final titleTheme = Theme.of(context).textTheme.headlineMedium;
+    final animatedScreenHeight = switch (animatedScreenType) {
+      AnimatedScreenType.expanded => MediaQuery.of(context).size.height,
+      AnimatedScreenType.collapsedLong => 200.0,
+      AnimatedScreenType.collapsedShort => 150.0,
+      AnimatedScreenType.hidden => 0.0,
+    };
 
-    final hasAppBar = _hasAppBar();
-    final hasSubtitles = _hasSubtitles();
-    final hasLogo = _hasLogo();
-
-    final animatedScreenType = _getAnimatedScreenType();
-    final isExpanded = animatedScreenType == AnimatedScreenType.expanded;
-    final animatedScreenHeight = _getAnimatedScreenHeight(
-      animatedScreenType,
-      expandedHeight,
-    );
-
-    final title = _getTitle(localizations, ref);
-    final subtitle = _getSubtitle(localizations);
-
-    final animatedScreenDecorations = BoxDecoration(
-      borderRadius: animatedScreenType == AnimatedScreenType.collapsed
+    final animatedScreenDecoration = BoxDecoration(
+      borderRadius: [
+        AnimatedScreenType.collapsedLong,
+        AnimatedScreenType.collapsedShort
+      ].contains(animatedScreenType)
           ? BorderRadius.only(
               bottomLeft: Radius.circular(50),
               bottomRight: Radius.circular(50),
             )
           : null,
-    );
-
-    final titleWidget = Text(
-      title,
-      style: titleTheme,
-      textAlign: TextAlign.center,
-    );
-
-    final logoWidget = Image.asset(
-      AssetsConstants.selfHelpNoBk,
-      height: page == RoutePaths.welcome ? 140.0 : 60.0,
     );
 
     return PopScope(
@@ -77,10 +72,10 @@ class Frame extends ConsumerWidget {
           children: [
             // animated screen
             AnimatedContainer(
-              clipBehavior: animatedScreenClipBehavior,
+              clipBehavior: Clip.antiAlias,
               height: animatedScreenHeight,
-              duration: animatiodDuration,
-              decoration: animatedScreenDecorations,
+              duration: Constants.animatiodDuration,
+              decoration: animatedScreenDecoration,
               child: Stack(
                 children: [
                   SizedBox.expand(
@@ -89,39 +84,25 @@ class Frame extends ConsumerWidget {
                   // animated screen content
                   SafeArea(
                     child: AnimatedSwitcher(
-                      duration: animatiodDuration,
+                      duration: Constants.animatiodDuration,
                       transitionBuilder: (child, animation) {
                         return FadeTransition(
+                          // key: ValueKey('${page?.name}'),
                           opacity: animation,
                           child: child,
                         );
                       },
-                      child: Center(
-                        key: animatedPageKey,
-                        child: Padding(
-                          padding: animatedScreenPadding,
-                          child: Column(
-                            children: [
-                              // logo
-                              if (hasLogo)
-                                _buildLogoWidget(hasAppBar, logoWidget, ref),
-
-                              // title and subtitles
-                              hasSubtitles
-                                  ? _buildTitleAndSubtitleWidget(
-                                      titleWidget,
-                                      subtitle,
-                                      isExpanded,
-                                      ref,
-                                      context,
-                                    )
-                                  : _buildTitleWidget(titleWidget),
-
-                              // enter button
-                              if (isExpanded) _buildButtonWidget(ref),
-                            ],
-                          ),
-                        ),
+                      // sizeed box used only for the key
+                      child: SizedBox(
+                        key: ValueKey('${page?.name}'),
+                        child: switch (animatedScreenType) {
+                          AnimatedScreenType.hidden => const SizedBox.shrink(),
+                          _ => _buildVisibleAnimatedScreenContent(
+                              context,
+                              ref,
+                              animatedScreenType,
+                            ),
+                        },
                       ),
                     ),
                   ),
@@ -135,145 +116,126 @@ class Frame extends ConsumerWidget {
     );
   }
 
-  bool _hasAppBar() {
-    return [
-      RoutePaths.sosLanding,
-      RoutePaths.gainControlLanding,
-      RoutePaths.profile,
-      RoutePaths.settings,
-    ].contains(page);
+  void _startPressed(WidgetRef ref) {
+    if (page == RoutePaths.welcome) {
+      final provider = ref.read(routerStateProvider);
+      provider.pushNamed(RoutePaths.login.name);
+    } else {
+      final provider = ref.read(pageFlowProvider.notifier);
+      provider.startFlow(FlowType.sos);
+    }
   }
 
-  bool _hasSubtitles() {
-    return [
+  void _backPressed(WidgetRef ref) {
+    ref.read(routerStateProvider).goNamed(RoutePaths.welcome.name);
+  }
+
+  Widget _buildTitleWidget(
+    BuildContext context,
+    AppLocalizations localizations,
+    WidgetRef ref,
+  ) {
+    return Text(
+      switch (page) {
+        RoutePaths.login => localizations.login,
+        RoutePaths.register => localizations.registering,
+        RoutePaths.welcome => localizations.welcomeTitle,
+        RoutePaths.sosLanding => localizations.sosMainTitle,
+        RoutePaths.profile => localizations.profile,
+        RoutePaths.settings => localizations.settings,
+        RoutePaths.home => localizations.welcomeMessage(
+            ref.read(userProvider).valueOrNull?.displayName ?? ''),
+        _ => ''
+      },
+      style: Theme.of(context).textTheme.headlineMedium,
+      textAlign: TextAlign.center,
+    );
+  }
+
+  Widget _buildVisibleAnimatedScreenContent(
+    BuildContext context,
+    WidgetRef ref,
+    AnimatedScreenType animatedScreenType,
+  ) {
+    final localizations = AppLocalizations.of(context)!;
+
+    final titleWidget = _buildTitleWidget(context, localizations, ref);
+
+    final hasBackButton = [
+      RoutePaths.sosLanding,
+    ].contains(page);
+
+    final hasLogo = [
+      RoutePaths.welcome,
+    ].contains(page);
+
+    final hasSubtitle = [
       RoutePaths.welcome,
       RoutePaths.home,
       RoutePaths.sosLanding,
     ].contains(page);
-  }
 
-  bool _hasLogo() {
-    return [
+    final hasStartButton = [
       RoutePaths.welcome,
       RoutePaths.sosLanding,
-      RoutePaths.login,
-      RoutePaths.register,
-      RoutePaths.profile,
-      RoutePaths.settings,
-      RoutePaths.gainControlLanding,
     ].contains(page);
-  }
 
-  AnimatedScreenType _getAnimatedScreenType() {
-    return switch (page) {
-      RoutePaths.welcome ||
-      RoutePaths.sosLanding ||
-      RoutePaths.gainControlLanding =>
-        AnimatedScreenType.expanded,
-      RoutePaths.login ||
-      RoutePaths.register ||
-      RoutePaths.home ||
-      RoutePaths.settings ||
-      RoutePaths.profile =>
-        AnimatedScreenType.collapsed,
-      _ => AnimatedScreenType.hidden,
-    };
-  }
-
-  String _getTitle(
-    AppLocalizations localizations,
-    WidgetRef ref,
-  ) {
-    return switch (page) {
-      RoutePaths.login => localizations.login,
-      RoutePaths.register => localizations.registering,
-      RoutePaths.welcome => localizations.welcomeTitle,
-      RoutePaths.sosLanding => localizations.sosMainTitle,
-      RoutePaths.profile => localizations.profile,
-      RoutePaths.settings => localizations.settings,
-      RoutePaths.home => localizations.welcomeMessage(
-          ref.watch(userProvider).valueOrNull?.displayName ?? ''),
-      _ => ''
-    };
-  }
-
-  double _getAnimatedScreenHeight(
-    AnimatedScreenType animatedScreenType,
-    double expandedHeight,
-  ) {
-    return switch (animatedScreenType) {
-      AnimatedScreenType.expanded => expandedHeight,
-      AnimatedScreenType.collapsed => 200.0,
-      AnimatedScreenType.hidden => 0.0,
-    };
-  }
-
-  String _getSubtitle(AppLocalizations localizations) {
-    return switch (page) {
-      RoutePaths.welcome => localizations.welcomeSubtitle,
-      RoutePaths.profile => 'Profile',
-      RoutePaths.home => localizations.homeSubtitle,
-      RoutePaths.sosLanding => localizations.sosMainInfo,
-      _ => ''
-    };
-  }
-
-  Widget _buildLogoWidget(bool hasAppBar, Widget logoWidget, WidgetRef ref) {
-    return Expanded(
-      child: Center(
-        child: hasAppBar
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton.filled(
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
-                        Colors.white30,
-                      ),
-                    ),
-                    onPressed: () {
-                      ref
-                          .read(routerStateProvider)
-                          .goNamed(RoutePaths.welcome.name);
-                    },
-                    icon: Icon(
-                      Icons.arrow_back_ios_new,
-                      color: Colors.black,
-                    ),
-                  ),
-                  logoWidget,
-                  SizedBox(width: 48),
-                ],
-              )
-            : logoWidget,
-      ),
-    );
-  }
-
-  Widget _buildButtonWidget(WidgetRef ref) {
-    return Expanded(
-      child: Center(
-        child: WideButton(
-          title: '${page?.name}',
-          onPressed: () {
-            final provider = ref.read(pageFlowProvider.notifier);
-            provider.startFlow(FlowType.sos);
-          },
-          type: ButtonType.transparent,
-          width: double.infinity,
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            if (hasBackButton) _buildBackButton(ref),
+            if (hasLogo) _buildLogo(),
+            hasSubtitle
+                ? _buildTitltWithSubtitle(context, titleWidget, localizations)
+                : _buildTitle(titleWidget),
+            if (hasStartButton) _buildStartButton(localizations, ref),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildTitleAndSubtitleWidget(
-    Text titleWidget,
-    String subtitle,
-    bool hasButton,
-    WidgetRef ref,
+  Widget _buildBackButton(WidgetRef ref) {
+    return Expanded(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          IconButton.filled(
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.all(
+                Colors.white30,
+              ),
+            ),
+            onPressed: () => _backPressed(ref),
+            icon: Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLogo() {
+    return Expanded(
+      child: Center(
+        child: Image.asset(
+          AssetsConstants.selfHelpNoBk,
+          height: page == RoutePaths.welcome ? 140.0 : 60.0,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTitltWithSubtitle(
     BuildContext context,
+    Widget titleWidget,
+    AppLocalizations localizations,
   ) {
-    final subtitleTheme = Theme.of(context).textTheme.bodyMedium;
     return Expanded(
       child: Column(
         children: [
@@ -292,8 +254,14 @@ class Frame extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  subtitle,
-                  style: subtitleTheme,
+                  switch (page) {
+                    RoutePaths.welcome => localizations.welcomeSubtitle,
+                    RoutePaths.profile => localizations.profile,
+                    RoutePaths.home => localizations.homeSubtitle,
+                    RoutePaths.sosLanding => localizations.sosMainInfo,
+                    _ => ''
+                  },
+                  style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -304,10 +272,30 @@ class Frame extends ConsumerWidget {
     );
   }
 
-  Widget _buildTitleWidget(Widget titleWidget) {
+  Widget _buildTitle(Widget titleWidget) {
     return Expanded(
       child: Center(
         child: titleWidget,
+      ),
+    );
+  }
+
+  Widget _buildStartButton(
+    AppLocalizations localizations,
+    WidgetRef ref,
+  ) {
+    return Expanded(
+      child: Center(
+        child: WideButton(
+          title: switch (page) {
+            RoutePaths.welcome => localizations.welcomeButtonTitle,
+            RoutePaths.sosLanding => localizations.startExercise,
+            _ => ''
+          },
+          onPressed: () => _startPressed(ref),
+          type: ButtonType.transparent,
+          width: double.infinity,
+        ),
       ),
     );
   }

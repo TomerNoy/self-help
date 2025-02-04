@@ -49,6 +49,15 @@ class Profile extends HookConsumerWidget {
           SizedBox(height: 32),
           Center(
             child: WideButton(
+              onPressed: () {},
+              title: 'Register as a Therapist',
+              type: ButtonType.gradient,
+              width: 300,
+            ),
+          ),
+          SizedBox(height: 32),
+          Center(
+            child: WideButton(
               onPressed: () async => await userService.signOut(),
               title: 'Sign Out',
               type: ButtonType.transparent,

@@ -310,6 +310,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.17"
+  equatable:
+    dependency: "direct main"
+    description:
+      name: equatable
+      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.7"
   fake_async:
     dependency: transitive
     description:
@@ -706,14 +714,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.19.0"
-  invert_colors:
-    dependency: "direct dev"
-    description:
-      name: invert_colors
-      sha256: "66e0063c64554cb5dca9f8017cc5095c762cbf766616d45f242a6b2b9c068cb9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.4"
   io:
     dependency: transitive
     description:

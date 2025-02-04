@@ -6,8 +6,6 @@ import 'package:self_help/pages/global_providers/app_overlay_provider.dart';
 import 'package:self_help/pages/global_providers/page_flow_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
-// ignore: depend_on_referenced_packages
-import 'package:invert_colors/invert_colors.dart';
 import 'package:self_help/services/services.dart';
 
 class DebugOverlay extends HookConsumerWidget {
@@ -26,12 +24,12 @@ class DebugOverlay extends HookConsumerWidget {
       child: Stack(
         children: [
           if (debugOn.value)
-            Column(
-              children: [
-                Spacer(),
-                Material(
-                  color: Colors.black.withAlpha(100),
-                  child: InvertColors(
+            SizedBox.expand(
+              child: Column(
+                children: [
+                  Spacer(),
+                  Material(
+                    color: Colors.black.withAlpha(100),
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: Column(
@@ -49,12 +47,12 @@ class DebugOverlay extends HookConsumerWidget {
                           //     Text(route.name),
                           //   ],
                           // ),
-                          Row(
-                            children: [
-                              Text('flow route: '),
-                              Text('${pageFlow.flowType}, ${pageFlow.index}'),
-                            ],
-                          ),
+                          // Row(
+                          //   children: [
+                          //     Text('flow route: '),
+                          //     Text('${pageFlow.flowType}, ${pageFlow.index}'),
+                          //   ],
+                          // ),
                           // Divider(),
                           // Wrap(
                           //   alignment: WrapAlignment.center,
@@ -85,35 +83,39 @@ class DebugOverlay extends HookConsumerWidget {
                           //   ),
                           // ),
                           // Divider(),
-                          // Wrap(
-                          //   alignment: WrapAlignment.center,
-                          //   crossAxisAlignment: WrapCrossAlignment.center,
-                          //   runSpacing: 4,
-                          //   spacing: 8,
-                          //   children: List.generate(
-                          //     RoutePaths.values.length,
-                          //     (index) {
-                          //       final route = RoutePaths.values[index];
-                          //       return InkWell(
-                          //         onTap: () {
-                          //           ref.read(routerStateProvider).pushNamed(
-                          //                 route.name,
-                          //               );
-                          //         },
-                          //         child: Container(
-                          //           color: Colors.white.withAlpha(100),
-                          //           child: Text(route.name),
-                          //         ),
-                          //       );
-                          //     },
-                          //   ),
-                          // ),
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            runSpacing: 4,
+                            spacing: 8,
+                            runAlignment: WrapAlignment.center,
+                            children: List.generate(
+                              RoutePaths.values.length,
+                              (index) {
+                                final route = RoutePaths.values[index];
+                                return InkWell(
+                                  onTap: () {
+                                    ref.read(routerStateProvider).pushNamed(
+                                          route.name,
+                                        );
+                                  },
+                                  child: Container(
+                                    color: Colors.black.withAlpha(100),
+                                    child: Text(
+                                      route.name,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           Positioned(
             right: 100,

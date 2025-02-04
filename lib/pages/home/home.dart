@@ -35,10 +35,8 @@ class Home extends HookConsumerWidget {
             buttonTitle: localizations.startResilienceButtonTitle,
             imagePath: AssetsConstants.confidenceMan,
             onPressed: () {
-              // todo
-              // ref
-              //     .read(collapsingAppBarProvider.notifier)
-              //     .updateState(AppBarType.gainControl);
+              final provider = ref.read(routerStateProvider);
+              provider.pushNamed(RoutePaths.resilience.name);
             },
           ),
           HomeCard(

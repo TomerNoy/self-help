@@ -14,6 +14,7 @@ import 'package:self_help/pages/look_around_exercise/look_around_exercise.dart';
 import 'package:self_help/pages/magic_touch/magic_touch.dart';
 import 'package:self_help/pages/profile/profile.dart';
 import 'package:self_help/pages/register/register.dart';
+import 'package:self_help/pages/resilience/resilience.dart';
 import 'package:self_help/pages/settings/settings.dart';
 import 'package:self_help/pages/stress_level/stress_level.dart';
 import 'package:self_help/pages/thought_release/thought_release.dart';
@@ -82,6 +83,11 @@ GoRouter router({
               path: RoutePaths.thoughtRelease.path,
               name: RoutePaths.thoughtRelease.name,
               builder: (context, state) => const ThoughtRelease(),
+            ),
+            GoRoute(
+              path: RoutePaths.resilience.path,
+              name: RoutePaths.resilience.name,
+              builder: (context, state) => const Resilience(),
             ),
             GoRoute(
               path: RoutePaths.calculateExercise.path,

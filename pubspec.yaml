@@ -40,6 +40,7 @@ dependencies:
   json_annotation: ^4.9.0
   animations: ^2.0.11
   flutter_dotenv: ^5.2.1
+  equatable: ^2.0.7
 
 dev_dependencies:
   flutter_test:
@@ -50,7 +51,6 @@ dev_dependencies:
   custom_lint: ^0.7.1
   riverpod_lint: ^2.6.4
   json_serializable: ^6.9.2
-  invert_colors: ^0.0.4
   flutter_launcher_icons: ^0.14.2
 
 flutter_launcher_icons:
