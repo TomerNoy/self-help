@@ -1,6 +1,8 @@
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/core/theme.dart';
 import 'package:self_help/pages/global_providers/page_flow_provider.dart';
@@ -75,27 +77,21 @@ class StressLevel extends ConsumerWidget {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            switch (level) {
-                              1 ||
-                              2 =>
-                                CommunityMaterialIcons.emoticon_excited_outline,
-                              3 ||
-                              4 =>
-                                CommunityMaterialIcons.emoticon_happy_outline,
-                              5 ||
-                              6 =>
-                                CommunityMaterialIcons.emoticon_neutral_outline,
-                              7 ||
-                              8 =>
-                                CommunityMaterialIcons.emoticon_sad_outline,
-                              9 ||
-                              10 =>
-                                CommunityMaterialIcons.emoticon_cry_outline,
-                              _ => CommunityMaterialIcons.minus
+                          AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 100),
+                            transitionBuilder: (child, animation) {
+                              return FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              );
                             },
-                            size: 80,
+                            child: SvgPicture.asset(
+                              key: ValueKey(level),
+                              AssetsConstants.faces[level - 1],
+                              width: 80,
+                            ),
                           ),
+                          SizedBox(height: 16),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -127,38 +123,6 @@ class StressLevel extends ConsumerWidget {
           title: localizations.continueButtonTitle,
         ),
         drawer: FlowDrawer(),
-      ),
-    );
-  }
-}
-
-class PressureIcon extends ConsumerWidget {
-  const PressureIcon({
-    required this.icon,
-    required this.title,
-    super.key,
-  });
-
-  final IconData icon;
-  final String title;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Icon(
-            icon,
-            size: 32,
-            color: Theme.of(context).primaryColor,
-          ),
-          SizedBox(height: 8),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ],
       ),
     );
   }

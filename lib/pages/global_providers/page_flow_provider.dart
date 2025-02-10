@@ -46,7 +46,7 @@ class PageFlow extends _$PageFlow {
     );
   }
 
-  List<String> get currentFlowList => FlowLists.flowListsMap[state.flowType]!;
+  List<String> get _currentFlowList => FlowLists.flowListsMap[state.flowType]!;
 
   // init flow by type
   void startFlow(FlowType flowType) {
@@ -64,11 +64,11 @@ class PageFlow extends _$PageFlow {
   void next([
     Map<String, String> params = const {},
   ]) {
-    if (currentFlowList.length > state.index + 1) {
+    if (_currentFlowList.length > state.index + 1) {
       state = state.copyWith(index: state.index + 1);
       loggerService.debug('flow state changed to: $state');
       final router = ref.read(routerStateProvider);
-      final routeToGo = currentFlowList[state.index];
+      final routeToGo = _currentFlowList[state.index];
       loggerService.debug('routeToGo: $routeToGo');
       router.pushNamed(routeToGo, pathParameters: params);
     }
@@ -79,7 +79,7 @@ class PageFlow extends _$PageFlow {
     final router = ref.read(routerStateProvider);
     if (state.index > 0) {
       state = state.copyWith(index: state.index - 1);
-      final routeToGo = currentFlowList[state.index];
+      final routeToGo = _currentFlowList[state.index];
       router.pushNamed(routeToGo);
       loggerService.debug('flow state changed to: $state');
     } else {
@@ -123,7 +123,7 @@ class PageFlow extends _$PageFlow {
       'updatePageIndex with path: $path, current state: $state',
     );
 
-    if (!currentFlowList.contains(path.name)) {
+    if (!_currentFlowList.contains(path.name)) {
       _reset();
     }
   }

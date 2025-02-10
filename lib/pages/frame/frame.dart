@@ -161,6 +161,8 @@ class Frame extends ConsumerWidget {
 
     final titleWidget = _buildTitleWidget(context, localizations, ref);
 
+    final menuButton = _buildMenuButton(ref);
+
     final hasBackButton = [
       RoutePaths.sosLanding,
     ].contains(page);
@@ -180,6 +182,8 @@ class Frame extends ConsumerWidget {
       RoutePaths.sosLanding,
     ].contains(page);
 
+    final isExpanded = animatedScreenType == AnimatedScreenType.expanded;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -188,8 +192,14 @@ class Frame extends ConsumerWidget {
             if (hasBackButton) _buildBackButton(ref),
             if (hasLogo) _buildLogo(),
             hasSubtitle
-                ? _buildTitltWithSubtitle(context, titleWidget, localizations)
-                : _buildTitle(titleWidget),
+                ? _buildTitltWithSubtitle(
+                    context,
+                    titleWidget,
+                    localizations,
+                    menuButton,
+                    isExpanded,
+                  )
+                : _buildTitle(titleWidget, menuButton),
             if (hasStartButton) _buildStartButton(localizations, ref),
           ],
         ),
@@ -235,6 +245,8 @@ class Frame extends ConsumerWidget {
     BuildContext context,
     Widget titleWidget,
     AppLocalizations localizations,
+    Widget menuButton,
+    bool isExpanded,
   ) {
     return Expanded(
       child: Column(
@@ -244,7 +256,17 @@ class Frame extends ConsumerWidget {
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 8),
-                child: titleWidget,
+                child: isExpanded
+                    ? titleWidget
+                    : Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          menuButton,
+                          Expanded(child: titleWidget),
+                          SizedBox(width: 40),
+                        ],
+                      ),
               ),
             ),
           ),
@@ -272,10 +294,16 @@ class Frame extends ConsumerWidget {
     );
   }
 
-  Widget _buildTitle(Widget titleWidget) {
+  Widget _buildTitle(Widget titleWidget, Widget menuButton) {
     return Expanded(
-      child: Center(
-        child: titleWidget,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          menuButton,
+          titleWidget,
+          SizedBox(width: 40),
+        ],
       ),
     );
   }
@@ -295,6 +323,37 @@ class Frame extends ConsumerWidget {
           onPressed: () => _startPressed(ref),
           type: ButtonType.transparent,
           width: double.infinity,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuButton(WidgetRef ref) {
+    return MenuAnchor(
+      builder: (context, controller, child) {
+        return IconButton.filled(
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all(
+              Colors.white30,
+            ),
+          ),
+          onPressed: () {
+            if (controller.isOpen) {
+              controller.close();
+            } else {
+              controller.open();
+            }
+          },
+          icon: Icon(
+            Icons.menu,
+            color: Colors.black,
+          ),
+        );
+      },
+      menuChildren: List.generate(
+        10,
+        (index) => ListTile(
+          title: Text('Item $index'),
         ),
       ),
     );

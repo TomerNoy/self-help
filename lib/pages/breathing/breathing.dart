@@ -20,45 +20,48 @@ class Breathing extends ConsumerWidget {
 
     final maxSize = Constants.minimumScreenWidth;
 
-    final provider = ref.watch(breathingExerciseProvider);
-    final notifier = ref.watch(breathingExerciseProvider.notifier);
+    final exerciseState = ref.watch(breathingExerciseProvider);
 
-    final breathingType = provider.breathingType;
+    final breathingType = exerciseState.breathingState;
 
-    final isPaused = breathingType == BreathingType.stopped;
+    final isPaused = breathingType == BreathingState.stopped;
 
     final innerCircleTitle = switch (breathingType) {
-      BreathingType.breathIn => localizations.breathIn,
-      BreathingType.peakHold ||
-      BreathingType.baseHold =>
+      BreathingState.breathIn => localizations.breathIn,
+      BreathingState.peakHold ||
+      BreathingState.baseHold =>
         localizations.holdBreath,
-      BreathingType.breathOut => localizations.breathOut,
+      BreathingState.breathOut => localizations.breathOut,
       _ => 'Paused',
     };
 
     //todo: colors?
     final breathingTypeColor = switch (breathingType) {
-      BreathingType.breathIn => breathStepIndicatorColor,
-      BreathingType.peakHold => Colors.grey.shade400,
-      BreathingType.breathOut => breathStepIndicatorColor,
-      BreathingType.baseHold => Colors.grey.shade400,
+      BreathingState.breathIn => breathStepIndicatorColor,
+      BreathingState.peakHold => Colors.grey.shade400,
+      BreathingState.breathOut => breathStepIndicatorColor,
+      BreathingState.baseHold => Colors.grey.shade400,
       _ => Colors.grey.shade300,
     };
 
     final minScale = maxSize / 2;
     final maxScale = maxSize / 1.5;
 
-    final circleExpanded = provider.breathingType == BreathingType.breathIn ||
-        provider.breathingType == BreathingType.peakHold;
+    final circleExpanded =
+        exerciseState.breathingState == BreathingState.breathIn ||
+            exerciseState.breathingState == BreathingState.peakHold;
 
     final circleSize =
         circleExpanded ? maxScale.toDouble() : minScale.toDouble();
 
+    loggerService.info('§ breathing state: $breathingType');
+
     /// expanding circle inner text
     final expandingCircleInner = isPaused
         ? IconButton(
-            onPressed: () =>
-                ref.read(breathingExerciseProvider.notifier).startTimer(),
+            onPressed: () {
+              ref.read(breathingExerciseProvider.notifier).startTimer();
+            },
             icon: FaIcon(
               FontAwesomeIcons.play,
               size: 48,
@@ -95,10 +98,10 @@ class Breathing extends ConsumerWidget {
                   );
                 },
                 child: Text(
-                  '${provider.timerCount}',
+                  '${exerciseState.stateCount}',
                   key: ValueKey<String>(
-                    provider.breathingType != BreathingType.stopped
-                        ? '${provider.timerCount}'
+                    exerciseState.breathingState != BreathingState.stopped
+                        ? '${exerciseState.stateCount}'
                         : 'empty',
                   ),
                   style: const TextStyle(fontSize: 30),
@@ -111,16 +114,16 @@ class Breathing extends ConsumerWidget {
     final expandingCircleWidget = AvatarGlow(
       glowColor: breathingTypeColor,
       glowCount: 3,
-      animate: [BreathingType.peakHold, BreathingType.baseHold]
-          .contains(provider.breathingType),
+      animate: [BreathingState.peakHold, BreathingState.baseHold]
+          .contains(exerciseState.breathingState),
       glowRadiusFactor: 0.1,
       duration: const Duration(seconds: 1),
       child: AnimatedContainer(
-        duration: switch (provider.breathingType) {
-          BreathingType.breathIn =>
-            Duration(seconds: notifier.breathInDuration),
-          BreathingType.breathOut =>
-            Duration(seconds: notifier.breathOutDuration),
+        duration: switch (exerciseState.breathingState) {
+          BreathingState.breathIn =>
+            Duration(seconds: exerciseState.stateCount),
+          BreathingState.breathOut =>
+            Duration(seconds: exerciseState.stateCount),
           _ => const Duration(seconds: 1),
         },
         width: circleSize,
@@ -150,7 +153,7 @@ class Breathing extends ConsumerWidget {
               width: double.infinity,
               height: double.infinity,
               child: CircularProgressIndicator(
-                value: notifier.breathingScale,
+                value: exerciseState.breathingScale,
                 color: breathingTypeColor,
                 backgroundColor: Colors.grey,
                 valueColor: AlwaysStoppedAnimation<Color>(breathingTypeColor),
@@ -165,37 +168,32 @@ class Breathing extends ConsumerWidget {
       ),
     );
 
-    /// start stop button
-    final stopButton = AnimatedSwitcher(
+    /// stop button
+    final stopButton = AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      transitionBuilder: (Widget child, Animation<double> animation) {
-        return ScaleTransition(
-          scale: animation,
-          child: child,
-        );
-      },
+      height: isPaused ? 0 : 60,
+      width: isPaused ? 0 : 60,
       child: IconButton(
-        key: ValueKey<bool>(provider.breathingType != BreathingType.stopped),
         onPressed: () => ref.read(breathingExerciseProvider.notifier).stop(),
-        icon: Container(
-          height: 40,
-          width: 40,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
-          ),
-          child: Center(
-            child: FaIcon(
-              FontAwesomeIcons.pause,
-              size: 30,
-              color: Colors.black87,
+        icon: FittedBox(
+          child: Container(
+            height: 50,
+            width: 50,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+            ),
+            child: Center(
+              child: FaIcon(
+                FontAwesomeIcons.pause,
+                size: 30,
+                color: Colors.black87,
+              ),
             ),
           ),
         ),
       ),
     );
-
-    loggerService.debug('breathing scale: ${notifier.breathingScale}');
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
@@ -227,8 +225,10 @@ class Breathing extends ConsumerWidget {
                             width: maxSize,
                             child: Center(child: expandingCircleWidget),
                           ),
-                          if (!isPaused) stopButton,
-                          SizedBox(height: 60),
+                          SizedBox(
+                            height: 60,
+                            child: Center(child: stopButton),
+                          ),
                         ],
                       ),
                     ),

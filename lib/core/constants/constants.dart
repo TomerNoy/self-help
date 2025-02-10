@@ -5,4 +5,6 @@ class Constants {
 
   static const timerDuration = Duration(seconds: 1);
   static const animatiodDuration = Duration(milliseconds: 500);
+
+  static const defaultTimeout = Duration(seconds: 10);
 }

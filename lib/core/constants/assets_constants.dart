@@ -8,4 +8,18 @@ class AssetsConstants {
   static const String therapist = 'assets/images/therapist.svg';
   static const String breathingGirl = 'assets/images/breathing_girl.svg';
   static const String butterflyGirl = 'assets/images/butterfly_girl.svg';
+
+  //faces
+  static const faces = [
+    'assets/icons/faces/happy4.svg',
+    'assets/icons/faces/happy3.svg',
+    'assets/icons/faces/happy2.svg',
+    'assets/icons/faces/happy1.svg',
+    'assets/icons/faces/middle.svg',
+    'assets/icons/faces/middle.svg',
+    'assets/icons/faces/sad1.svg',
+    'assets/icons/faces/sad2.svg',
+    'assets/icons/faces/sad3.svg',
+    'assets/icons/faces/sad4.svg',
+  ];
 }

@@ -13,7 +13,7 @@ class DebugOverlay extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final debugOn = useState<bool>(true);
+    final debugOn = useState<bool>(false);
 
     final authProvider = ref.watch(userAuthProvider);
     final route = ref.watch(routerListenerProvider);

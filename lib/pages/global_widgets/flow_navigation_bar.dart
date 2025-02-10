@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:self_help/core/constants/flow_route_constant.dart';
 import 'package:self_help/pages/global_providers/page_flow_provider.dart';
+import 'package:self_help/pages/global_widgets/exercide_bar.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 
@@ -18,6 +20,9 @@ class FlowNavigationBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (ref.read(pageFlowProvider).flowType == FlowType.none) {
+      return ExercideBar();
+    }
     final localizations = AppLocalizations.of(context)!;
     return BottomAppBar(
       height: 100,

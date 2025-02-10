@@ -1,5 +1,7 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:self_help/services/app_lifecycle_service.dart';
+import 'package:self_help/services/firebase_service.dart';
 import 'package:self_help/services/logger_service.dart';
 import 'package:self_help/services/storage_service.dart';
 import 'package:self_help/services/user_service.dart';
@@ -9,8 +11,20 @@ class ServiceProvider {
 
   static Future<void> init() async {
     try {
+      // load env
+      await dotenv.load(fileName: ".env");
+
       // logger
       _getIt.registerSingleton<LoggerService>(LoggerService());
+
+      // firebase
+      _getIt.registerSingletonAsync<FirebaseService>(
+        () async {
+          final firebaseService = FirebaseService();
+          await firebaseService.init();
+          return firebaseService;
+        },
+      );
 
       // storage
       _getIt.registerSingletonAsync<StorageService>(

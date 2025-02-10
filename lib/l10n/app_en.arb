@@ -289,5 +289,9 @@
   "home": "Home",
   "@home": {
     "description": "home"
+  },
+  "endExercise": "End exercise",
+  "@endExercise": {
+    "description": "end exercise"
   }
 }

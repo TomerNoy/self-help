@@ -7,48 +7,67 @@ import 'package:self_help/services/services.dart';
 
 part 'breathing_notifier.g.dart';
 
-enum BreathingType { stopped, breathIn, peakHold, breathOut, baseHold }
+enum BreathingState { stopped, breathIn, peakHold, breathOut, baseHold }
 
 @immutable
 class BreathingExerciseState {
-  final BreathingType breathingType;
+  final BreathingState breathingState;
+  final int stateCount;
   final int timerCount;
+  final int repeatCount;
+  final double breathingScale;
 
   const BreathingExerciseState({
-    required this.breathingType,
+    required this.breathingState,
+    required this.stateCount,
     required this.timerCount,
+    required this.repeatCount,
+    required this.breathingScale,
   });
 
   BreathingExerciseState copyWith({
-    BreathingType? breathingType,
-    bool? isPaused,
+    BreathingState? breathingState,
+    int? stateCount,
     int? timerCount,
+    int? repeatCount,
+    double? breathingScale,
   }) {
     return BreathingExerciseState(
-      breathingType: breathingType ?? this.breathingType,
+      breathingState: breathingState ?? this.breathingState,
+      stateCount: stateCount ?? this.stateCount,
       timerCount: timerCount ?? this.timerCount,
+      repeatCount: repeatCount ?? this.repeatCount,
+      breathingScale: breathingScale ?? this.breathingScale,
     );
+  }
+
+  @override
+  String toString() {
+    return '''BreathingExerciseState{
+    breathingState: $breathingState, 
+    stateCount: $stateCount, 
+    timerCount: $timerCount, 
+    repeatCount: $repeatCount
+    breathingScale: $breathingScale
+    }''';
   }
 }
 
 @riverpod
 class BreathingExercise extends _$BreathingExercise {
-  late int _breathInDuration;
-  late int _peakHoldDuration;
-  late int _breathOutDuration;
-  late int _baseHoldDuration;
-  late int _repeats;
+  late final int _breathInDuration;
+  late final int _peakHoldDuration;
+  late final int _breathOutDuration;
+  late final int _baseHoldDuration;
+  late final int _repeats;
+  late final int _totalDuration;
 
-  late double _breathingInFraction;
-  late double _breathingOutFraction;
+  late final double _breathingInFraction;
+  late final double _breathingOutFraction;
 
-  var _breathingScale = 0.0;
+  // var _breathingScale = 0.0;
 
   Timer? _timer;
-
-  double get breathingScale => _breathingScale;
-  int get breathInDuration => _breathInDuration;
-  int get breathOutDuration => _breathOutDuration;
 
   @override
   BreathingExerciseState build() {
@@ -57,6 +76,11 @@ class BreathingExercise extends _$BreathingExercise {
     _peakHoldDuration = storageService.readPeakHoldDuration();
     _breathOutDuration = storageService.readBreathOutDuration();
     _baseHoldDuration = storageService.readBaseHoldDuration();
+    _totalDuration = (_breathInDuration +
+            _peakHoldDuration +
+            _breathOutDuration +
+            _baseHoldDuration) *
+        _repeats;
 
     _breathingInFraction = 1 / _breathInDuration;
     _breathingOutFraction = 1 / _breathOutDuration;
@@ -69,72 +93,81 @@ class BreathingExercise extends _$BreathingExercise {
     );
 
     return BreathingExerciseState(
-      breathingType: BreathingType.stopped,
-      timerCount: _breathInDuration,
+      breathingState: BreathingState.stopped,
+      stateCount: 0,
+      timerCount: 0,
+      repeatCount: 0,
+      breathingScale: 0.0,
     );
   }
 
   void startTimer() {
     //safeguard to prevent multiple timers
-    if (state.breathingType != BreathingType.stopped) {
+    if (state.breathingState != BreathingState.stopped) {
       return;
     }
 
     state = state.copyWith(
-      breathingType: BreathingType.breathIn,
-      timerCount: _breathInDuration,
+      breathingState: BreathingState.breathIn,
+      stateCount: _breathInDuration,
+      timerCount: _totalDuration,
+      repeatCount: _repeats,
+      breathingScale: _breathingInFraction,
     );
-
-    var repeats = _repeats;
-    _breathingScale += _breathingInFraction;
 
     _timer = Timer.periodic(
       Constants.timerDuration,
       (_) {
-        state = state.copyWith(timerCount: state.timerCount - 1);
-        loggerService.debug('_timerCount $state.timerCount');
-        switch (state.breathingType) {
-          case BreathingType.breathIn:
-            if (state.timerCount <= 0) {
-              state = state.copyWith(
-                breathingType: BreathingType.peakHold,
-                timerCount: _peakHoldDuration,
-              );
-            } else {
-              _breathingScale += _breathingInFraction;
-            }
-            break;
-          case BreathingType.peakHold:
-            if (state.timerCount <= 0) {
-              state = state.copyWith(
-                breathingType: BreathingType.breathOut,
-                timerCount: _breathOutDuration,
-              );
+        state = state.copyWith(
+          stateCount: state.stateCount - 1,
+          timerCount: state.timerCount - 1,
+        );
 
-              _breathingScale -= _breathingOutFraction;
-            }
-            break;
-          case BreathingType.breathOut:
-            if (state.timerCount <= 0) {
+        switch (state.breathingState) {
+          case BreathingState.breathIn:
+            if (state.stateCount <= 0) {
               state = state.copyWith(
-                breathingType: BreathingType.baseHold,
-                timerCount: _baseHoldDuration,
+                breathingState: BreathingState.peakHold,
+                stateCount: _peakHoldDuration,
               );
             } else {
-              _breathingScale -= _breathingOutFraction;
+              state = state.copyWith(
+                breathingScale: state.breathingScale + _breathingInFraction,
+              );
             }
             break;
-          case BreathingType.baseHold:
-            if (repeats <= 0) {
+          case BreathingState.peakHold:
+            if (state.stateCount <= 0) {
+              state = state.copyWith(
+                breathingState: BreathingState.breathOut,
+                stateCount: _breathOutDuration,
+                breathingScale: state.breathingScale - _breathingOutFraction,
+              );
+            }
+            break;
+          case BreathingState.breathOut:
+            if (state.stateCount <= 0) {
+              state = state.copyWith(
+                breathingState: BreathingState.baseHold,
+                stateCount: _baseHoldDuration,
+              );
+            } else {
+              state = state.copyWith(
+                breathingScale: state.breathingScale - _breathingOutFraction,
+              );
+            }
+            break;
+          case BreathingState.baseHold:
+            if (state.repeatCount <= 1) {
               stop();
             } else {
-              if (state.timerCount <= 0) {
-                repeats--;
+              if (state.stateCount <= 0) {
                 state = state.copyWith(
-                  breathingType: BreathingType.breathIn,
-                  timerCount: _breathInDuration,
+                  breathingState: BreathingState.breathIn,
+                  stateCount: _breathInDuration,
+                  repeatCount: state.repeatCount - 1,
+                  breathingScale: state.breathingScale + _breathingInFraction,
                 );
-                _breathingScale += _breathingInFraction;
               }
             }
 
@@ -149,129 +182,11 @@ class BreathingExercise extends _$BreathingExercise {
   void stop() {
     _timer?.cancel();
     state = state.copyWith(
-      breathingType: BreathingType.stopped,
-      timerCount: _breathInDuration,
+      breathingState: BreathingState.stopped,
+      stateCount: 0,
+      timerCount: 0,
+      repeatCount: 0,
+      breathingScale: 0.0,
     );
-
-    _breathingScale = 0;
   }
 }
-
-// final breathingExerciseProvider =
-//     ChangeNotifierProvider.autoDispose<BreathingExerciseNotifier>(
-//   (ref) => BreathingExerciseNotifier(),
-// );
-//
-// class BreathingExerciseNotifier extends ChangeNotifier {
-//   BreathingExerciseNotifier() {
-//     _repeats = storageService.readRepeats();
-//     _breathInDuration = storageService.readBreathInDuration();
-//     _peakHoldDuration = storageService.readPeakHoldDuration();
-//     _breathOutDuration = storageService.readBreathOutDuration();
-//     _baseHoldDuration = storageService.readBaseHoldDuration();
-//
-//     _breathingInFraction = 1 / _breathInDuration;
-//     _breathingOutFraction = 1 / _breathOutDuration;
-//   }
-//
-//   /// initial params
-//   late int _breathInDuration;
-//   late int _peakHoldDuration;
-//   late int _breathOutDuration;
-//   late int _baseHoldDuration;
-//   late int _repeats;
-//
-//   late double _breathingInFraction;
-//   late double _breathingOutFraction;
-//
-//   /// local params
-//   late int _timerCount = _breathInDuration;
-//   var _breathingType = BreathingType.stopped;
-//   var _breathingScale = 0.0;
-//
-//   Timer? _timer;
-//
-//   /// getters
-//   int get timerCount => _timerCount;
-//   BreathingType get breathingType => _breathingType;
-//   double get breathingScale => _breathingScale;
-//   int get breathInDuration => _breathInDuration;
-//   int get breathOutDuration => _breathOutDuration;
-//
-//   void stop() {
-//     _timer?.cancel();
-//     _timerCount = _breathInDuration;
-//     _breathingType = BreathingType.stopped;
-//     _breathingScale = 0;
-//     notifyListeners();
-//   }
-//
-//   void startTimer() {
-//     //safeguard to prevent multiple timers
-//     if (_breathingType != BreathingType.stopped) {
-//       return;
-//     }
-//
-//     _breathingType = BreathingType.breathIn;
-//     var repeats = _repeats;
-//     _timerCount = _breathInDuration;
-//     _breathingScale += _breathingInFraction;
-//     notifyListeners();
-//
-//     _timer = Timer.periodic(
-//       Constants.timerDuration,
-//       (_) {
-//         _timerCount--;
-//         loggerService.debug('_timerCount $_timerCount');
-//         switch (_breathingType) {
-//           case BreathingType.breathIn:
-//             if (_timerCount <= 0) {
-//               _timerCount = _peakHoldDuration;
-//               _breathingType = BreathingType.peakHold;
-//             } else {
-//               _breathingScale += _breathingInFraction;
-//             }
-//             break;
-//           case BreathingType.peakHold:
-//             if (_timerCount <= 0) {
-//               _timerCount = _breathOutDuration;
-//               _breathingType = BreathingType.breathOut;
-//               _breathingScale -= _breathingOutFraction;
-//             }
-//             break;
-//           case BreathingType.breathOut:
-//             if (_timerCount <= 0) {
-//               _timerCount = _baseHoldDuration;
-//               _breathingType = BreathingType.baseHold;
-//             } else {
-//               _breathingScale -= _breathingOutFraction;
-//             }
-//             break;
-//           case BreathingType.baseHold:
-//             if (repeats <= 0) {
-//               stop();
-//             } else {
-//               if (_timerCount <= 0) {
-//                 repeats--;
-//                 _timerCount = _breathInDuration;
-//                 _breathingType = BreathingType.breathIn;
-//                 _breathingScale += _breathingInFraction;
-//               }
-//             }
-//
-//             break;
-//           default:
-//             break;
-//         }
-//         notifyListeners();
-//       },
-//     );
-//   }
-//
-//   @override
-//   void dispose() {
-//     loggerService.debug('disposing breathing exercise notifier');
-//     _timer?.cancel();
-//     super.dispose();
-//   }
-// }

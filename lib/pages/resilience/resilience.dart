@@ -28,6 +28,21 @@ class Resilience extends ConsumerWidget {
         description: 'Breathing',
         path: RoutePaths.breathing,
       ),
+      Exercise(
+        title: 'Magic touch',
+        description: 'Magic touch',
+        path: RoutePaths.magicTouch,
+      ),
+      Exercise(
+        title: 'Thought Release',
+        description: 'Thought Release',
+        path: RoutePaths.thoughtRelease,
+      ),
+      Exercise(
+        title: 'Look Around',
+        description: 'Look Around',
+        path: RoutePaths.lookAroundExercise,
+      ),
     ];
 
     return Scaffold(
@@ -37,7 +52,7 @@ class Resilience extends ConsumerWidget {
           (index) {
             return Card(
               child: ListTile(
-                leading: Icon(Icons.ac_unit),
+                leading: Icon(Icons.task),
                 title: Text(exercises[index].title),
                 subtitle: Text(exercises[index].description),
                 onTap: () {
