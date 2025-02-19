@@ -63,7 +63,7 @@ class CalcExercise extends HookConsumerWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            '${provider[index].firstNumber} ${provider[index].operation} ${provider[index].secondNumber} =',
+                            '${provider[index].firstNumber} ${provider[index].operation.displayText} ${provider[index].secondNumber} =',
                             style: Theme.of(context).textTheme.headlineLarge,
                           ),
                         ),

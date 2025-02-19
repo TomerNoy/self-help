@@ -210,17 +210,9 @@
   "@textures": {
     "description": "textures"
   },
-  "texturesExamples": "For example: smooth, hard, soft, hot, etc.",
+  "texturesExamples": "For example: wood, glass, plastic, etc.",
   "@texturesExamples": {
     "description": "textures examples"
-  },
-  "sounds": "Sounds",
-  "@sounds": {
-    "description": "sounds"
-  },
-  "soundsExamples": "For example: noise, knock sound, chirping sound, etc.",
-  "@soundsExamples": {
-    "description": "sounds examples"
   },
   "gainControlLandingTitle": "Returning to control thought",
   "@gainControlLandingTitle": {

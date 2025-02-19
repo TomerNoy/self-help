@@ -14,8 +14,8 @@ import 'package:self_help/services/services.dart';
 
 enum AnimatedScreenType { expanded, collapsedLong, collapsedShort, hidden }
 
-class Frame extends ConsumerWidget {
-  const Frame({
+class MainShell extends ConsumerWidget {
+  const MainShell({
     super.key,
     required this.child,
     required this.page,

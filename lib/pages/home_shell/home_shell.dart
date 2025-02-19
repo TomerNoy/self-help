@@ -6,8 +6,8 @@ import 'package:self_help/core/theme.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 
-class HomeFrame extends HookConsumerWidget {
-  const HomeFrame({
+class HomeShell extends HookConsumerWidget {
+  const HomeShell({
     super.key,
     required this.child,
     required this.page,

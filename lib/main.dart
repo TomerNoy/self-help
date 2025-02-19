@@ -8,6 +8,7 @@ Future<void> main() async {
   await ServiceProvider.init();
   runApp(
     ProviderScope(
+      observers: [MyProviderObserver()],
       child: const App(),
     ),
   );
@@ -15,3 +16,18 @@ Future<void> main() async {
 
 /// todo
 /// - do i still need router listener?
+
+class MyProviderObserver extends ProviderObserver {
+  @override
+  void didUpdateProvider(
+    ProviderBase<Object?> provider,
+    Object? previousValue,
+    Object? newValue,
+    ProviderContainer container,
+  ) {
+    loggerService.debug('''
+provider: ${provider.name ?? provider.runtimeType}
+newValue: $newValue
+''');
+  }
+}

@@ -49,7 +49,7 @@ GoRouter routerState(Ref ref) {
 
       final onUnrestrictedPage = unrestrictedRoutes.contains(location);
 
-      loggerService.debug('authState: $authValue, location: $location');
+      loggerService.debug('§ authState: $authValue, location: $location');
 
       // authenticated
       if (authValue == UserAuthState.authenticated) {

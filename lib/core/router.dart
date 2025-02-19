@@ -5,16 +5,17 @@ import 'package:self_help/pages/breathing/breathing.dart';
 import 'package:self_help/pages/calculate_exercise/calc_exercise.dart';
 import 'package:self_help/pages/enter_number/enter_number.dart';
 import 'package:self_help/pages/enter_number_reversed/enter_number_reversed.dart';
-import 'package:self_help/pages/frame/frame.dart';
+import 'package:self_help/pages/main_shell/main_shell.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
 import 'package:self_help/pages/home/home.dart';
-import 'package:self_help/pages/home_shell/home_frame.dart';
+import 'package:self_help/pages/home_shell/home_shell.dart';
 import 'package:self_help/pages/login/login.dart';
 import 'package:self_help/pages/look_around_exercise/look_around_exercise.dart';
 import 'package:self_help/pages/magic_touch/magic_touch.dart';
 import 'package:self_help/pages/profile/profile.dart';
 import 'package:self_help/pages/register/register.dart';
 import 'package:self_help/pages/resilience/resilience.dart';
+import 'package:self_help/pages/resilience_shell/resilience_shell.dart';
 import 'package:self_help/pages/settings/settings.dart';
 import 'package:self_help/pages/stress_level/stress_level.dart';
 import 'package:self_help/pages/thought_release/thought_release.dart';
@@ -33,7 +34,7 @@ GoRouter router({
       ShellRoute(
           builder: (context, state, child) {
             final page = RoutePaths.fromPath(state.fullPath ?? '');
-            return Frame(page: page, child: child);
+            return MainShell(page: page, child: child);
           },
           routes: [
             GoRoute(
@@ -59,7 +60,7 @@ GoRouter router({
             ShellRoute(
               builder: (context, state, child) {
                 final page = RoutePaths.fromPath(state.fullPath ?? '');
-                return HomeFrame(page: page, child: child);
+                return HomeShell(page: page, child: child);
               },
               routes: [
                 GoRoute(
@@ -84,10 +85,19 @@ GoRouter router({
               name: RoutePaths.thoughtRelease.name,
               builder: (context, state) => const ThoughtRelease(),
             ),
-            GoRoute(
-              path: RoutePaths.resilience.path,
-              name: RoutePaths.resilience.name,
-              builder: (context, state) => const Resilience(),
+            ShellRoute(
+              builder: (context, state, child) {
+                final page = RoutePaths.fromPath(state.fullPath ?? '');
+                return ResilienceShell(page: page, child: child);
+              },
+              routes: [
+                GoRoute(
+                  path: RoutePaths.resilience.path,
+                  name: RoutePaths.resilience.name,
+                  builder: (context, state) => const Resilience(),
+                ),
+                // todo add routes for resilience
+              ],
             ),
             GoRoute(
               path: RoutePaths.calculateExercise.path,

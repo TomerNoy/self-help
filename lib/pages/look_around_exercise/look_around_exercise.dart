@@ -17,13 +17,11 @@ class LookAroundExercise extends HookConsumerWidget {
     final titles = [
       localization.colors,
       localization.textures,
-      localization.sounds,
     ];
 
     final examples = [
       localization.colorsExamples,
       localization.texturesExamples,
-      localization.soundsExamples,
     ];
 
     final controllers = useState<List<TextEditingController>>(
@@ -47,7 +45,7 @@ class LookAroundExercise extends HookConsumerWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: List.generate(
-            3,
+            2,
             (titleIndex) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

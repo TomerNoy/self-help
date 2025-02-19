@@ -9,6 +9,7 @@ import 'package:self_help/models/result.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
 import 'package:self_help/services/services.dart';
 
+/// this class is responsible for handling user authentication and user data
 class UserService {
   UserService() {
     _authStateChanges.add(UserAuthState.loading);
@@ -40,11 +41,13 @@ class UserService {
 
   AppUser get currentUser => AppUser.fromFirebaseUser(_auth.currentUser!);
 
+  /// this method is used to register a new user
   Future<Result<User>> registerUser(
     String email,
     String password,
     String name,
   ) async {
+    // this method is used to handle the call to the firebase authentication
     return _handleCall(() async {
       _authStateChanges.add(UserAuthState.loading);
       final userCredential = await _auth.createUserWithEmailAndPassword(
