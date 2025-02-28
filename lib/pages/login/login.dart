@@ -7,6 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/core/form_validators.dart';
+import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
+import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/services/services.dart';
@@ -39,6 +41,16 @@ class Login extends HookConsumerWidget {
     ];
 
     GoogleSignIn googleSignIn = GoogleSignIn(scopes: scopes);
+
+    final routerListener = ref.watch(routerListenerProvider);
+    if (routerListener == RoutePaths.login) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => ref.read(animatedAppBarProvider.notifier).updateState(
+              appBarType: AppBarType.collapsed,
+              appBarTitle: localizations.login,
+            ),
+      );
+    }
 
     return ListView(
       padding: const EdgeInsets.all(16),

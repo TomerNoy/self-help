@@ -1,11 +1,13 @@
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/constants.dart';
+import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/core/theme.dart';
+import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/page_flow_provider.dart';
+import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_widgets/flow_appbar.dart';
 import 'package:self_help/pages/global_widgets/flow_drawer.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
@@ -21,6 +23,18 @@ class StressLevel extends ConsumerWidget {
     final level = ref.watch(stressLevelProvider);
     final localizations = AppLocalizations.of(context)!;
     final width = Constants.minimumScreenWidth;
+
+    final routerListener = ref.watch(routerListenerProvider);
+    if (routerListener == RoutePaths.stressLevel) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => ref.read(animatedAppBarProvider.notifier).updateState(
+              appBarType: AppBarType.expanded,
+              appBarTitle: localizations.measureTitle,
+              subtitle: localizations.measureSubtitle,
+            ),
+      );
+    }
+
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
@@ -28,10 +42,10 @@ class StressLevel extends ConsumerWidget {
         }
       },
       child: Scaffold(
-        appBar: FlowAppBar(
-          title: localizations.measureTitle,
-          subtitle: localizations.measureSubtitle,
-        ),
+        // appBar: FlowAppBar(
+        //   title: localizations.measureTitle,
+        //   subtitle: localizations.measureSubtitle,
+        // ),
         body: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),

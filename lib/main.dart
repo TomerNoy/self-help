@@ -14,9 +14,6 @@ Future<void> main() async {
   );
 }
 
-/// todo
-/// - do i still need router listener?
-
 class MyProviderObserver extends ProviderObserver {
   @override
   void didUpdateProvider(

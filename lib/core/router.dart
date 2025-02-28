@@ -14,11 +14,14 @@ import 'package:self_help/pages/look_around_exercise/look_around_exercise.dart';
 import 'package:self_help/pages/magic_touch/magic_touch.dart';
 import 'package:self_help/pages/profile/profile.dart';
 import 'package:self_help/pages/register/register.dart';
+import 'package:self_help/pages/repeat_number.dart/repeat_number.dart';
 import 'package:self_help/pages/resilience/resilience.dart';
 import 'package:self_help/pages/resilience_shell/resilience_shell.dart';
 import 'package:self_help/pages/settings/settings.dart';
+import 'package:self_help/pages/sos_landing/sos_landing.dart';
 import 'package:self_help/pages/stress_level/stress_level.dart';
 import 'package:self_help/pages/thought_release/thought_release.dart';
+import 'package:self_help/pages/welcome/welcome.dart';
 
 GoRouter router({
   GoRouterRedirect? redirect,
@@ -40,12 +43,12 @@ GoRouter router({
             GoRoute(
               path: RoutePaths.welcome.path,
               name: RoutePaths.welcome.name,
-              builder: (context, state) => const SizedBox.shrink(),
+              builder: (context, state) => const Welcome(),
             ),
             GoRoute(
               path: RoutePaths.sosLanding.path,
               name: RoutePaths.sosLanding.name,
-              builder: (context, state) => const SizedBox.shrink(),
+              builder: (context, state) => SosLanding(),
             ),
             GoRoute(
               path: RoutePaths.login.path,
@@ -128,6 +131,11 @@ GoRouter router({
               path: RoutePaths.stressLevel.path,
               name: RoutePaths.stressLevel.name,
               builder: (context, state) => const StressLevel(),
+            ),
+            GoRoute(
+              path: RoutePaths.repeatNumber.path,
+              name: RoutePaths.repeatNumber.name,
+              builder: (context, state) => const RepeatNumber(),
             ),
             GoRoute(
               path: RoutePaths.magicTouch.path,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/core/theme.dart';
-import 'package:self_help/pages/global_widgets/flow_appbar.dart';
+import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
+import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/calculate_exercise/providers/calc_exercise_provider.dart';
@@ -14,6 +16,18 @@ class CalcExercise extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localization = AppLocalizations.of(context)!;
+
+    final routerListener = ref.watch(routerListenerProvider);
+
+    if (routerListener == RoutePaths.calculateExercise) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => ref.read(animatedAppBarProvider.notifier).updateState(
+              appBarType: AppBarType.expanded,
+              appBarTitle: localization.calcExercise,
+              subtitle: localization.calcExerciseSubtitle,
+            ),
+      );
+    }
 
     final isValid = useState(false);
 
@@ -38,10 +52,6 @@ class CalcExercise extends HookConsumerWidget {
     }, []);
 
     return Scaffold(
-      appBar: FlowAppBar(
-        title: localization.calcExercise,
-        subtitle: localization.calcExerciseSubtitle,
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Directionality(

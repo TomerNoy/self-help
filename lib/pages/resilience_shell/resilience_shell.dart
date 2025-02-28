@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/core/theme.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
+import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/home_shell/home_shell.dart';
 
@@ -24,6 +25,16 @@ class ResilienceShell extends ConsumerWidget {
     final profileButtonIsExpanded = page == RoutePaths.profile;
     final settingsButtonIsExpanded = page == RoutePaths.settings;
 
+    final routerListener = ref.watch(routerListenerProvider);
+    if (routerListener == RoutePaths.resilience) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => ref.read(animatedAppBarProvider.notifier).updateState(
+              appBarType: AppBarType.collapsed,
+              appBarTitle: 'Resilience',
+            ),
+      );
+    }
+
     return Scaffold(
       extendBody: true,
       body: child,
@@ -40,8 +51,8 @@ class ResilienceShell extends ConsumerWidget {
               iconData: Icons.person,
               label: localizations.profile,
               onPressed: () {
-                final provider = ref.read(routerStateProvider);
-                provider.pushNamed(RoutePaths.profile.name);
+                // final provider = ref.read(routerStateProvider);
+                // provider.pushNamed(RoutePaths.profile.name);
               },
               isExpanded: profileButtonIsExpanded,
             ),
@@ -49,8 +60,8 @@ class ResilienceShell extends ConsumerWidget {
               label: localizations.settings,
               iconData: Icons.settings,
               onPressed: () {
-                final provider = ref.read(routerStateProvider);
-                provider.pushNamed(RoutePaths.settings.name);
+                // final provider = ref.read(routerStateProvider);
+                // provider.pushNamed(RoutePaths.settings.name);
               },
               isExpanded: settingsButtonIsExpanded,
             ),

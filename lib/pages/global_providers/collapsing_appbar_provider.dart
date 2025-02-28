@@ -1,48 +1,82 @@
-// import 'package:riverpod_annotation/riverpod_annotation.dart';
-// import 'package:self_help/core/constants/routes_constants.dart';
-// import 'package:self_help/pages/global_providers/router_provider.dart';
-// import 'package:self_help/services/services.dart';
+import 'package:flutter/material.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-// part 'collapsing_appbar_provider.g.dart';
+part 'collapsing_appbar_provider.g.dart';
 
-// enum AppBarType {
-//   welcome,
-//   login,
-//   register,
-//   home,
-//   sos,
-//   hidden,
-//   loading,
-//   error,
-//   gainControl,
-//   profile,
-//   settings,
-// }
+enum AppBarType { collapsed, expanded, fullScreen }
 
-// @riverpod
-// class CollapsingAppBar extends _$CollapsingAppBar {
-//   @override
-//   AppBarType build() {
-//     final route = ref.watch(routerListenerProvider);
-//     final routerProviderWasInit = storageService.readRouterProviderWasInit();
+@immutable
+class AppBarState {
+  final AppBarType appBarType;
+  final String? appBarTitle;
+  final String? fullScreenTitle;
+  final String? subtitle;
+  final String? logo;
+  final bool hasBackButton;
+  final VoidCallback? startCallback;
 
-//     loggerService
-//         .debug('CollapsingAppBar: build: $route, $routerProviderWasInit');
+  const AppBarState({
+    required this.appBarType,
+    this.appBarTitle,
+    this.fullScreenTitle,
+    this.subtitle,
+    this.logo,
+    this.hasBackButton = false,
+    this.startCallback,
+  });
 
-//     return switch (route) {
-//       RoutePaths.login =>
-//         routerProviderWasInit ? AppBarType.login : AppBarType.welcome,
-//       RoutePaths.register => AppBarType.register,
-//       RoutePaths.home => AppBarType.home,
-//       RoutePaths.profile => AppBarType.profile,
-//       RoutePaths.settings => AppBarType.settings,
-//       _ => AppBarType.hidden,
-//     };
-//   }
+  AppBarState copyWith({
+    required AppBarType appBarType,
+    String? appBarTitle,
+    String? fullScreenTitle,
+    String? subtitle,
+    String? logo,
+    bool? hasBackButton,
+    VoidCallback? startCallback,
+  }) {
+    return AppBarState(
+      appBarType: appBarType,
+      appBarTitle: appBarTitle,
+      fullScreenTitle: fullScreenTitle,
+      subtitle: subtitle,
+      logo: logo,
+      hasBackButton: hasBackButton ?? false,
+      startCallback: startCallback,
+    );
+  }
 
-//   /// Updates the state explicitly, overriding any reactive updates.
-//   void updateState(AppBarType newState) {
-//     loggerService.debug('CollapsingAppBar: updateState: $newState');
-//     state = newState;
-//   }
-// }
+  @override
+  String toString() {
+    return 'AppBarState(appBarType: $appBarType, title: $appBarTitle, subtitle: $subtitle, hasBackButton: $hasBackButton, hasStartButton: $startCallback, hasLogo: $logo, fullScreenTitle: $fullScreenTitle)';
+  }
+}
+
+@riverpod
+class AnimatedAppBar extends _$AnimatedAppBar {
+  @override
+  AppBarState build() {
+    return AppBarState(
+      appBarType: AppBarType.collapsed,
+    );
+  }
+
+  void updateState({
+    required AppBarType appBarType,
+    String? appBarTitle,
+    String? fullScreenTitle,
+    String? subtitle,
+    String? logo,
+    bool? hasBackButton,
+    VoidCallback? startCallback,
+  }) {
+    state = state.copyWith(
+      appBarType: appBarType,
+      appBarTitle: appBarTitle,
+      fullScreenTitle: fullScreenTitle,
+      subtitle: subtitle,
+      logo: logo,
+      hasBackButton: hasBackButton ?? false,
+      startCallback: startCallback,
+    );
+  }
+}

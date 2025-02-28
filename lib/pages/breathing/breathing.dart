@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:self_help/core/constants/constants.dart';
+import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/core/theme.dart';
+import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
+import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_widgets/animated_background.dart';
 import 'package:self_help/pages/global_widgets/flow_appbar.dart';
 import 'package:self_help/pages/global_widgets/flow_drawer.dart';
@@ -17,6 +20,18 @@ class Breathing extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
+
+    final routerListener = ref.watch(routerListenerProvider);
+
+    if (routerListener == RoutePaths.breathing) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => ref.read(animatedAppBarProvider.notifier).updateState(
+              appBarType: AppBarType.expanded,
+              appBarTitle: localizations.breathingExercise,
+              subtitle: localizations.breathingExerciseSubtitle,
+            ),
+      );
+    }
 
     final maxSize = Constants.minimumScreenWidth;
 
@@ -201,47 +216,45 @@ class Breathing extends ConsumerWidget {
           // flowController.backNoPop();
         }
       },
-      child: Stack(
-        children: [
-          SizedBox.expand(
-            child: AnimatedBackground(),
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              gradientStartColor,
+              gradientEndColor,
+            ],
           ),
-          Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: FlowAppBar(
-              title: localizations.breathingExercise,
-              subtitle: localizations.breathingExerciseSubtitle,
-            ),
-            body: Column(
-              children: [
-                SingleChildScrollView(
-                  child: Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Center(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: maxSize,
-                            width: maxSize,
-                            child: Center(child: expandingCircleWidget),
-                          ),
-                          SizedBox(
-                            height: 60,
-                            child: Center(child: stopButton),
-                          ),
-                        ],
-                      ),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: SingleChildScrollView(
+            child: Directionality(
+              textDirection: TextDirection.rtl,
+              child: Center(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: maxSize,
+                      width: maxSize,
+                      child: Center(child: expandingCircleWidget),
                     ),
-                  ),
+                    SizedBox(
+                      height: 60,
+                      child: Center(child: stopButton),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-            bottomNavigationBar: FlowNavigationBar(
-              title: localizations.skip,
-            ),
-            drawer: FlowDrawer(),
           ),
-        ],
+          bottomNavigationBar: FlowNavigationBar(
+            title: localizations.skip,
+          ),
+          drawer: FlowDrawer(),
+        ),
       ),
     );
   }

@@ -43,6 +43,11 @@ class Resilience extends ConsumerWidget {
         description: 'Look Around',
         path: RoutePaths.lookAroundExercise,
       ),
+      Exercise(
+        title: 'Reapeat Number',
+        description: 'Reapeat Number',
+        path: RoutePaths.repeatNumber,
+      ),
     ];
 
     return Scaffold(

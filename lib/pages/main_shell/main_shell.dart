@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/core/constants/flow_route_constant.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
+import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/page_flow_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
-import 'package:self_help/pages/global_providers/user_provider.dart';
 import 'package:self_help/pages/global_widgets/animated_background.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/services/services.dart';
 
-enum AnimatedScreenType { expanded, collapsedLong, collapsedShort, hidden }
+// todo add fade transition to appbar
 
-class MainShell extends ConsumerWidget {
+class MainShell extends HookConsumerWidget {
   const MainShell({
     super.key,
     required this.child,
@@ -26,92 +28,204 @@ class MainShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    loggerService.info('page $page');
+    final appState = ref.watch(animatedAppBarProvider);
+    loggerService.debug('§ appState $appState');
 
-    final animatedScreenType = switch (page) {
-      // expanded
-      RoutePaths.welcome ||
-      RoutePaths.sosLanding ||
-      RoutePaths.gainControlLanding =>
-        AnimatedScreenType.expanded,
-      // collapsed long
-      RoutePaths.home => AnimatedScreenType.collapsedLong,
-      // collapsed short
-      RoutePaths.login ||
-      RoutePaths.register ||
-      RoutePaths.settings ||
-      RoutePaths.profile =>
-        AnimatedScreenType.collapsedShort,
-      // hidden
-      _ => AnimatedScreenType.hidden,
-    };
+    final appBarType = appState.appBarType;
+    final appBarTitle = appState.appBarTitle;
+    final subtitle = appState.subtitle;
+    final fullScreenTitle = appState.fullScreenTitle;
+    final logo = appState.logo;
 
-    final animatedScreenHeight = switch (animatedScreenType) {
-      AnimatedScreenType.expanded => MediaQuery.of(context).size.height,
-      AnimatedScreenType.collapsedLong => 200.0,
-      AnimatedScreenType.collapsedShort => 150.0,
-      AnimatedScreenType.hidden => 0.0,
-    };
+    final hasBackButton = appState.hasBackButton;
+    final startCallback = appState.startCallback;
 
-    final animatedScreenDecoration = BoxDecoration(
-      borderRadius: [
-        AnimatedScreenType.collapsedLong,
-        AnimatedScreenType.collapsedShort
-      ].contains(animatedScreenType)
-          ? BorderRadius.only(
-              bottomLeft: Radius.circular(50),
-              bottomRight: Radius.circular(50),
-            )
-          : null,
+    final isFullScreen = appBarType == AppBarType.fullScreen;
+
+    const radius = BorderRadius.vertical(
+      bottom: Radius.circular(30),
     );
+    final borderRadius = isFullScreen ? null : radius;
+
+    final bottomHeight = switch (appBarType) {
+      AppBarType.collapsed => 0.0,
+      AppBarType.expanded => 60.0,
+      AppBarType.fullScreen => MediaQuery.of(context).size.height -
+          AppBar().preferredSize.height -
+          MediaQuery.of(context).padding.top,
+    };
+    // loggerService.debug('measureKey height ${size.value?.height}');
 
     return PopScope(
       canPop: false,
       child: Scaffold(
-        body: Column(
-          children: [
-            // animated screen
-            AnimatedContainer(
-              clipBehavior: Clip.antiAlias,
-              height: animatedScreenHeight,
-              duration: Constants.animatiodDuration,
-              decoration: animatedScreenDecoration,
-              child: Stack(
-                children: [
-                  SizedBox.expand(
+        appBar: PreferredSize(
+          preferredSize: MediaQuery.of(context).size,
+          child: IntrinsicHeight(
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: AnimatedContainer(
+                    duration: Constants.animationDuration,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      borderRadius: borderRadius,
+                    ),
                     child: const AnimatedBackground(),
                   ),
-                  // animated screen content
-                  SafeArea(
-                    child: AnimatedSwitcher(
-                      duration: Constants.animatiodDuration,
-                      transitionBuilder: (child, animation) {
-                        return FadeTransition(
-                          // key: ValueKey('${page?.name}'),
-                          opacity: animation,
-                          child: child,
-                        );
-                      },
-                      // sizeed box used only for the key
-                      child: SizedBox(
-                        key: ValueKey('${page?.name}'),
-                        child: switch (animatedScreenType) {
-                          AnimatedScreenType.hidden => const SizedBox.shrink(),
-                          _ => _buildVisibleAnimatedScreenContent(
-                              context,
-                              ref,
-                              animatedScreenType,
+                ),
+                AppBar(
+                  backgroundColor: Colors.transparent,
+                  title: Text(appBarTitle ?? ''),
+                  titleTextStyle: Theme.of(context).textTheme.headlineMedium,
+                  centerTitle: true,
+                  leading: hasBackButton
+                      ? IconButton.filled(
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStateProperty.all(
+                              Colors.white30,
                             ),
-                        },
+                          ),
+                          onPressed: () => ref.read(routerStateProvider).pop(),
+                          icon: Icon(
+                            Icons.arrow_back_ios_new,
+                            color: Colors.black,
+                          ),
+                        )
+                      : null,
+                  bottom: PreferredSize(
+                    preferredSize: MediaQuery.of(context).size,
+                    child: AnimatedContainer(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      duration: Constants.animationDuration,
+                      height: bottomHeight,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          if (logo != null)
+                            Flexible(
+                              child: Image.asset(
+                                AssetsConstants.selfHelpNoBk,
+                                height: 140.0,
+                              ),
+                            ),
+                          Flexible(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (fullScreenTitle != null)
+                                  Flexible(
+                                    child: Text(
+                                      '$fullScreenTitle\n',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                if (subtitle != null)
+                                  Flexible(
+                                    child: Text(
+                                      subtitle,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          if (startCallback != null)
+                            Flexible(
+                              child: Center(
+                                child: WideButton(
+                                  title: 'המשך',
+                                  onPressed: startCallback,
+                                  type: ButtonType.transparent,
+                                  width: double.infinity,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Expanded(child: child),
-          ],
+          ),
         ),
+        // PreferredSize(
+        //   preferredSize: MediaQuery.of(context).size,
+        //   child: AnimatedContainer(
+        //     duration: Constants.animationDuration,
+        //     height: 200,
+        //     child: Stack(
+        //       key: ValueKey('${page?.name}'),
+        //       children: [
+        //         Positioned.fill(
+        //           child: const AnimatedBackground(),
+        //         ),
+        //         // animated screen content
+        //         SafeArea(
+        //           child: AnimatedSwitcher(
+        //             duration: Constants.animationDuration,
+        //             transitionBuilder: (child, animation) {
+        //               return FadeTransition(
+        //                 // key: ValueKey('${page?.name}'),
+        //                 opacity: animation,
+        //                 child: child,
+        //               );
+        //             },
+        //             // sizeed box used only for the key
+        //             child: SizedBox(
+        //               // key: ValueKey('${page?.name}'),
+        //               child: switch (appBarType) {
+        //                 AppBarType.hidden => const SizedBox.shrink(),
+        //                 _ => Center(
+        //                     child: Padding(
+        //                       padding: const EdgeInsets.all(16),
+        //                       child: Column(
+        //                         mainAxisAlignment:
+        //                             MainAxisAlignment.spaceAround,
+        //                         children: [
+        //                           if (hasBackButton) _buildBackButton(ref),
+        //                           if (hasLogo) _buildLogo(),
+        //                           Column(
+        //                             children: [
+        //                               Text(
+        //                                 title,
+        //                                 style: Theme.of(context)
+        //                                     .textTheme
+        //                                     .headlineMedium,
+        //                                 textAlign: TextAlign.center,
+        //                               ),
+        //                               if (subtitle.isNotEmpty)
+        //                                 Text(
+        //                                   '\n$subtitle',
+        //                                   style: Theme.of(context)
+        //                                       .textTheme
+        //                                       .bodyMedium,
+        //                                   textAlign: TextAlign.center,
+        //                                 ),
+        //                             ],
+        //                           ),
+        //                           if (hasStartButton)
+        //                             _buildStartButton(localizations, ref),
+        //                         ],
+        //                       ),
+        //                     ),
+        //                   ),
+        //               },
+        //             ),
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
+        body: child,
       ),
     );
   }
@@ -126,109 +240,32 @@ class MainShell extends ConsumerWidget {
     }
   }
 
-  void _backPressed(WidgetRef ref) {
-    ref.read(routerStateProvider).goNamed(RoutePaths.welcome.name);
-  }
+  // void _backPressed(WidgetRef ref) {
+  //   ref.read(routerStateProvider).pop();
+  // }
 
-  Widget _buildTitleWidget(
-    BuildContext context,
-    AppLocalizations localizations,
-    WidgetRef ref,
-  ) {
-    return Text(
-      switch (page) {
-        RoutePaths.login => localizations.login,
-        RoutePaths.register => localizations.registering,
-        RoutePaths.welcome => localizations.welcomeTitle,
-        RoutePaths.sosLanding => localizations.sosMainTitle,
-        RoutePaths.profile => localizations.profile,
-        RoutePaths.settings => localizations.settings,
-        RoutePaths.home => localizations.welcomeMessage(
-            ref.read(userProvider).valueOrNull?.displayName ?? ''),
-        _ => ''
-      },
-      style: Theme.of(context).textTheme.headlineMedium,
-      textAlign: TextAlign.center,
-    );
-  }
-
-  Widget _buildVisibleAnimatedScreenContent(
-    BuildContext context,
-    WidgetRef ref,
-    AnimatedScreenType animatedScreenType,
-  ) {
-    final localizations = AppLocalizations.of(context)!;
-
-    final titleWidget = _buildTitleWidget(context, localizations, ref);
-
-    final menuButton = _buildMenuButton(ref);
-
-    final hasBackButton = [
-      RoutePaths.sosLanding,
-    ].contains(page);
-
-    final hasLogo = [
-      RoutePaths.welcome,
-    ].contains(page);
-
-    final hasSubtitle = [
-      RoutePaths.welcome,
-      RoutePaths.home,
-      RoutePaths.sosLanding,
-    ].contains(page);
-
-    final hasStartButton = [
-      RoutePaths.welcome,
-      RoutePaths.sosLanding,
-    ].contains(page);
-
-    final isExpanded = animatedScreenType == AnimatedScreenType.expanded;
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            if (hasBackButton) _buildBackButton(ref),
-            if (hasLogo) _buildLogo(),
-            hasSubtitle
-                ? _buildTitltWithSubtitle(
-                    context,
-                    titleWidget,
-                    localizations,
-                    menuButton,
-                    isExpanded,
-                  )
-                : _buildTitle(titleWidget, menuButton),
-            if (hasStartButton) _buildStartButton(localizations, ref),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBackButton(WidgetRef ref) {
-    return Expanded(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          IconButton.filled(
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(
-                Colors.white30,
-              ),
-            ),
-            onPressed: () => _backPressed(ref),
-            icon: Icon(
-              Icons.arrow_back_ios_new,
-              color: Colors.black,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildBackButton(WidgetRef ref) {
+  //   return Expanded(
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.start,
+  //       mainAxisSize: MainAxisSize.max,
+  //       children: [
+  //         IconButton.filled(
+  //           style: ButtonStyle(
+  //             backgroundColor: WidgetStateProperty.all(
+  //               Colors.white30,
+  //             ),
+  //           ),
+  //           onPressed: () => _backPressed(ref),
+  //           icon: Icon(
+  //             Icons.arrow_back_ios_new,
+  //             color: Colors.black,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildLogo() {
     return Expanded(
@@ -247,6 +284,7 @@ class MainShell extends ConsumerWidget {
     AppLocalizations localizations,
     Widget menuButton,
     bool isExpanded,
+    String subtitle,
   ) {
     return Expanded(
       child: Column(
@@ -276,13 +314,7 @@ class MainShell extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  switch (page) {
-                    RoutePaths.welcome => localizations.welcomeSubtitle,
-                    RoutePaths.profile => localizations.profile,
-                    RoutePaths.home => localizations.homeSubtitle,
-                    RoutePaths.sosLanding => localizations.sosMainInfo,
-                    _ => ''
-                  },
+                  subtitle,
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
