@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 
-const textTitleColor = Color(0xff191919);
-const textSubtitleColor = Color(0xff4C4C4C);
-const textAboveAnimationColor = Color(0xff263238);
+const black = Color(0xff191919);
+const darkGrey = Color(0xff4C4C4C);
 const textStepColor = Color(0xff999999);
 
-const gradientEndColor = Color(0xff7E57C2);
-const gradientStartColor = Color(0xff7FCCEE);
+const purple = Color(0xff7E57C2);
+const purple2 = Color(0xff7F92D8);
+const purple3 = Color(0xff7F92D8);
 
+const blue = Color(0xff7FCCEE);
+const blue2 = Color(0xff91D1F0);
+const blue3 = Color(0xffB3DCF0);
+
+const whiteGrey = Color(0xffE6E6E6);
+const white = Color(0xffF5F5F5);
+
+// TODO: change this to match the design
 const breathStepIndicatorColor = Color(0xff92E3A9);
-
-const greyBackgroundColor = Color(0xffE6E6E6);
-
-const buttonBackgroundBlack = Color(0xff1A1A1A);
-
 const correctAnswerColor = Color(0xffB8FFF2);
 const wrongAnswerColor = Color(0xffFFD0D0);
 
@@ -21,7 +24,7 @@ ThemeData generateTheme() {
   return ThemeData(
     useMaterial3: true,
     colorScheme: const ColorScheme.light(
-      primary: gradientEndColor,
+      primary: purple,
     ),
     sliderTheme: const SliderThemeData(
       inactiveTrackColor: Colors.transparent,
@@ -44,7 +47,7 @@ ThemeData generateTheme() {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: gradientEndColor, width: 2.0),
+        borderSide: BorderSide(color: purple, width: 2.0),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
@@ -83,20 +86,23 @@ ThemeData generateTheme() {
             fontWeight: FontWeight.bold,
           ),
         ),
-        foregroundColor: WidgetStatePropertyAll<Color>(textTitleColor),
+        foregroundColor: WidgetStatePropertyAll<Color>(black),
+        side: WidgetStatePropertyAll<BorderSide>(
+          const BorderSide(color: black),
+        ),
       ),
     ),
     textTheme: const TextTheme(
-      titleLarge: TextStyle(color: textTitleColor),
+      titleLarge: TextStyle(color: black),
       titleMedium: TextStyle(
-        color: textTitleColor,
+        color: black,
         fontWeight: FontWeight.bold,
       ),
-      titleSmall: TextStyle(color: textTitleColor),
+      titleSmall: TextStyle(color: black),
 
       // body
       bodyLarge: TextStyle(
-        color: textTitleColor,
+        color: black,
         fontFamily: 'Rubik',
         letterSpacing: 0.04,
         height: 1.2,
@@ -104,16 +110,16 @@ ThemeData generateTheme() {
       ),
       // regular
       bodyMedium: TextStyle(
-        color: textTitleColor,
+        color: black,
         fontFamily: 'Rubik',
         fontSize: 16,
         fontWeight: FontWeight.w400,
         height: 1.2,
         letterSpacing: 0.04,
       ),
-      bodySmall: TextStyle(color: textTitleColor),
-      labelSmall: TextStyle(color: textTitleColor),
-      labelMedium: TextStyle(color: textTitleColor),
+      bodySmall: TextStyle(color: black),
+      labelSmall: TextStyle(color: black),
+      labelMedium: TextStyle(color: black),
 
       // step title
       labelLarge: TextStyle(
@@ -125,11 +131,11 @@ ThemeData generateTheme() {
         height: 1.2,
       ),
 
-      displaySmall: TextStyle(color: textTitleColor),
-      displayMedium: TextStyle(color: textTitleColor),
-      displayLarge: TextStyle(color: textTitleColor),
+      displaySmall: TextStyle(color: black),
+      displayMedium: TextStyle(color: black),
+      displayLarge: TextStyle(color: black),
       headlineLarge: TextStyle(
-        color: textTitleColor,
+        color: black,
         fontFamily: 'Rubik',
         fontWeight: FontWeight.w400,
         letterSpacing: 0.04,
@@ -137,12 +143,12 @@ ThemeData generateTheme() {
       ),
       // title
       headlineMedium: TextStyle(
-        color: textTitleColor,
+        color: black,
         fontFamily: 'Rubik',
         fontWeight: FontWeight.w600,
         letterSpacing: 0.04,
       ),
-      headlineSmall: TextStyle(color: textTitleColor),
+      headlineSmall: TextStyle(color: black),
     ),
   );
 }

@@ -77,7 +77,7 @@ class EnterNumber extends HookConsumerWidget {
       ),
       bottomNavigationBar: FlowNavigationBar(
         title: localizations.continueButtonTitle,
-        disabled: !isValid.value,
+        skip: !isValid.value,
         routeParams: {'userNumber': controller.text},
       ),
     );

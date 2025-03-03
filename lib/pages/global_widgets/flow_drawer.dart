@@ -18,7 +18,7 @@ class FlowDrawer extends ConsumerWidget {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: gradientEndColor,
+              color: purple,
             ),
             child: Column(
               children: [

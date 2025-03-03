@@ -116,7 +116,7 @@ class MagicTouch extends HookConsumerWidget {
         ),
         bottomNavigationBar: FlowNavigationBar(
           title: localizations.continueButtonTitle,
-          disabled: provider.isFinished,
+          skip: provider.isFinished,
         ),
         drawer: FlowDrawer(),
       ),

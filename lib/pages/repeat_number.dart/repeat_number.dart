@@ -53,7 +53,21 @@ class RepeatNumber extends HookConsumerWidget {
       return null;
     }, []);
 
+    final orderedBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0),
+      borderSide: BorderSide(
+        color: orderedInputValid.value ? Colors.green : Colors.grey,
+      ),
+    );
+    final reversedBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0),
+      borderSide: BorderSide(
+        color: reversedInputValid.value ? Colors.green : Colors.grey,
+      ),
+    );
+
     return Scaffold(
+        backgroundColor: Colors.transparent,
         body: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
@@ -68,7 +82,9 @@ class RepeatNumber extends HookConsumerWidget {
                   SizedBox(height: 16),
                   Text(
                     orderedRandomNumber,
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          letterSpacing: 10,
+                        ),
                   ),
                   SizedBox(height: 16),
                   Directionality(
@@ -88,6 +104,8 @@ class RepeatNumber extends HookConsumerWidget {
                           ?.copyWith(letterSpacing: 10),
                       decoration: InputDecoration(
                         counter: Offstage(),
+                        enabledBorder: orderedBorder,
+                        focusedBorder: orderedBorder,
                       ),
                       onChanged: (value) {
                         if (value == orderedRandomNumber) {
@@ -121,6 +139,8 @@ class RepeatNumber extends HookConsumerWidget {
                           ?.copyWith(letterSpacing: 10),
                       decoration: InputDecoration(
                         counter: Offstage(),
+                        enabledBorder: reversedBorder,
+                        focusedBorder: reversedBorder,
                       ),
                       onChanged: (value) {
                         loggerService.debug(
@@ -141,7 +161,7 @@ class RepeatNumber extends HookConsumerWidget {
         ),
         bottomNavigationBar: FlowNavigationBar(
           title: localizations.continueButtonTitle,
-          disabled: !reversedInputValid.value,
+          skip: !reversedInputValid.value,
         ));
   }
 

@@ -42,7 +42,7 @@ class ResilienceShell extends ConsumerWidget {
         padding: const EdgeInsets.all(0),
         height: 60,
         shape: const CircularNotchedRectangle(),
-        color: gradientStartColor,
+        color: blue,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [

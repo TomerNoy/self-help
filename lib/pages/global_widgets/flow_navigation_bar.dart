@@ -11,12 +11,12 @@ class FlowNavigationBar extends ConsumerWidget {
     super.key,
     required this.title,
     this.routeParams = const {},
-    this.disabled = false,
+    this.skip = false,
   });
 
   final Map<String, String> routeParams;
   final String title;
-  final bool disabled;
+  final bool skip;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,13 +45,11 @@ class FlowNavigationBar extends ConsumerWidget {
               SizedBox(width: 32),
               Expanded(
                 child: WideButton(
-                  onPressed: disabled
-                      ? null
-                      : () {
-                          final provider = ref.read(pageFlowProvider.notifier);
-                          provider.next(routeParams);
-                        },
-                  title: title,
+                  onPressed: () {
+                    final provider = ref.read(pageFlowProvider.notifier);
+                    provider.next(routeParams);
+                  },
+                  title: skip ? localizations.skip : title,
                   type: ButtonType.gradient,
                 ),
               ),

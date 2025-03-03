@@ -30,12 +30,13 @@ class Home extends HookConsumerWidget {
     }
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: ListView(
         padding: const EdgeInsets.all(16),
         shrinkWrap: true,
         children: [
           HomeCard(
-            backgroundColor: greyBackgroundColor,
+            backgroundColor: whiteGrey,
             description: 'פרוטוקול להתמודדות עם לחץ/חרדה',
             buttonTitle: localizations.startSosButtonTitle,
             imagePath: AssetsConstants.sosGirl,
@@ -45,7 +46,7 @@ class Home extends HookConsumerWidget {
             },
           ),
           HomeCard(
-            backgroundColor: greyBackgroundColor,
+            backgroundColor: whiteGrey,
             description: 'בנה את החוסן הנפשי שלך - תרגול יום יומי',
             buttonTitle: localizations.startResilienceButtonTitle,
             imagePath: AssetsConstants.confidenceMan,
@@ -55,7 +56,7 @@ class Home extends HookConsumerWidget {
             },
           ),
           HomeCard(
-            backgroundColor: greyBackgroundColor,
+            backgroundColor: whiteGrey,
             description: 'מצא מטפל קרוב אליך',
             buttonTitle: localizations.startFindATherapistButtonTitle,
             imagePath: AssetsConstants.therapist,

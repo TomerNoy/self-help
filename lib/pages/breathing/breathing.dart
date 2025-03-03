@@ -7,8 +7,6 @@ import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/core/theme.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
-import 'package:self_help/pages/global_widgets/animated_background.dart';
-import 'package:self_help/pages/global_widgets/flow_appbar.dart';
 import 'package:self_help/pages/global_widgets/flow_drawer.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
@@ -216,21 +214,10 @@ class Breathing extends ConsumerWidget {
           // flowController.backNoPop();
         }
       },
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.white,
-              gradientStartColor,
-              gradientEndColor,
-            ],
-          ),
-        ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: SingleChildScrollView(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: SingleChildScrollView(
             child: Directionality(
               textDirection: TextDirection.rtl,
               child: Center(
@@ -250,11 +237,11 @@ class Breathing extends ConsumerWidget {
               ),
             ),
           ),
-          bottomNavigationBar: FlowNavigationBar(
-            title: localizations.skip,
-          ),
-          drawer: FlowDrawer(),
         ),
+        bottomNavigationBar: FlowNavigationBar(
+          title: localizations.skip,
+        ),
+        drawer: FlowDrawer(),
       ),
     );
   }

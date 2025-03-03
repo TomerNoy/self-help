@@ -11,8 +11,7 @@ class FlowLists {
 
   static List<String> sos = [
     RoutePaths.stressLevel.name,
-    RoutePaths.enterNumber.name,
-    RoutePaths.enterNumberReversed.name,
+    RoutePaths.repeatNumber.name,
     RoutePaths.breathing.name,
     RoutePaths.stressLevel.name,
     RoutePaths.magicTouch.name,

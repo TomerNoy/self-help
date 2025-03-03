@@ -34,8 +34,8 @@ class WideButton extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          gradientStartColor,
-                          gradientEndColor,
+                          blue,
+                          purple,
                         ],
                       ),
                       borderRadius: BorderRadius.circular(26.0),
@@ -54,16 +54,6 @@ class WideButton extends StatelessWidget {
                 ),
               _ => OutlinedButton(
                   onPressed: onPressed,
-                  style: switch (type) {
-                    ButtonType.black =>
-                      Theme.of(context).outlinedButtonTheme.style!.copyWith(
-                            backgroundColor:
-                                WidgetStateProperty.all(buttonBackgroundBlack),
-                            foregroundColor:
-                                WidgetStateProperty.all(Colors.white),
-                          ),
-                    _ => null,
-                  },
                   child: Text(title),
                 )
             },

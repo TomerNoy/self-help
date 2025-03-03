@@ -133,7 +133,7 @@ class CalcExercise extends HookConsumerWidget {
       ),
       bottomNavigationBar: FlowNavigationBar(
         title: localization.continueButtonTitle,
-        disabled: !isValid.value,
+        skip: !isValid.value,
       ),
     );
   }

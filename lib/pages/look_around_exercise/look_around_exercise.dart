@@ -103,7 +103,7 @@ class LookAroundExercise extends HookConsumerWidget {
       ),
       bottomNavigationBar: FlowNavigationBar(
         title: localization.continueButtonTitle,
-        disabled: !controllers.value.every((e) => e.text.isNotEmpty),
+        skip: !controllers.value.every((e) => e.text.isNotEmpty),
       ),
     );
   }

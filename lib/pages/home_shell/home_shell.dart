@@ -37,6 +37,7 @@ class HomeShell extends HookConsumerWidget {
         : notchMarginController.reverse();
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       extendBody: true,
       body: child,
       bottomNavigationBar: AnimatedBuilder(
@@ -47,7 +48,7 @@ class HomeShell extends HookConsumerWidget {
             height: 60,
             shape: const CircularNotchedRectangle(),
             notchMargin: notchMarginAnimation.value,
-            color: gradientStartColor,
+            color: blue,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -151,8 +152,16 @@ class AnimatedFAB extends HookConsumerWidget {
       scale: scaleAnimation,
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
           shape: BoxShape.circle,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              blue,
+              // purple,
+              darkGrey,
+            ],
+          ),
         ),
         child: IconButton(
           icon: Icon(

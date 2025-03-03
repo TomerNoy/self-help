@@ -4,7 +4,7 @@ class Constants {
   static const collapsedAppBarHeight = 165.0;
 
   static const timerDuration = Duration(seconds: 1);
-  static const animationDuration = Duration(milliseconds: 500);
+  static const animationDuration = Duration(milliseconds: 300);
 
   static const defaultTimeout = Duration(seconds: 10);
 }

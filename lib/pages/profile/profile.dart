@@ -37,6 +37,7 @@ class Profile extends HookConsumerWidget {
     }
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: ListView(
         padding: EdgeInsets.all(16),
         children: [

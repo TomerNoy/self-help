@@ -8,7 +8,6 @@ import 'package:self_help/core/theme.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/page_flow_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
-import 'package:self_help/pages/global_widgets/flow_appbar.dart';
 import 'package:self_help/pages/global_widgets/flow_drawer.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
@@ -69,10 +68,10 @@ class StressLevel extends ConsumerWidget {
                       ),
                       customColors: CustomSliderColors(
                         progressBarColors: [
-                          gradientStartColor,
-                          gradientEndColor,
+                          blue,
+                          purple,
                         ],
-                        trackColor: greyBackgroundColor,
+                        trackColor: whiteGrey,
                         shadowColor: Colors.transparent,
                       ),
                       infoProperties: InfoProperties(
