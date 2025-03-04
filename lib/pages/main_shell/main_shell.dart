@@ -30,6 +30,8 @@ class MainShell extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appState = ref.watch(animatedAppBarProvider);
+    //TODO: why is this printing each time breathing page is updated?
+    // because the state is the same
     loggerService.debug('§ appState $appState');
 
     final appBarType = appState.appBarType;

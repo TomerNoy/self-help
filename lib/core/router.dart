@@ -3,8 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/pages/breathing/breathing.dart';
 import 'package:self_help/pages/calculate_exercise/calc_exercise.dart';
-import 'package:self_help/pages/enter_number/enter_number.dart';
-import 'package:self_help/pages/enter_number_reversed/enter_number_reversed.dart';
 import 'package:self_help/pages/main_shell/main_shell.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
 import 'package:self_help/pages/home/home.dart';
@@ -111,21 +109,6 @@ GoRouter router({
               path: RoutePaths.lookAroundExercise.path,
               name: RoutePaths.lookAroundExercise.name,
               builder: (context, state) => const LookAroundExercise(),
-            ),
-            GoRoute(
-              path: RoutePaths.enterNumber.path,
-              name: RoutePaths.enterNumber.name,
-              builder: (context, state) => const EnterNumber(),
-            ),
-            GoRoute(
-              path: RoutePaths.enterNumberReversed.path,
-              name: RoutePaths.enterNumberReversed.name,
-              builder: (context, state) {
-                final userNUmber = state.pathParameters['userNumber'] ?? '';
-                return EnterNumberReversed(
-                  userNumber: userNUmber,
-                );
-              },
             ),
             GoRoute(
               path: RoutePaths.stressLevel.path,

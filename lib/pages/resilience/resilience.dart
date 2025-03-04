@@ -14,11 +14,6 @@ class Resilience extends ConsumerWidget {
 
     final exercises = [
       Exercise(
-        title: 'Enter Number',
-        description: 'description',
-        path: RoutePaths.enterNumber,
-      ),
-      Exercise(
         title: 'Calculate',
         description: 'relief stress and anxiety by focusing on the present',
         path: RoutePaths.calculateExercise,

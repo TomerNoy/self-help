@@ -208,6 +208,19 @@ class Breathing extends ConsumerWidget {
       ),
     );
 
+    // final progressIndicator = Padding(
+    //   padding: const EdgeInsets.all(16.0),
+    //   child: LinearProgressIndicator(
+    //     value: exerciseState.totalSeconds == 0
+    //         ? 0
+    //         : (1 / exerciseState.totalSeconds) * exerciseState.secondsLeft,
+    //     backgroundColor: Colors.grey.shade300,
+    //     valueColor: AlwaysStoppedAnimation<Color>(breathingTypeColor),
+    //     borderRadius: BorderRadius.circular(5),
+    //     minHeight: 10,
+    //   ),
+    // );
+
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
@@ -228,6 +241,7 @@ class Breathing extends ConsumerWidget {
                       width: maxSize,
                       child: Center(child: expandingCircleWidget),
                     ),
+                    // progressIndicator,
                     SizedBox(
                       height: 60,
                       child: Center(child: stopButton),

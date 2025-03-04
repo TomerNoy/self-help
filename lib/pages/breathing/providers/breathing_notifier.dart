@@ -12,30 +12,34 @@ enum BreathingState { stopped, breathIn, peakHold, breathOut, baseHold }
 @immutable
 class BreathingExerciseState {
   final BreathingState breathingState;
+  final int totalSeconds;
   final int stateCount;
-  final int timerCount;
+  final int secondsLeft;
   final int repeatCount;
   final double breathingScale;
 
   const BreathingExerciseState({
     required this.breathingState,
+    required this.totalSeconds,
     required this.stateCount,
-    required this.timerCount,
+    required this.secondsLeft,
     required this.repeatCount,
     required this.breathingScale,
   });
 
   BreathingExerciseState copyWith({
     BreathingState? breathingState,
+    int? totalSeconds,
     int? stateCount,
-    int? timerCount,
+    int? secondsLeft,
     int? repeatCount,
     double? breathingScale,
   }) {
     return BreathingExerciseState(
       breathingState: breathingState ?? this.breathingState,
+      totalSeconds: totalSeconds ?? this.totalSeconds,
       stateCount: stateCount ?? this.stateCount,
-      timerCount: timerCount ?? this.timerCount,
+      secondsLeft: secondsLeft ?? this.secondsLeft,
       repeatCount: repeatCount ?? this.repeatCount,
       breathingScale: breathingScale ?? this.breathingScale,
     );
@@ -45,8 +49,9 @@ class BreathingExerciseState {
   String toString() {
     return '''BreathingExerciseState{
     breathingState: $breathingState, 
+    totalSeconds: $totalSeconds,
     stateCount: $stateCount, 
-    timerCount: $timerCount, 
+    secondsLeft: $secondsLeft, 
     repeatCount: $repeatCount
     breathingScale: $breathingScale
     }''';
@@ -94,8 +99,9 @@ class BreathingExercise extends _$BreathingExercise {
 
     return BreathingExerciseState(
       breathingState: BreathingState.stopped,
+      totalSeconds: 0,
       stateCount: 0,
-      timerCount: 0,
+      secondsLeft: 0,
       repeatCount: 0,
       breathingScale: 0.0,
     );
@@ -109,8 +115,9 @@ class BreathingExercise extends _$BreathingExercise {
 
     state = state.copyWith(
       breathingState: BreathingState.breathIn,
+      totalSeconds: _totalDuration,
       stateCount: _breathInDuration,
-      timerCount: _totalDuration,
+      secondsLeft: _totalDuration,
       repeatCount: _repeats,
       breathingScale: _breathingInFraction,
     );
@@ -120,7 +127,7 @@ class BreathingExercise extends _$BreathingExercise {
       (_) {
         state = state.copyWith(
           stateCount: state.stateCount - 1,
-          timerCount: state.timerCount - 1,
+          secondsLeft: state.secondsLeft - 1,
         );
 
         switch (state.breathingState) {
@@ -184,7 +191,7 @@ class BreathingExercise extends _$BreathingExercise {
     state = state.copyWith(
       breathingState: BreathingState.stopped,
       stateCount: 0,
-      timerCount: 0,
+      secondsLeft: 0,
       repeatCount: 0,
       breathingScale: 0.0,
     );
