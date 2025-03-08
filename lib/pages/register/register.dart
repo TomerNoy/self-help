@@ -25,16 +25,19 @@ class Register extends HookConsumerWidget {
 
     final formKey = useMemoized(() => GlobalKey<FormState>());
 
-    final routerListener = ref.watch(routerListenerProvider);
-    if (routerListener == RoutePaths.register) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-              appBarType: AppBarType.collapsed,
-              appBarTitle: localizations.registration,
-            ),
-      );
-    }
+    ref.listen(
+      routerListenerProvider,
+      (previous, next) {
+        if (next != previous && next == RoutePaths.home) {
+          updateAppBar(ref, localizations);
+        }
+      },
+    );
 
+    useEffect(() {
+      updateAppBar(ref, localizations);
+      return null;
+    }, const []);
     return Form(
       key: formKey,
       child: ListView(
@@ -151,5 +154,14 @@ class Register extends HookConsumerWidget {
         );
       }
     }
+  }
+
+  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
+            appBarType: AppBarType.collapsed,
+            appBarTitle: localizations.registration,
+          ),
+    );
   }
 }

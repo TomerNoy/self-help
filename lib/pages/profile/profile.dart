@@ -26,15 +26,19 @@ class Profile extends HookConsumerWidget {
       }
     }, []);
 
-    final routerListener = ref.watch(routerListenerProvider);
-    if (routerListener == RoutePaths.profile) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-              appBarType: AppBarType.collapsed,
-              appBarTitle: localizations.profile,
-            ),
-      );
-    }
+    ref.listen(
+      routerListenerProvider,
+      (previous, next) {
+        if (next != previous && next == RoutePaths.home) {
+          updateAppBar(ref, localizations);
+        }
+      },
+    );
+
+    useEffect(() {
+      updateAppBar(ref, localizations);
+      return null;
+    }, const []);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -144,6 +148,15 @@ class Profile extends HookConsumerWidget {
           ],
         );
       },
+    );
+  }
+
+  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
+            appBarType: AppBarType.collapsed,
+            appBarTitle: localizations.profile,
+          ),
     );
   }
 }

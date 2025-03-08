@@ -1,7 +1,8 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/core/theme.dart';
@@ -13,23 +14,25 @@ import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/breathing/providers/breathing_notifier.dart';
 import 'package:self_help/services/services.dart';
 
-class Breathing extends ConsumerWidget {
+class Breathing extends HookConsumerWidget {
   const Breathing({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
 
-    final routerListener = ref.watch(routerListenerProvider);
+    ref.listen(
+      routerListenerProvider,
+      (previous, next) {
+        if (next != previous && next == RoutePaths.home) {
+          updateAppBar(ref, localizations);
+        }
+      },
+    );
 
-    if (routerListener == RoutePaths.breathing) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-              appBarType: AppBarType.expanded,
-              appBarTitle: localizations.breathingExercise,
-              subtitle: localizations.breathingExerciseSubtitle,
-            ),
-      );
-    }
+    useEffect(() {
+      updateAppBar(ref, localizations);
+      return null;
+    }, const []);
 
     final maxSize = Constants.minimumScreenWidth;
 
@@ -246,6 +249,7 @@ class Breathing extends ConsumerWidget {
                       height: 60,
                       child: Center(child: stopButton),
                     ),
+                    Text('left ${exerciseState.secondsLeft} repeat ${exerciseState.repeatCount}'),
                   ],
                 ),
               ),
@@ -257,6 +261,16 @@ class Breathing extends ConsumerWidget {
         ),
         drawer: FlowDrawer(),
       ),
+    );
+  }
+
+  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
+            appBarType: AppBarType.expanded,
+            appBarTitle: localizations.breathingExercise,
+            subtitle: localizations.breathingExerciseSubtitle,
+          ),
     );
   }
 }

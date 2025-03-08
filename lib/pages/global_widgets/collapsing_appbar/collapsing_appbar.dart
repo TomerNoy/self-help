@@ -1,201 +1,182 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:self_help/core/constants/assets_constants.dart';
-// import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
-// import 'package:self_help/pages/global_widgets/animated_background.dart';
-// import 'package:self_help/pages/global_widgets/collapsing_appbar/collapsing_appbar_config.dart';
-// import 'package:self_help/pages/global_widgets/wide_button.dart';
-// import 'package:self_help/pages/loading.dart';
-// import 'package:self_help/services/services.dart';
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:self_help/core/constants/assets_constants.dart';
+import 'package:self_help/core/constants/constants.dart';
+import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
+import 'package:self_help/pages/global_providers/router_provider.dart';
+import 'package:self_help/pages/global_widgets/animated_background.dart';
+import 'package:self_help/pages/global_widgets/wide_button.dart';
 
-// class CollapsingAppbar extends ConsumerWidget {
-//   const CollapsingAppbar({super.key});
+class CollapsingAppbar extends HookConsumerWidget
+    implements PreferredSizeWidget {
+  const CollapsingAppbar({
+    super.key,
+    required this.size,
+  });
 
-//   static const animationDuration = Duration(milliseconds: 300);
+  final Size size;
 
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final appBarType = ref.watch(collapsingAppBarProvider);
-//     final logo = Image.asset(AssetsConstants.selfHelpNoBk);
-//     final config = AppBarContent(context: context, state: appBarType, ref: ref);
+// TODO add fade transition to appbar?
 
-//     if (appBarType == AppBarType.loading) {
-//       return Loading();
-//     }
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appState = ref.watch(animatedAppBarProvider);
 
-//     loggerService.debug('CollapsingAppbar: appBarType: $appBarType');
+    final appBarType = appState.appBarType;
+    final appBarTitle = appState.appBarTitle;
+    final subtitle = appState.subtitle;
+    final fullScreenTitle = appState.fullScreenTitle;
+    final logo = appState.logo;
 
-//     final isExpanded = [
-//       AppBarType.welcome,
-//       AppBarType.sos,
-//       AppBarType.gainControl,
-//       AppBarType.loading,
-//     ].contains(appBarType);
+    final hasBackButton = appState.hasBackButton;
+    final startCallback = appState.startCallback;
 
-//     // logo
-//     final logoWidget = SafeArea(
-//       bottom: false,
-//       child: AnimatedContainer(
-//         duration: animationDuration,
-//         height: config.logoHeight,
-//         child: Center(
-//           child: Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               AnimatedContainer(
-//                 duration: animationDuration,
-//                 width: 50,
-//                 height: [
-//                   AppBarType.sos,
-//                   AppBarType.gainControl,
-//                   AppBarType.profile,
-//                   AppBarType.settings,
-//                 ].contains(appBarType)
-//                     ? 50
-//                     : 0,
-//                 child: FittedBox(
-//                   child: Center(
-//                     child: Container(
-//                       decoration: BoxDecoration(
-//                         color: Colors.white24,
-//                         borderRadius: BorderRadius.circular(50),
-//                       ),
-//                       child: IconButton(
-//                         onPressed: config.backPressed,
-//                         icon: const Icon(
-//                           Icons.arrow_back_ios_new,
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//               FittedBox(child: logo),
-//               SizedBox(width: 50),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
+    final isFullScreen = appBarType == AppBarType.fullScreen;
 
-//     // title
-//     final titleWidget = AnimatedSwitcher(
-//       duration: animationDuration,
-//       transitionBuilder: (child, animation) {
-//         return ScaleTransition(
-//           scale: animation,
-//           child: child,
-//         );
-//       },
-//       child: Text(
-//         key: ValueKey('$appBarType'),
-//         config.title,
-//         style: Theme.of(context).textTheme.headlineMedium,
-//         textAlign: TextAlign.center,
-//       ),
-//     );
+    const radius = BorderRadius.vertical(
+      bottom: Radius.circular(30),
+    );
+    final borderRadius = isFullScreen ? null : radius;
+    final subtitleStyle = Theme.of(context).textTheme.bodyMedium;
+    final appBarHeight = AppBar().preferredSize.height;
+    final padding = MediaQuery.of(context).padding.top;
 
-//     // subtitle
-//     final subtitleWidget = AnimatedContainer(
-//       duration: animationDuration,
-//       height: config.subtitleHeight,
-//       child: AnimatedOpacity(
-//         duration: animationDuration,
-//         opacity: config.opacity,
-//         child: Text(
-//           config.subtitle,
-//           style: Theme.of(context).textTheme.bodyLarge,
-//           textAlign: TextAlign.center,
-//         ),
-//       ),
-//     );
+    double bottomHeight = 0.0;
 
-//     // button
-//     final buttonWidget = AnimatedContainer(
-//       duration: animationDuration,
-//       height: config.buttonHeight,
-//       child: AnimatedOpacity(
-//         duration: animationDuration,
-//         opacity: config.opacity,
-//         child: Align(
-//           alignment: Alignment.topCenter,
-//           child: WideButton(
-//             onPressed: config.startPressed,
-//             title: config.buttonTitle,
-//             type: ButtonType.transparent,
-//             width: double.infinity,
-//           ),
-//         ),
-//       ),
-//     );
+    if (appBarType == AppBarType.expanded) {
+      final textPainter = TextPainter(
+        text: TextSpan(text: subtitle, style: subtitleStyle),
+        maxLines: null,
+        textDirection: TextDirection.rtl,
+      )..layout(maxWidth: MediaQuery.of(context).size.width - padding);
+      bottomHeight = textPainter.height + 32;
+    } else if (appBarType == AppBarType.fullScreen) {
+      bottomHeight = MediaQuery.of(context).size.height - appBarHeight;
+    }
 
-//     return AnimatedOpacity(
-//       duration: animationDuration,
-//       opacity: appBarType == AppBarType.hidden ? 0.0 : 1.0,
-//       child: AnimatedContainer(
-//         duration: animationDuration,
-//         width: double.infinity,
-//         height: config.animationHeight,
-//         child: TweenAnimationBuilder<BorderRadius>(
-//           duration: animationDuration,
-//           curve: Curves.easeInOut,
-//           tween: Tween(
-//             begin: BorderRadius.vertical(
-//               bottom: Radius.circular(isExpanded ? 50 : 0),
-//             ),
-//             end: BorderRadius.vertical(
-//               bottom: Radius.circular(isExpanded ? 0 : 50),
-//             ),
-//           ),
-//           builder: (context, radius, child) {
-//             return ClipRRect(
-//               borderRadius: radius,
-//               child: Stack(
-//                 children: [
-//                   SizedBox.expand(
-//                     child: const AnimatedBackground(),
-//                   ),
-//                   Center(
-//                     child: Material(
-//                       color: Colors.transparent,
-//                       child: LayoutBuilder(
-//                         builder: (context, constraints) {
-//                           return SingleChildScrollView(
-//                             padding: const EdgeInsets.symmetric(horizontal: 16),
-//                             child: ConstrainedBox(
-//                               constraints: BoxConstraints(
-//                                 minHeight: constraints.maxHeight,
-//                               ),
-//                               child: Column(
-//                                 mainAxisAlignment:
-//                                     MainAxisAlignment.spaceAround,
-//                                 children: [
-//                                   Directionality(
-//                                     textDirection: TextDirection.rtl,
-//                                     child: logoWidget,
-//                                   ),
-//                                   Column(
-//                                     children: [
-//                                       titleWidget,
-//                                       const SizedBox(height: 16),
-//                                       subtitleWidget,
-//                                     ],
-//                                   ),
-//                                   buttonWidget,
-//                                 ],
-//                               ),
-//                             ),
-//                           );
-//                         },
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             );
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }
+    return IntrinsicHeight(
+      child: AnimatedContainer(
+        duration: Constants.animationDuration,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          borderRadius: borderRadius,
+        ),
+        child: Stack(
+          children: [
+            Positioned.fill(child: const AnimatedBackground()),
+            AppBar(
+              backgroundColor: Colors.transparent,
+              title: Text(appBarTitle ?? ''),
+              titleTextStyle: Theme.of(context).textTheme.headlineMedium,
+              centerTitle: true,
+              leading: hasBackButton
+                  ? IconButton.filled(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(
+                          Colors.white30,
+                        ),
+                      ),
+                      onPressed: () => ref.read(routerStateProvider).pop(),
+                      icon: Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.black,
+                      ),
+                    )
+                  : null,
+              bottom: PreferredSize(
+                preferredSize: MediaQuery.of(context).size,
+                child: AnimatedContainer(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  duration: Constants.animationDuration,
+                  height: bottomHeight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      if (logo != null)
+                        Flexible(
+                          child: Image.asset(
+                            AssetsConstants.selfHelpNoBk,
+                            height: 140.0,
+                          ),
+                        ),
+                      Flexible(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (fullScreenTitle != null)
+                              Flexible(
+                                child: Text(
+                                  '$fullScreenTitle\n',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            if (subtitle != null)
+                              Flexible(
+                                child: Text(
+                                  subtitle,
+                                  style: subtitleStyle,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      if (startCallback != null)
+                        Flexible(
+                          child: Center(
+                            child: WideButton(
+                              title: 'המשך',
+                              onPressed: startCallback,
+                              type: ButtonType.transparent,
+                              width: double.infinity,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuButton(WidgetRef ref) {
+    return MenuAnchor(
+      builder: (context, controller, child) {
+        return IconButton.filled(
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all(
+              Colors.white30,
+            ),
+          ),
+          onPressed: () {
+            if (controller.isOpen) {
+              controller.close();
+            } else {
+              controller.open();
+            }
+          },
+          icon: Icon(
+            Icons.menu,
+            color: Colors.black,
+          ),
+        );
+      },
+      menuChildren: List.generate(
+        10,
+        (index) => ListTile(
+          title: Text('Item $index'),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => size;
+}

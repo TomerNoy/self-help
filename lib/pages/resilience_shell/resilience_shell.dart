@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/core/theme.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
@@ -7,7 +8,7 @@ import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/home_shell/home_shell.dart';
 
-class ResilienceShell extends ConsumerWidget {
+class ResilienceShell extends HookConsumerWidget {
   const ResilienceShell({
     super.key,
     required this.child,
@@ -25,15 +26,19 @@ class ResilienceShell extends ConsumerWidget {
     final profileButtonIsExpanded = page == RoutePaths.profile;
     final settingsButtonIsExpanded = page == RoutePaths.settings;
 
-    final routerListener = ref.watch(routerListenerProvider);
-    if (routerListener == RoutePaths.resilience) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-              appBarType: AppBarType.collapsed,
-              appBarTitle: 'Resilience',
-            ),
-      );
-    }
+    ref.listen(
+      routerListenerProvider,
+      (previous, next) {
+        if (next != previous && next == RoutePaths.home) {
+          updateAppBar(ref, localizations);
+        }
+      },
+    );
+
+    useEffect(() {
+      updateAppBar(ref, localizations);
+      return null;
+    }, const []);
 
     return Scaffold(
       extendBody: true,
@@ -68,6 +73,15 @@ class ResilienceShell extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
+            appBarType: AppBarType.collapsed,
+            appBarTitle: 'Resilience',
+          ),
     );
   }
 }

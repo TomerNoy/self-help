@@ -42,16 +42,19 @@ class Login extends HookConsumerWidget {
 
     GoogleSignIn googleSignIn = GoogleSignIn(scopes: scopes);
 
-    final routerListener = ref.watch(routerListenerProvider);
-    if (routerListener == RoutePaths.login) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-              appBarType: AppBarType.collapsed,
-              appBarTitle: localizations.login,
-            ),
-      );
-    }
+    ref.listen(
+      routerListenerProvider,
+      (previous, next) {
+        if (next != previous && next == RoutePaths.home) {
+          updateAppBar(ref, localizations);
+        }
+      },
+    );
 
+    useEffect(() {
+      updateAppBar(ref, localizations);
+      return null;
+    }, const []);
     return ListView(
       padding: const EdgeInsets.all(16),
       shrinkWrap: true,
@@ -215,5 +218,14 @@ class Login extends HookConsumerWidget {
         ),
       );
     }
+  }
+
+  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
+            appBarType: AppBarType.collapsed,
+            appBarTitle: localizations.login,
+          ),
+    );
   }
 }

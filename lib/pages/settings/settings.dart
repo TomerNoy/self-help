@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
@@ -13,16 +14,19 @@ class Settings extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
 
-    final routerListener = ref.watch(routerListenerProvider);
-    if (routerListener == RoutePaths.settings) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-              appBarType: AppBarType.collapsed,
-              appBarTitle: localizations.settings,
-            ),
-      );
-    }
+    ref.listen(
+      routerListenerProvider,
+      (previous, next) {
+        if (next != previous && next == RoutePaths.home) {
+          updateAppBar(ref, localizations);
+        }
+      },
+    );
 
+    useEffect(() {
+      updateAppBar(ref, localizations);
+      return null;
+    }, const []);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: ListView(
@@ -35,6 +39,15 @@ class Settings extends HookConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
+            appBarType: AppBarType.collapsed,
+            appBarTitle: localizations.settings,
+          ),
     );
   }
 }
