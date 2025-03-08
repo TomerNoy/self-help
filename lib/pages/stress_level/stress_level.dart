@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
@@ -14,7 +15,7 @@ import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/stress_level/providers/stress_level_provider.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
-class StressLevel extends ConsumerWidget {
+class StressLevel extends HookConsumerWidget {
   const StressLevel({super.key});
 
   @override
@@ -23,16 +24,19 @@ class StressLevel extends ConsumerWidget {
     final localizations = AppLocalizations.of(context)!;
     final width = Constants.minimumScreenWidth;
 
-    final routerListener = ref.watch(routerListenerProvider);
-    if (routerListener == RoutePaths.stressLevel) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-              appBarType: AppBarType.expanded,
-              appBarTitle: localizations.measureTitle,
-              subtitle: localizations.measureSubtitle,
-            ),
-      );
-    }
+    ref.listen(
+      routerListenerProvider,
+      (previous, next) {
+        if (next != previous && next == RoutePaths.home) {
+          updateAppBar(ref, localizations);
+        }
+      },
+    );
+
+    useEffect(() {
+      updateAppBar(ref, localizations);
+      return null;
+    }, const []);
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
@@ -137,6 +141,16 @@ class StressLevel extends ConsumerWidget {
         ),
         drawer: FlowDrawer(),
       ),
+    );
+  }
+
+  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
+            appBarType: AppBarType.expanded,
+            appBarTitle: localizations.measureTitle,
+            subtitle: localizations.measureSubtitle,
+          ),
     );
   }
 }

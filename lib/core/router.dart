@@ -34,8 +34,7 @@ GoRouter router({
     routes: [
       ShellRoute(
           builder: (context, state, child) {
-            final page = RoutePaths.fromPath(state.fullPath ?? '');
-            return MainShell(page: page, child: child);
+            return MainShell(child: child);
           },
           routes: [
             GoRoute(

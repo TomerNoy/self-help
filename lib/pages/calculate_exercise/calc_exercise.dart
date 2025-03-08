@@ -17,17 +17,19 @@ class CalcExercise extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final localization = AppLocalizations.of(context)!;
 
-    final routerListener = ref.watch(routerListenerProvider);
+    ref.listen(
+      routerListenerProvider,
+      (previous, next) {
+        if (next != previous && next == RoutePaths.home) {
+          updateAppBar(ref, localization);
+        }
+      },
+    );
 
-    if (routerListener == RoutePaths.calculateExercise) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-              appBarType: AppBarType.expanded,
-              appBarTitle: localization.calcExercise,
-              subtitle: localization.calcExerciseSubtitle,
-            ),
-      );
-    }
+    useEffect(() {
+      updateAppBar(ref, localization);
+      return null;
+    }, const []);
 
     final isValid = useState(false);
 
@@ -135,6 +137,16 @@ class CalcExercise extends HookConsumerWidget {
         title: localization.continueButtonTitle,
         skip: !isValid.value,
       ),
+    );
+  }
+
+  void updateAppBar(WidgetRef ref, AppLocalizations localization) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
+            appBarType: AppBarType.expanded,
+            appBarTitle: localization.calcExercise,
+            subtitle: localization.calcExerciseSubtitle,
+          ),
     );
   }
 }

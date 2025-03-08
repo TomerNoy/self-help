@@ -24,17 +24,14 @@ class RepeatNumber extends HookConsumerWidget {
     final orderedFocusNode = useFocusNode();
     final reversedFocusNode = useFocusNode();
 
-    final routerListener = ref.watch(routerListenerProvider);
-
-    if (routerListener == RoutePaths.repeatNumber) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-              appBarType: AppBarType.expanded,
-              appBarTitle: localizations.enterNumber,
-              subtitle: localizations.enterNumberSubtitle,
-            ),
-      );
-    }
+    ref.listen(
+      routerListenerProvider,
+      (previous, next) {
+        if (next != previous && next == RoutePaths.home) {
+          updateAppBar(ref, localizations);
+        }
+      },
+    );
 
     final String orderedRandomNumber = useMemoized(
       () => generateRandom(),
@@ -47,6 +44,7 @@ class RepeatNumber extends HookConsumerWidget {
     final reversedInputValid = useState(false);
 
     useEffect(() {
+      updateAppBar(ref, localizations);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         FocusScope.of(context).requestFocus(orderedFocusNode);
       });
@@ -170,5 +168,15 @@ class RepeatNumber extends HookConsumerWidget {
       return Random().nextInt(10);
     });
     return list.join();
+  }
+
+  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
+            appBarType: AppBarType.expanded,
+            appBarTitle: localizations.enterNumber,
+            subtitle: localizations.enterNumberSubtitle,
+          ),
+    );
   }
 }

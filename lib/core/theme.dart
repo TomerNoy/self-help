@@ -6,7 +6,7 @@ const textStepColor = Color(0xff999999);
 
 const purple = Color(0xff7E57C2);
 const purple2 = Color(0xff7F92D8);
-const purple3 = Color(0xff7F92D8);
+const purple3 = Color(0xff7FAFE3);
 
 const blue = Color(0xff7FCCEE);
 const blue2 = Color(0xff91D1F0);

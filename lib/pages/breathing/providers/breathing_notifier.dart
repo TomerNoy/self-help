@@ -133,10 +133,11 @@ class BreathingExercise extends _$BreathingExercise {
         switch (state.breathingState) {
           case BreathingState.breathIn:
             if (state.stateCount <= 0) {
-              state = state.copyWith(
-                breathingState: BreathingState.peakHold,
-                stateCount: _peakHoldDuration,
-              );
+              if (_peakHoldDuration == 0) {
+                _updateBreathingState(BreathingState.breathOut);
+              } else {
+                _updateBreathingState(BreathingState.peakHold);
+              }
             } else {
               state = state.copyWith(
                 breathingScale: state.breathingScale + _breathingInFraction,
@@ -145,19 +146,24 @@ class BreathingExercise extends _$BreathingExercise {
             break;
           case BreathingState.peakHold:
             if (state.stateCount <= 0) {
-              state = state.copyWith(
-                breathingState: BreathingState.breathOut,
-                stateCount: _breathOutDuration,
-                breathingScale: state.breathingScale - _breathingOutFraction,
-              );
+              _updateBreathingState(BreathingState.breathOut);
             }
             break;
           case BreathingState.breathOut:
             if (state.stateCount <= 0) {
-              state = state.copyWith(
-                breathingState: BreathingState.baseHold,
-                stateCount: _baseHoldDuration,
-              );
+              if (state.repeatCount <= 1) {
+                stop();
+              } else if (_baseHoldDuration == 0) {
+                _updateBreathingState(
+                  BreathingState.breathIn,
+                  repeatCount: state.repeatCount - 1,
+                );
+              } else {
+                _updateBreathingState(
+                  BreathingState.baseHold,
+                  repeatCount: state.repeatCount - 1,
+                );
+              }
             } else {
               state = state.copyWith(
                 breathingScale: state.breathingScale - _breathingOutFraction,
@@ -167,17 +173,9 @@ class BreathingExercise extends _$BreathingExercise {
           case BreathingState.baseHold:
             if (state.repeatCount <= 1) {
               stop();
-            } else {
-              if (state.stateCount <= 0) {
-                state = state.copyWith(
-                  breathingState: BreathingState.breathIn,
-                  stateCount: _breathInDuration,
-                  repeatCount: state.repeatCount - 1,
-                  breathingScale: state.breathingScale + _breathingInFraction,
-                );
-              }
+            } else if (state.stateCount <= 0) {
+              _updateBreathingState(BreathingState.breathIn);
             }
-
             break;
           default:
             break;
@@ -186,14 +184,36 @@ class BreathingExercise extends _$BreathingExercise {
     );
   }
 
+  void _updateBreathingState(
+    BreathingState breathingState, {
+    int? repeatCount,
+  }) {
+    state = state.copyWith(
+      breathingState: breathingState,
+      stateCount: switch (breathingState) {
+        BreathingState.breathIn => _breathInDuration,
+        BreathingState.peakHold => _peakHoldDuration,
+        BreathingState.breathOut => _breathOutDuration,
+        BreathingState.baseHold => _baseHoldDuration,
+        _ => 0,
+      },
+      breathingScale: switch (breathingState) {
+        BreathingState.breathIn => state.breathingScale + _breathingInFraction,
+        BreathingState.breathOut =>
+          state.breathingScale - _breathingOutFraction,
+        BreathingState.stopped => 0.0,
+        _ => null,
+      },
+      repeatCount: repeatCount,
+      secondsLeft: switch (breathingState) {
+        BreathingState.stopped => 0,
+        _ => null,
+      },
+    );
+  }
+
   void stop() {
     _timer?.cancel();
-    state = state.copyWith(
-      breathingState: BreathingState.stopped,
-      stateCount: 0,
-      secondsLeft: 0,
-      repeatCount: 0,
-      breathingScale: 0.0,
-    );
+    _updateBreathingState(BreathingState.stopped, repeatCount: 0);
   }
 }

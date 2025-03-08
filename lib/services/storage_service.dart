@@ -5,10 +5,10 @@ class StorageService {
 
   Future<void> init() async => _pref = await SharedPreferences.getInstance();
 
-  int readBreathInDuration() => _pref.getInt('BreathInDuration') ?? 4;
+  int readBreathInDuration() => _pref.getInt('BreathInDuration') ?? 3;
   int readPeakHoldDuration() => _pref.getInt('PeakHoldDuration') ?? 2;
   int readBreathOutDuration() => _pref.getInt('BreathOutDuration') ?? 6;
-  int readBaseHoldDuration() => _pref.getInt('BaseHoldDuration') ?? 2;
+  int readBaseHoldDuration() => _pref.getInt('BaseHoldDuration') ?? 0;
   int readRepeats() => _pref.getInt('Repeats') ?? 4;
 
   String readPreferredLanguage() {
