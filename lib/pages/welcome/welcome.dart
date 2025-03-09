@@ -14,33 +14,38 @@ class Welcome extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
 
+    final title = localizations.welcomeTitle;
+    final subtitle = localizations.welcomeSubtitle;
+
+    final appbarNotifier = ref.read(animatedAppBarProvider.notifier);
+    final routerProvider = ref.read(routerStateProvider);
+
+    void updateAppBar() {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => appbarNotifier.updateState(
+            appBarType: AppBarType.fullScreen,
+            logo: AssetsConstants.selfHelpNoBk,
+            fullScreenTitle: title,
+            subtitle: subtitle,
+            startCallback: () {
+              routerProvider.pushNamed(RoutePaths.login.name);
+            }),
+      );
+    }
+
     ref.listen(
       routerListenerProvider,
       (previous, next) {
-        if (next != previous && next == RoutePaths.home) {
-          updateAppBar(ref, localizations);
+        if (next != previous && next == RoutePaths.welcome) {
+          updateAppBar();
         }
       },
     );
 
     useEffect(() {
-      updateAppBar(ref, localizations);
+      updateAppBar();
       return null;
     }, const []);
     return SizedBox.shrink();
-  }
-
-  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-          appBarType: AppBarType.fullScreen,
-          logo: AssetsConstants.selfHelpNoBk,
-          fullScreenTitle: localizations.welcomeTitle,
-          subtitle: localizations.welcomeSubtitle,
-          startCallback: () {
-            final provider = ref.read(routerStateProvider);
-            provider.pushNamed(RoutePaths.login.name);
-          }),
-    );
   }
 }

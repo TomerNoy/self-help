@@ -5,11 +5,11 @@ import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/core/theme.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
-import 'package:self_help/models/app_user.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_providers/user_provider.dart';
 import 'package:self_help/pages/home/widgets/home_card.dart';
+import 'package:self_help/services/services.dart';
 
 class Home extends HookConsumerWidget {
   const Home({super.key});
@@ -17,20 +17,36 @@ class Home extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
-
     final user = ref.watch(userProvider).value;
+    final title = localizations.welcomeMessage(user?.displayName ?? 'Guest');
+    final subtitle = localizations.welcomeSubtitle;
+
+    final appbarNotifier = ref.read(animatedAppBarProvider.notifier);
+
+    void updateAppBar() {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) {
+          loggerService.debug('§§ Home updateAppBar expanded');
+          appbarNotifier.updateState(
+            appBarType: AppBarType.expanded,
+            appBarTitle: title,
+            subtitle: subtitle,
+          );
+        },
+      );
+    }
 
     ref.listen(
       routerListenerProvider,
       (previous, next) {
         if (next != previous && next == RoutePaths.home) {
-          updateAppBar(ref, localizations, user);
+          updateAppBar();
         }
       },
     );
 
     useEffect(() {
-      updateAppBar(ref, localizations, user);
+      updateAppBar();
       return null;
     }, const []);
 
@@ -71,18 +87,6 @@ class Home extends HookConsumerWidget {
           ),
         ],
       ),
-    );
-  }
-
-  void updateAppBar(
-      WidgetRef ref, AppLocalizations localizations, AppUser? user) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-            appBarType: AppBarType.expanded,
-            appBarTitle:
-                localizations.welcomeMessage(user?.displayName ?? 'Guest'),
-            subtitle: localizations.homeSubtitle,
-          ),
     );
   }
 }

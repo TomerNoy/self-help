@@ -49,28 +49,35 @@ class HomeShell extends HookConsumerWidget {
             shape: const CircularNotchedRectangle(),
             notchMargin: notchMarginAnimation.value,
             color: blue,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                AnimatedIconButton(
-                  iconData: Icons.person,
-                  label: localizations.profile,
-                  onPressed: () {
-                    final provider = ref.read(routerStateProvider);
-                    provider.pushNamed(RoutePaths.profile.name);
-                  },
-                  isExpanded: profileButtonIsExpanded,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: 800,
                 ),
-                AnimatedIconButton(
-                  label: localizations.settings,
-                  iconData: Icons.settings,
-                  onPressed: () {
-                    final provider = ref.read(routerStateProvider);
-                    provider.pushNamed(RoutePaths.settings.name);
-                  },
-                  isExpanded: settingsButtonIsExpanded,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    AnimatedIconButton(
+                      iconData: Icons.person,
+                      label: localizations.profile,
+                      onPressed: () {
+                        final provider = ref.read(routerStateProvider);
+                        provider.pushNamed(RoutePaths.profile.name);
+                      },
+                      isExpanded: profileButtonIsExpanded,
+                    ),
+                    AnimatedIconButton(
+                      label: localizations.settings,
+                      iconData: Icons.settings,
+                      onPressed: () {
+                        final provider = ref.read(routerStateProvider);
+                        provider.pushNamed(RoutePaths.settings.name);
+                      },
+                      isExpanded: settingsButtonIsExpanded,
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           );
         },

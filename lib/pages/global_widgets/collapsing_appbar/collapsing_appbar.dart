@@ -6,6 +6,7 @@ import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_widgets/animated_background.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
+import 'package:self_help/services/services.dart';
 
 class CollapsingAppbar extends HookConsumerWidget
     implements PreferredSizeWidget {
@@ -22,6 +23,8 @@ class CollapsingAppbar extends HookConsumerWidget
   Widget build(BuildContext context, WidgetRef ref) {
     final appState = ref.watch(animatedAppBarProvider);
 
+    loggerService.debug('§§ CollapsingAppbar ${appState.appBarType}');
+
     final appBarType = appState.appBarType;
     final appBarTitle = appState.appBarTitle;
     final subtitle = appState.subtitle;
@@ -37,7 +40,9 @@ class CollapsingAppbar extends HookConsumerWidget
       bottom: Radius.circular(30),
     );
     final borderRadius = isFullScreen ? null : radius;
-    final subtitleStyle = Theme.of(context).textTheme.bodyMedium;
+    final subtitleStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
+          height: 1.5,
+        );
     final appBarHeight = AppBar().preferredSize.height;
     final padding = MediaQuery.of(context).padding.top;
 
@@ -49,7 +54,7 @@ class CollapsingAppbar extends HookConsumerWidget
         maxLines: null,
         textDirection: TextDirection.rtl,
       )..layout(maxWidth: MediaQuery.of(context).size.width - padding);
-      bottomHeight = textPainter.height + 32;
+      bottomHeight = textPainter.height + 16;
     } else if (appBarType == AppBarType.fullScreen) {
       bottomHeight = MediaQuery.of(context).size.height - appBarHeight;
     }
@@ -86,6 +91,9 @@ class CollapsingAppbar extends HookConsumerWidget
               bottom: PreferredSize(
                 preferredSize: MediaQuery.of(context).size,
                 child: AnimatedContainer(
+                  constraints: BoxConstraints(
+                    maxWidth: 800,
+                  ),
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   duration: Constants.animationDuration,
                   height: bottomHeight,

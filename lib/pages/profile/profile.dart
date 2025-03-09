@@ -18,6 +18,18 @@ class Profile extends HookConsumerWidget {
     final user = ref.watch(userProvider).value;
 
     final localizations = AppLocalizations.of(context)!;
+    final title = localizations.profile;
+
+    final appbarNotifier = ref.read(animatedAppBarProvider.notifier);
+
+    void updateAppBar() {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => appbarNotifier.updateState(
+          appBarType: AppBarType.collapsed,
+          appBarTitle: title,
+        ),
+      );
+    }
 
     final showSnackBar = useCallback((String message) {
       if (context.mounted) {
@@ -29,63 +41,70 @@ class Profile extends HookConsumerWidget {
     ref.listen(
       routerListenerProvider,
       (previous, next) {
-        if (next != previous && next == RoutePaths.home) {
-          updateAppBar(ref, localizations);
+        if (next != previous && next == RoutePaths.profile) {
+          updateAppBar();
         }
       },
     );
 
     useEffect(() {
-      updateAppBar(ref, localizations);
+      updateAppBar();
       return null;
     }, const []);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: ListView(
-        padding: EdgeInsets.all(16),
-        children: [
-          ListTile(
-            title: const Text('Name'),
-            subtitle: Text('${user?.displayName}'),
-            leading: Icon(Icons.person, size: 32),
-            trailing: IconButton(
-              onPressed: () => _editValuePressed(
-                user,
-                context,
-                ref,
-                showSnackBar,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: 800,
+          ),
+          child: ListView(
+            padding: EdgeInsets.all(16),
+            children: [
+              ListTile(
+                title: const Text('Name'),
+                subtitle: Text('${user?.displayName}'),
+                leading: Icon(Icons.person, size: 32),
+                trailing: IconButton(
+                  onPressed: () => _editValuePressed(
+                    user,
+                    context,
+                    ref,
+                    showSnackBar,
+                  ),
+                  icon: Icon(
+                    Icons.edit,
+                    size: 32,
+                  ),
+                ),
               ),
-              icon: Icon(
-                Icons.edit,
-                size: 32,
+              ListTile(
+                title: const Text('Email'),
+                subtitle: Text('${user?.email}'),
+                leading: Icon(Icons.email, size: 32),
               ),
-            ),
+              SizedBox(height: 32),
+              Center(
+                child: WideButton(
+                  onPressed: () {},
+                  title: 'Register as a Therapist',
+                  type: ButtonType.gradient,
+                  width: 300,
+                ),
+              ),
+              SizedBox(height: 32),
+              Center(
+                child: WideButton(
+                  onPressed: () async => await userService.signOut(),
+                  title: 'Sign Out',
+                  type: ButtonType.transparent,
+                  width: 200,
+                ),
+              )
+            ],
           ),
-          ListTile(
-            title: const Text('Email'),
-            subtitle: Text('${user?.email}'),
-            leading: Icon(Icons.email, size: 32),
-          ),
-          SizedBox(height: 32),
-          Center(
-            child: WideButton(
-              onPressed: () {},
-              title: 'Register as a Therapist',
-              type: ButtonType.gradient,
-              width: 300,
-            ),
-          ),
-          SizedBox(height: 32),
-          Center(
-            child: WideButton(
-              onPressed: () async => await userService.signOut(),
-              title: 'Sign Out',
-              type: ButtonType.transparent,
-              width: 200,
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
@@ -148,15 +167,6 @@ class Profile extends HookConsumerWidget {
           ],
         );
       },
-    );
-  }
-
-  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-            appBarType: AppBarType.collapsed,
-            appBarTitle: localizations.profile,
-          ),
     );
   }
 }

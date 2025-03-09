@@ -1,65 +1,15 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:self_help/core/constants/constants.dart';
+import 'package:self_help/models/breathing_state.dart';
 import 'package:self_help/services/services.dart';
 
 part 'breathing_notifier.g.dart';
 
-enum BreathingState { stopped, breathIn, peakHold, breathOut, baseHold }
-
-@immutable
-class BreathingExerciseState {
-  final BreathingState breathingState;
-  final int totalSeconds;
-  final int stateCount;
-  final int secondsLeft;
-  final int repeatCount;
-  final double breathingScale;
-
-  const BreathingExerciseState({
-    required this.breathingState,
-    required this.totalSeconds,
-    required this.stateCount,
-    required this.secondsLeft,
-    required this.repeatCount,
-    required this.breathingScale,
-  });
-
-  BreathingExerciseState copyWith({
-    BreathingState? breathingState,
-    int? totalSeconds,
-    int? stateCount,
-    int? secondsLeft,
-    int? repeatCount,
-    double? breathingScale,
-  }) {
-    return BreathingExerciseState(
-      breathingState: breathingState ?? this.breathingState,
-      totalSeconds: totalSeconds ?? this.totalSeconds,
-      stateCount: stateCount ?? this.stateCount,
-      secondsLeft: secondsLeft ?? this.secondsLeft,
-      repeatCount: repeatCount ?? this.repeatCount,
-      breathingScale: breathingScale ?? this.breathingScale,
-    );
-  }
-
-  @override
-  String toString() {
-    return '''BreathingExerciseState{
-    breathingState: $breathingState, 
-    totalSeconds: $totalSeconds,
-    stateCount: $stateCount, 
-    secondsLeft: $secondsLeft, 
-    repeatCount: $repeatCount
-    breathingScale: $breathingScale
-    }''';
-  }
-}
-
 @riverpod
 class BreathingExercise extends _$BreathingExercise {
+  static const _prepareCount = 5;
   late final int _breathInDuration;
   late final int _peakHoldDuration;
   late final int _breathOutDuration;
@@ -70,9 +20,8 @@ class BreathingExercise extends _$BreathingExercise {
   late final double _breathingInFraction;
   late final double _breathingOutFraction;
 
-  // var _breathingScale = 0.0;
-
-  Timer? _timer;
+  Timer? _exercisetimer;
+  Timer? _preparetimer;
 
   @override
   BreathingExerciseState build() {
@@ -93,12 +42,14 @@ class BreathingExercise extends _$BreathingExercise {
     ref.onDispose(
       () {
         loggerService.debug('disposing breathing exercise notifier');
-        _timer?.cancel();
+        _exercisetimer?.cancel();
+        _preparetimer?.cancel();
       },
     );
 
     return BreathingExerciseState(
       breathingState: BreathingState.stopped,
+      prepareCount: 0,
       totalSeconds: 0,
       stateCount: 0,
       secondsLeft: 0,
@@ -107,9 +58,40 @@ class BreathingExercise extends _$BreathingExercise {
     );
   }
 
-  void startTimer() {
+  void start() {
+    _startPrepare();
+  }
+
+  void _startPrepare() {
+    // safeguard to prevent multiple timers
+    if (_preparetimer != null) {
+      return;
+    }
+
+    state = state.copyWith(
+      breathingState: BreathingState.prepare,
+      prepareCount: _prepareCount,
+    );
+
+    _preparetimer = Timer.periodic(
+      Constants.timerDuration,
+      (timer) {
+        if (state.prepareCount <= 1) {
+          _stopPrepare();
+          return _startExcercise();
+        }
+
+        state = state.copyWith(
+          prepareCount: state.prepareCount - 1,
+        );
+      },
+    );
+  }
+
+  void _startExcercise() {
     //safeguard to prevent multiple timers
-    if (state.breathingState != BreathingState.stopped) {
+    if (state.breathingState != BreathingState.prepare &&
+        state.breathingState != BreathingState.stopped) {
       return;
     }
 
@@ -122,7 +104,7 @@ class BreathingExercise extends _$BreathingExercise {
       breathingScale: _breathingInFraction,
     );
 
-    _timer = Timer.periodic(
+    _exercisetimer = Timer.periodic(
       Constants.timerDuration,
       (_) {
         state = state.copyWith(
@@ -152,7 +134,7 @@ class BreathingExercise extends _$BreathingExercise {
           case BreathingState.breathOut:
             if (state.stateCount <= 0) {
               if (state.repeatCount <= 1) {
-                stop();
+                _stopExercise();
               } else if (_baseHoldDuration == 0) {
                 _updateBreathingState(
                   BreathingState.breathIn,
@@ -172,7 +154,7 @@ class BreathingExercise extends _$BreathingExercise {
             break;
           case BreathingState.baseHold:
             if (state.repeatCount <= 1) {
-              stop();
+              _stopExercise();
             } else if (state.stateCount <= 0) {
               _updateBreathingState(BreathingState.breathIn);
             }
@@ -213,7 +195,18 @@ class BreathingExercise extends _$BreathingExercise {
   }
 
   void stop() {
-    _timer?.cancel();
+    _stopPrepare();
+    _stopExercise();
+  }
+
+  void _stopPrepare() {
+    _preparetimer?.cancel();
+    _preparetimer = null;
+  }
+
+  void _stopExercise() {
+    _exercisetimer?.cancel();
+    _exercisetimer = null;
     _updateBreathingState(BreathingState.stopped, repeatCount: 0);
   }
 }

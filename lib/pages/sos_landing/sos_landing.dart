@@ -15,35 +15,38 @@ class SosLanding extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
 
+    final appBarNotifier = ref.read(animatedAppBarProvider.notifier);
+    final pageFlowNotifier = ref.read(pageFlowProvider.notifier);
+
+    final title = localizations.sosMainTitle;
+    final subtitle = localizations.sosMainInfo;
+
+    void updateAppBar() {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => appBarNotifier.updateState(
+          appBarType: AppBarType.fullScreen,
+          fullScreenTitle: title,
+          subtitle: subtitle,
+          startCallback: () => pageFlowNotifier.startFlow(FlowType.sos),
+          hasBackButton: true,
+        ),
+      );
+    }
+
     ref.listen(
       routerListenerProvider,
       (previous, next) {
-        if (next != previous && next == RoutePaths.home) {
-          updateAppBar(ref, localizations);
+        if (next != previous && next == RoutePaths.sosLanding) {
+          updateAppBar();
         }
       },
     );
 
     useEffect(() {
-      updateAppBar(ref, localizations);
+      updateAppBar();
       return null;
     }, const []);
 
-    return SizedBox.shrink();
-  }
-
-  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-            appBarType: AppBarType.fullScreen,
-            fullScreenTitle: localizations.sosMainTitle,
-            subtitle: localizations.sosMainInfo,
-            startCallback: () {
-              final provider = ref.read(pageFlowProvider.notifier);
-              provider.startFlow(FlowType.sos);
-            },
-            hasBackButton: true,
-          ),
-    );
+    return const SizedBox.shrink();
   }
 }

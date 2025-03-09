@@ -17,6 +17,18 @@ class Register extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
+    final title = localizations.registration;
+
+    final appbarNotifier = ref.read(animatedAppBarProvider.notifier);
+
+    void updateAppBar() {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => appbarNotifier.updateState(
+          appBarType: AppBarType.collapsed,
+          appBarTitle: title,
+        ),
+      );
+    }
 
     final emailController = useTextEditingController();
     final nameController = useTextEditingController();
@@ -28,106 +40,118 @@ class Register extends HookConsumerWidget {
     ref.listen(
       routerListenerProvider,
       (previous, next) {
-        if (next != previous && next == RoutePaths.home) {
-          updateAppBar(ref, localizations);
+        if (next != previous && next == RoutePaths.register) {
+          updateAppBar();
         }
       },
     );
 
     useEffect(() {
-      updateAppBar(ref, localizations);
+      updateAppBar();
       return null;
     }, const []);
-    return Form(
-      key: formKey,
-      child: ListView(
+
+    return Center(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        shrinkWrap: true,
-        children: [
-          TextFormField(
-            controller: nameController,
-            decoration: InputDecoration(
-              labelText: localizations.name,
-            ),
-            keyboardType: TextInputType.name,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]'))
-            ],
-            validator: FormValidators.nameValidator,
-          ),
-          const SizedBox(height: 16),
-          TextFormField(
-            controller: emailController,
-            decoration: InputDecoration(
-              labelText: localizations.email,
-            ),
-            keyboardType: TextInputType.emailAddress,
-            inputFormatters: [
-              FilteringTextInputFormatter.deny(RegExp(r'\s')),
-            ],
-            validator: FormValidators.emailValidator,
-          ),
-          const SizedBox(height: 16),
-          TextFormField(
-            controller: passwordController,
-            decoration: InputDecoration(
-              labelText: localizations.password,
-            ),
-            obscureText: true,
-            inputFormatters: [
-              FilteringTextInputFormatter.deny(RegExp(r'\s')),
-            ],
-            validator: FormValidators.passwordValidator,
-          ),
-          const SizedBox(height: 16),
-          TextFormField(
-            controller: repeatPasswordController,
-            decoration: InputDecoration(
-              labelText: localizations.repeatPassword,
-            ),
-            obscureText: true,
-            validator: (value) => FormValidators.passwordMatchValidator(
-              value,
-              passwordController.text,
-            ),
-          ),
-          const SizedBox(height: 32),
-          WideButton(
-            title: localizations.register,
-            onPressed: () {
-              _register(
-                formKey,
-                emailController.text,
-                passwordController.text,
-                nameController.text,
-                context,
-                ref,
-              );
-            },
-            width: double.infinity,
-            type: ButtonType.black,
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () {
-                  // ref
-                  //     .read(collapsingAppBarProvider.notifier)
-                  //     .updateState(AppBarType.login);
-                  context.pop(RoutePaths.login.name);
-                },
-                child: Row(
-                  children: [
-                    const Icon(Icons.arrow_back_ios),
-                    Text(localizations.backToLogging),
-                  ],
-                ),
+        child: Form(
+          key: formKey,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: 800,
               ),
-            ],
-          )
-        ],
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      labelText: localizations.name,
+                    ),
+                    keyboardType: TextInputType.name,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]'))
+                    ],
+                    validator: FormValidators.nameValidator,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      labelText: localizations.email,
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                    ],
+                    validator: FormValidators.emailValidator,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                      labelText: localizations.password,
+                    ),
+                    obscureText: true,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                    ],
+                    validator: FormValidators.passwordValidator,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: repeatPasswordController,
+                    decoration: InputDecoration(
+                      labelText: localizations.repeatPassword,
+                    ),
+                    obscureText: true,
+                    validator: (value) => FormValidators.passwordMatchValidator(
+                      value,
+                      passwordController.text,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  Center(
+                    child: WideButton(
+                      title: localizations.register,
+                      onPressed: () {
+                        _register(
+                          formKey,
+                          emailController.text,
+                          passwordController.text,
+                          nameController.text,
+                          context,
+                          ref,
+                        );
+                      },
+                      type: ButtonType.black,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          // ref
+                          //     .read(collapsingAppBarProvider.notifier)
+                          //     .updateState(AppBarType.login);
+                          context.pop(RoutePaths.login.name);
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(Icons.arrow_back_ios),
+                            Text(localizations.backToLogging),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -154,14 +178,5 @@ class Register extends HookConsumerWidget {
         );
       }
     }
-  }
-
-  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-            appBarType: AppBarType.collapsed,
-            appBarTitle: localizations.registration,
-          ),
-    );
   }
 }

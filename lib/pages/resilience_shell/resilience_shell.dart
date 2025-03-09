@@ -26,17 +26,28 @@ class ResilienceShell extends HookConsumerWidget {
     final profileButtonIsExpanded = page == RoutePaths.profile;
     final settingsButtonIsExpanded = page == RoutePaths.settings;
 
+    final appbarNotifier = ref.read(animatedAppBarProvider.notifier);
+
+    void updateAppBar() {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => appbarNotifier.updateState(
+          appBarType: AppBarType.collapsed,
+          appBarTitle: 'Resilience', // TODO: replace with title
+        ),
+      );
+    }
+
     ref.listen(
       routerListenerProvider,
       (previous, next) {
-        if (next != previous && next == RoutePaths.home) {
-          updateAppBar(ref, localizations);
+        if (next != previous && next == RoutePaths.resilience) {
+          updateAppBar();
         }
       },
     );
 
     useEffect(() {
-      updateAppBar(ref, localizations);
+      updateAppBar();
       return null;
     }, const []);
 
@@ -73,15 +84,6 @@ class ResilienceShell extends HookConsumerWidget {
           ],
         ),
       ),
-    );
-  }
-
-  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-            appBarType: AppBarType.collapsed,
-            appBarTitle: 'Resilience',
-          ),
     );
   }
 }

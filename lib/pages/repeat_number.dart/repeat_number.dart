@@ -17,6 +17,20 @@ class RepeatNumber extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
+    final title = localizations.enterNumber;
+    final subtitle = localizations.enterNumberSubtitle;
+
+    final appbarNotifier = ref.read(animatedAppBarProvider.notifier);
+
+    void updateAppBar() {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => appbarNotifier.updateState(
+          appBarType: AppBarType.expanded,
+          appBarTitle: title,
+          subtitle: subtitle,
+        ),
+      );
+    }
 
     final orderedController = useTextEditingController();
     final reversedController = useTextEditingController();
@@ -27,8 +41,8 @@ class RepeatNumber extends HookConsumerWidget {
     ref.listen(
       routerListenerProvider,
       (previous, next) {
-        if (next != previous && next == RoutePaths.home) {
-          updateAppBar(ref, localizations);
+        if (next != previous && next == RoutePaths.repeatNumber) {
+          updateAppBar();
         }
       },
     );
@@ -44,7 +58,7 @@ class RepeatNumber extends HookConsumerWidget {
     final reversedInputValid = useState(false);
 
     useEffect(() {
-      updateAppBar(ref, localizations);
+      updateAppBar();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         FocusScope.of(context).requestFocus(orderedFocusNode);
       });
@@ -70,89 +84,94 @@ class RepeatNumber extends HookConsumerWidget {
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Enter the number you see below',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    orderedRandomNumber,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          letterSpacing: 10,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: 800,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Enter the number you see below',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      orderedRandomNumber,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            letterSpacing: 10,
+                          ),
+                    ),
+                    SizedBox(height: 16),
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: TextField(
+                        controller: orderedController,
+                        focusNode: orderedFocusNode,
+                        textAlign: TextAlign.center,
+                        keyboardType: TextInputType.number,
+                        maxLength: 10,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(letterSpacing: 10),
+                        decoration: InputDecoration(
+                          counter: Offstage(),
+                          enabledBorder: orderedBorder,
+                          focusedBorder: orderedBorder,
                         ),
-                  ),
-                  SizedBox(height: 16),
-                  Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: TextField(
-                      controller: orderedController,
-                      focusNode: orderedFocusNode,
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.number,
-                      maxLength: 10,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(letterSpacing: 10),
-                      decoration: InputDecoration(
-                        counter: Offstage(),
-                        enabledBorder: orderedBorder,
-                        focusedBorder: orderedBorder,
+                        onChanged: (value) {
+                          if (value == orderedRandomNumber) {
+                            FocusScope.of(context)
+                                .requestFocus(reversedFocusNode);
+                            orderedInputValid.value = true;
+                          } else {
+                            orderedInputValid.value = false;
+                          }
+                        },
                       ),
-                      onChanged: (value) {
-                        if (value == orderedRandomNumber) {
-                          FocusScope.of(context)
-                              .requestFocus(reversedFocusNode);
-                          orderedInputValid.value = true;
-                        } else {
-                          orderedInputValid.value = false;
-                        }
-                      },
                     ),
-                  ),
-                  SizedBox(height: 16),
-                  Text('Now enter the number in reverse order',
-                      style: Theme.of(context).textTheme.titleMedium),
-                  SizedBox(height: 16),
-                  Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: TextField(
-                      controller: reversedController,
-                      focusNode: reversedFocusNode,
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.number,
-                      maxLength: 10,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(letterSpacing: 10),
-                      decoration: InputDecoration(
-                        counter: Offstage(),
-                        enabledBorder: reversedBorder,
-                        focusedBorder: reversedBorder,
+                    SizedBox(height: 16),
+                    Text('Now enter the number in reverse order',
+                        style: Theme.of(context).textTheme.titleMedium),
+                    SizedBox(height: 16),
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: TextField(
+                        controller: reversedController,
+                        focusNode: reversedFocusNode,
+                        textAlign: TextAlign.center,
+                        keyboardType: TextInputType.number,
+                        maxLength: 10,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(letterSpacing: 10),
+                        decoration: InputDecoration(
+                          counter: Offstage(),
+                          enabledBorder: reversedBorder,
+                          focusedBorder: reversedBorder,
+                        ),
+                        onChanged: (value) {
+                          loggerService.debug(
+                              'reversedRandomNumber: $reversedRandomNumber');
+                          if (value == reversedRandomNumber) {
+                            reversedFocusNode.unfocus();
+                            reversedInputValid.value = true;
+                          } else {
+                            reversedInputValid.value = false;
+                          }
+                        },
                       ),
-                      onChanged: (value) {
-                        loggerService.debug(
-                            'reversedRandomNumber: $reversedRandomNumber');
-                        if (value == reversedRandomNumber) {
-                          reversedFocusNode.unfocus();
-                          reversedInputValid.value = true;
-                        } else {
-                          reversedInputValid.value = false;
-                        }
-                      },
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -168,15 +187,5 @@ class RepeatNumber extends HookConsumerWidget {
       return Random().nextInt(10);
     });
     return list.join();
-  }
-
-  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-            appBarType: AppBarType.expanded,
-            appBarTitle: localizations.enterNumber,
-            subtitle: localizations.enterNumberSubtitle,
-          ),
-    );
   }
 }

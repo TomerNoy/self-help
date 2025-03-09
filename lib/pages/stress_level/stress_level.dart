@@ -21,20 +21,36 @@ class StressLevel extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final level = ref.watch(stressLevelProvider);
+
+    final appbarNotifier = ref.read(animatedAppBarProvider.notifier);
     final localizations = AppLocalizations.of(context)!;
+
+    final title = localizations.measureTitle;
+    final subtitle = localizations.measureSubtitle;
+
     final width = Constants.minimumScreenWidth;
+
+    void updateAppBar() {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => appbarNotifier.updateState(
+          appBarType: AppBarType.expanded,
+          appBarTitle: title,
+          subtitle: subtitle,
+        ),
+      );
+    }
 
     ref.listen(
       routerListenerProvider,
       (previous, next) {
-        if (next != previous && next == RoutePaths.home) {
-          updateAppBar(ref, localizations);
+        if (next != previous && next == RoutePaths.stressLevel) {
+          updateAppBar();
         }
       },
     );
 
     useEffect(() {
-      updateAppBar(ref, localizations);
+      updateAppBar();
       return null;
     }, const []);
 
@@ -141,16 +157,6 @@ class StressLevel extends HookConsumerWidget {
         ),
         drawer: FlowDrawer(),
       ),
-    );
-  }
-
-  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-            appBarType: AppBarType.expanded,
-            appBarTitle: localizations.measureTitle,
-            subtitle: localizations.measureSubtitle,
-          ),
     );
   }
 }

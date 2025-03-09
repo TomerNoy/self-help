@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:self_help/services/services.dart';
 
 part 'collapsing_appbar_provider.g.dart';
 
@@ -69,6 +70,7 @@ class AnimatedAppBar extends _$AnimatedAppBar {
     bool? hasBackButton,
     VoidCallback? startCallback,
   }) {
+    loggerService.debug('§§ AnimatedAppBar updateState $appBarType');
     state = state.copyWith(
       appBarType: appBarType,
       appBarTitle: appBarTitle,

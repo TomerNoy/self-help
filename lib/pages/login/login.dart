@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -22,6 +23,17 @@ class Login extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
+    final title = localizations.login;
+    final appbarNotifier = ref.read(animatedAppBarProvider.notifier);
+
+    void updateAppBar() {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => appbarNotifier.updateState(
+          appBarType: AppBarType.collapsed,
+          appBarTitle: title,
+        ),
+      );
+    }
 
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
@@ -40,118 +52,132 @@ class Login extends HookConsumerWidget {
       'https://www.googleapis.com/auth/contacts.readonly',
     ];
 
-    GoogleSignIn googleSignIn = GoogleSignIn(scopes: scopes);
+    GoogleSignIn googleSignIn = GoogleSignIn(
+      clientId: dotenv.env['WEB_CLIENT_ID'],
+      scopes: scopes,
+    );
 
     ref.listen(
       routerListenerProvider,
       (previous, next) {
-        if (next != previous && next == RoutePaths.home) {
-          updateAppBar(ref, localizations);
+        if (next != previous && next == RoutePaths.login) {
+          updateAppBar();
         }
       },
     );
 
     useEffect(() {
-      updateAppBar(ref, localizations);
+      updateAppBar();
       return null;
     }, const []);
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      shrinkWrap: true,
-      children: [
-        Form(
-          key: formKey,
+
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: 800,
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              TextFormField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: localizations.email,
-                ),
-                keyboardType: TextInputType.emailAddress,
-                validator: FormValidators.emailValidator,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: passwordController,
-                decoration: InputDecoration(
-                  labelText: localizations.password,
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      passwordVisible.value = !passwordVisible.value;
-                    },
-                    icon: Icon(
-                      passwordVisible.value
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
+              Form(
+                key: formKey,
+                child: Center(
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          labelText: localizations.email,
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: FormValidators.emailValidator,
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: passwordController,
+                        decoration: InputDecoration(
+                          labelText: localizations.password,
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              passwordVisible.value = !passwordVisible.value;
+                            },
+                            icon: Icon(
+                              passwordVisible.value
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                          ),
+                        ),
+                        obscureText: !passwordVisible.value,
+                        validator: FormValidators.passwordValidator,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton.icon(
+                            onPressed: () {},
+                            label: Text(localizations.forgotPassword),
+                            icon: const Icon(Icons.arrow_forward_ios),
+                            iconAlignment: IconAlignment.end,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      WideButton(
+                        title: localizations.welcomeButtonTitle,
+                        onPressed: () => _login(
+                          formKey,
+                          emailController.text,
+                          passwordController.text,
+                          context,
+                          ref,
+                        ),
+                        type: ButtonType.black,
+                        width: double.infinity,
+                      ),
+                    ],
                   ),
                 ),
-                obscureText: !passwordVisible.value,
-                validator: FormValidators.passwordValidator,
+              ),
+              const SizedBox(height: 32),
+              Text(localizations.or, textAlign: TextAlign.center),
+              IconButton(
+                onPressed: () {
+                  _googleSignIn(
+                    googleSignIn,
+                    context,
+                    ref,
+                  );
+                },
+                icon: google,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton.icon(
-                    onPressed: () {},
-                    label: Text(localizations.forgotPassword),
-                    icon: const Icon(Icons.arrow_forward_ios),
-                    iconAlignment: IconAlignment.end,
+                  Text(localizations.dontHaveAccount),
+                  TextButton(
+                    onPressed: () {
+                      // ref
+                      //     .read(collapsingAppBarProvider.notifier)
+                      //     .updateState(AppBarType.register);
+
+                      context.pushNamed(RoutePaths.register.name);
+                    },
+                    child: Row(
+                      children: [
+                        Text(localizations.registerNow),
+                        const Icon(Icons.arrow_forward_ios),
+                      ],
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              WideButton(
-                title: localizations.welcomeButtonTitle,
-                onPressed: () => _login(
-                  formKey,
-                  emailController.text,
-                  passwordController.text,
-                  context,
-                  ref,
-                ),
-                type: ButtonType.black,
-                width: double.infinity,
-              ),
+              // todo remove after testing
             ],
           ),
         ),
-        const SizedBox(height: 32),
-        Text(localizations.or, textAlign: TextAlign.center),
-        IconButton(
-          onPressed: () {
-            _googleSignIn(
-              googleSignIn,
-              context,
-              ref,
-            );
-          },
-          icon: google,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(localizations.dontHaveAccount),
-            TextButton(
-              onPressed: () {
-                // ref
-                //     .read(collapsingAppBarProvider.notifier)
-                //     .updateState(AppBarType.register);
-
-                context.pushNamed(RoutePaths.register.name);
-              },
-              child: Row(
-                children: [
-                  Text(localizations.registerNow),
-                  const Icon(Icons.arrow_forward_ios),
-                ],
-              ),
-            ),
-          ],
-        ),
-        // todo remove after testing
-      ],
+      ),
     );
   }
 
@@ -218,14 +244,5 @@ class Login extends HookConsumerWidget {
         ),
       );
     }
-  }
-
-  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-            appBarType: AppBarType.collapsed,
-            appBarTitle: localizations.login,
-          ),
-    );
   }
 }

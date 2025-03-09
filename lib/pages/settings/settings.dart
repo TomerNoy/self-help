@@ -14,40 +14,50 @@ class Settings extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
 
+    final title = localizations.settings;
+    final appbarNotifier = ref.read(animatedAppBarProvider.notifier);
+
+    void updateAppBar() {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => appbarNotifier.updateState(
+          appBarType: AppBarType.collapsed,
+          appBarTitle: title,
+        ),
+      );
+    }
+
     ref.listen(
       routerListenerProvider,
       (previous, next) {
-        if (next != previous && next == RoutePaths.home) {
-          updateAppBar(ref, localizations);
+        if (next != previous && next == RoutePaths.settings) {
+          updateAppBar();
         }
       },
     );
 
     useEffect(() {
-      updateAppBar(ref, localizations);
+      updateAppBar();
       return null;
     }, const []);
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: ListView(
-        padding: EdgeInsets.all(16),
-        children: [
-          ListTile(
-            leading: const Icon(Icons.language),
-            title: Text(localizations.language),
-            trailing: WelcomeLanguageButton(),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: 800,
           ),
-        ],
+          child: ListView(
+            padding: EdgeInsets.all(16),
+            children: [
+              ListTile(
+                leading: const Icon(Icons.language),
+                title: Text(localizations.language),
+                trailing: WelcomeLanguageButton(),
+              ),
+            ],
+          ),
+        ),
       ),
-    );
-  }
-
-  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-            appBarType: AppBarType.collapsed,
-            appBarTitle: localizations.settings,
-          ),
     );
   }
 }

@@ -16,20 +16,29 @@ class CalcExercise extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localization = AppLocalizations.of(context)!;
+    final title = localization.calcExercise;
+    final subtitle = localization.calcExerciseSubtitle;
+
+    final appbarNotifier = ref.read(animatedAppBarProvider.notifier);
+
+    void updateAppBar() {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => appbarNotifier.updateState(
+          appBarType: AppBarType.expanded,
+          appBarTitle: title,
+          subtitle: subtitle,
+        ),
+      );
+    }
 
     ref.listen(
       routerListenerProvider,
       (previous, next) {
-        if (next != previous && next == RoutePaths.home) {
-          updateAppBar(ref, localization);
+        if (next != previous && next == RoutePaths.calculateExercise) {
+          updateAppBar();
         }
       },
     );
-
-    useEffect(() {
-      updateAppBar(ref, localization);
-      return null;
-    }, const []);
 
     final isValid = useState(false);
 
@@ -42,6 +51,7 @@ class CalcExercise extends HookConsumerWidget {
     );
 
     useEffect(() {
+      updateAppBar();
       return () {
         for (var controller in controllers.value) {
           controller.dispose();
@@ -54,81 +64,95 @@ class CalcExercise extends HookConsumerWidget {
     }, []);
 
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Directionality(
-          textDirection: TextDirection.ltr,
-          child: Column(
-            children: List.generate(
-              5,
-              (index) {
-                final provider = ref.watch(calcExerciseProvider);
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: 800,
+                ),
+                child: Column(
+                  children: List.generate(
+                    5,
+                    (index) {
+                      final provider = ref.watch(calcExerciseProvider);
 
-                return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            '${provider[index].firstNumber} ${provider[index].operation.displayText} ${provider[index].secondNumber} =',
-                            style: Theme.of(context).textTheme.headlineLarge,
+                      return Card(
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  '${provider[index].firstNumber} ${provider[index].operation.displayText} ${provider[index].secondNumber} =',
+                                  style:
+                                      Theme.of(context).textTheme.headlineLarge,
+                                ),
+                              ),
+                              Container(
+                                width: 79,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                  ),
+                                  color: provider[index].result ==
+                                          int.tryParse(
+                                              controllers.value[index].text)
+                                      ? correctAnswerColor
+                                      : wrongAnswerColor,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: TextField(
+                                  controller: controllers.value[index],
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(0),
+                                    counter: Offstage(),
+                                  ),
+                                  maxLength: 2,
+                                  keyboardType: TextInputType.number,
+                                  textAlign: TextAlign.center,
+                                  style:
+                                      Theme.of(context).textTheme.headlineLarge,
+                                  focusNode: focusNodes.value[index],
+                                  onChanged: (value) {
+                                    controllers.value =
+                                        List.from(controllers.value);
+
+                                    if (provider[index].result ==
+                                        int.tryParse(value)) {
+                                      loggerService.debug('correct');
+                                      // focus on next node
+                                      if (index < 4) {
+                                        focusNodes.value[index + 1]
+                                            .requestFocus();
+                                      } else {
+                                        isValid.value = true;
+                                        focusNodes.value[index].unfocus();
+                                      }
+                                    } else {
+                                      loggerService.debug('incorrect');
+                                      isValid.value = false;
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Container(
-                          width: 79,
-                          height: 48,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey,
-                            ),
-                            color: provider[index].result ==
-                                    int.tryParse(controllers.value[index].text)
-                                ? correctAnswerColor
-                                : wrongAnswerColor,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: TextField(
-                            controller: controllers.value[index],
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(0),
-                              counter: Offstage(),
-                            ),
-                            maxLength: 2,
-                            keyboardType: TextInputType.number,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headlineLarge,
-                            focusNode: focusNodes.value[index],
-                            onChanged: (value) {
-                              controllers.value = List.from(controllers.value);
-
-                              if (provider[index].result ==
-                                  int.tryParse(value)) {
-                                loggerService.debug('correct');
-                                // focus on next node
-                                if (index < 4) {
-                                  focusNodes.value[index + 1].requestFocus();
-                                } else {
-                                  isValid.value = true;
-                                  focusNodes.value[index].unfocus();
-                                }
-                              } else {
-                                loggerService.debug('incorrect');
-                                isValid.value = false;
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ),
             ),
           ),
         ),
@@ -137,16 +161,6 @@ class CalcExercise extends HookConsumerWidget {
         title: localization.continueButtonTitle,
         skip: !isValid.value,
       ),
-    );
-  }
-
-  void updateAppBar(WidgetRef ref, AppLocalizations localization) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-            appBarType: AppBarType.expanded,
-            appBarTitle: localization.calcExercise,
-            subtitle: localization.calcExerciseSubtitle,
-          ),
     );
   }
 }

@@ -17,6 +17,8 @@ class ServiceProvider {
       // logger
       _getIt.registerSingleton<LoggerService>(LoggerService());
 
+      await _getIt.allReady();
+
       // firebase
       _getIt.registerSingletonAsync<FirebaseService>(
         () async {

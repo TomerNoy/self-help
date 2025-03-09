@@ -6,31 +6,45 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/core/theme.dart';
+import 'package:self_help/models/breathing_state.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_widgets/flow_drawer.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/breathing/providers/breathing_notifier.dart';
-import 'package:self_help/services/services.dart';
 
 class Breathing extends HookConsumerWidget {
   const Breathing({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
+    final title = localizations.breathingExercise;
+    final subtitle = localizations.breathingExerciseSubtitle;
+
+    final appbarNotifier = ref.read(animatedAppBarProvider.notifier);
+
+    void updateAppBar() {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => appbarNotifier.updateState(
+          appBarType: AppBarType.expanded,
+          appBarTitle: title,
+          subtitle: subtitle,
+        ),
+      );
+    }
 
     ref.listen(
       routerListenerProvider,
       (previous, next) {
-        if (next != previous && next == RoutePaths.home) {
-          updateAppBar(ref, localizations);
+        if (next != previous && next == RoutePaths.breathing) {
+          updateAppBar();
         }
       },
     );
 
     useEffect(() {
-      updateAppBar(ref, localizations);
+      updateAppBar();
       return null;
     }, const []);
 
@@ -48,6 +62,7 @@ class Breathing extends HookConsumerWidget {
       BreathingState.baseHold =>
         localizations.holdBreath,
       BreathingState.breathOut => localizations.breathOut,
+      BreathingState.prepare => 'Starting in',
       _ => 'Paused',
     };
 
@@ -70,13 +85,11 @@ class Breathing extends HookConsumerWidget {
     final circleSize =
         circleExpanded ? maxScale.toDouble() : minScale.toDouble();
 
-    loggerService.info('§ breathing state: $breathingType');
-
     /// expanding circle inner text
     final expandingCircleInner = isPaused
         ? IconButton(
             onPressed: () {
-              ref.read(breathingExerciseProvider.notifier).startTimer();
+              ref.read(breathingExerciseProvider.notifier).start();
             },
             icon: FaIcon(
               FontAwesomeIcons.play,
@@ -114,7 +127,10 @@ class Breathing extends HookConsumerWidget {
                   );
                 },
                 child: Text(
-                  '${exerciseState.stateCount}',
+                  switch (breathingType) {
+                    BreathingState.prepare => '${exerciseState.prepareCount}',
+                    _ => '${exerciseState.stateCount}',
+                  },
                   key: ValueKey<String>(
                     exerciseState.breathingState != BreathingState.stopped
                         ? '${exerciseState.stateCount}'
@@ -249,7 +265,13 @@ class Breathing extends HookConsumerWidget {
                       height: 60,
                       child: Center(child: stopButton),
                     ),
-                    Text('left ${exerciseState.secondsLeft} repeat ${exerciseState.repeatCount}'),
+                    SizedBox(
+                      height: 60,
+                      child: breathingType != BreathingState.stopped &&
+                              breathingType != BreathingState.prepare
+                          ? Text('seconds left ${exerciseState.secondsLeft}')
+                          : null,
+                    )
                   ],
                 ),
               ),
@@ -261,16 +283,6 @@ class Breathing extends HookConsumerWidget {
         ),
         drawer: FlowDrawer(),
       ),
-    );
-  }
-
-  void updateAppBar(WidgetRef ref, AppLocalizations localizations) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref.read(animatedAppBarProvider.notifier).updateState(
-            appBarType: AppBarType.expanded,
-            appBarTitle: localizations.breathingExercise,
-            subtitle: localizations.breathingExerciseSubtitle,
-          ),
     );
   }
 }
