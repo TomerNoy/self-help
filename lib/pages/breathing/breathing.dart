@@ -5,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
-import 'package:self_help/core/theme.dart';
 import 'package:self_help/models/breathing_state.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
@@ -68,10 +67,10 @@ class Breathing extends HookConsumerWidget {
 
     //todo: colors?
     final breathingTypeColor = switch (breathingType) {
-      BreathingState.breathIn => breathStepIndicatorColor,
-      BreathingState.peakHold => Colors.grey.shade400,
-      BreathingState.breathOut => breathStepIndicatorColor,
-      BreathingState.baseHold => Colors.grey.shade400,
+      BreathingState.breathIn => Theme.of(context).colorScheme.primary,
+      BreathingState.peakHold => Theme.of(context).colorScheme.tertiary,
+      BreathingState.breathOut => Theme.of(context).colorScheme.secondary,
+      BreathingState.baseHold => Theme.of(context).colorScheme.tertiary,
       _ => Colors.grey.shade300,
     };
 

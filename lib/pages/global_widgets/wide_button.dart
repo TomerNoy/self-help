@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:self_help/core/theme.dart';
 
 enum ButtonType { transparent, gradient, black }
 
@@ -31,15 +30,6 @@ class WideButton extends StatelessWidget {
               ButtonType.gradient => ElevatedButton(
                   onPressed: onPressed,
                   child: Ink(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          blue,
-                          purple,
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(26.0),
-                    ),
                     child: Container(
                       padding:
                           EdgeInsets.symmetric(vertical: 10, horizontal: 16),

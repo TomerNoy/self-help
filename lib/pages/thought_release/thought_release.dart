@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
-import 'package:self_help/pages/global_widgets/flow_appbar.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 
@@ -26,10 +25,10 @@ class ThoughtRelease extends ConsumerWidget {
     );
 
     return Scaffold(
-      appBar: FlowAppBar(
-        title: localization.thoughtReleaseTitle,
-        subtitle: localization.thoughtReleaseSubtitle,
-      ),
+      // appBar: FlowAppBar(
+      //   title: localization.thoughtReleaseTitle,
+      //   subtitle: localization.thoughtReleaseSubtitle,
+      // ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,

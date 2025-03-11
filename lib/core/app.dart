@@ -12,10 +12,14 @@ class App extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    TextTheme textTheme = createTextTheme(context, "Rubik", "Rubik");
+    MaterialTheme theme = MaterialTheme(textTheme);
+
     return MaterialApp.router(
       locale: ref.watch(localeNotifierProvider),
       debugShowCheckedModeBanner: false,
-      theme: generateTheme(),
+      theme: theme.light(),
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       localeResolutionCallback:

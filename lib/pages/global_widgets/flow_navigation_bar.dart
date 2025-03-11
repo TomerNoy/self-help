@@ -27,35 +27,42 @@ class FlowNavigationBar extends ConsumerWidget {
     return BottomAppBar(
       height: 100,
       color: Colors.transparent,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: 800,
+          ),
+          child: Column(
             children: [
-              Expanded(
-                child: WideButton(
-                  onPressed: () {
-                    final provider = ref.read(pageFlowProvider.notifier);
-                    provider.back();
-                  },
-                  title: localizations.back,
-                  type: ButtonType.transparent,
-                ),
-              ),
-              SizedBox(width: 32),
-              Expanded(
-                child: WideButton(
-                  onPressed: () {
-                    final provider = ref.read(pageFlowProvider.notifier);
-                    provider.next(routeParams);
-                  },
-                  title: skip ? localizations.skip : title,
-                  type: ButtonType.gradient,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: WideButton(
+                      onPressed: () {
+                        final provider = ref.read(pageFlowProvider.notifier);
+                        provider.back();
+                      },
+                      title: localizations.back,
+                      type: ButtonType.transparent,
+                    ),
+                  ),
+                  SizedBox(width: 32),
+                  Expanded(
+                    child: WideButton(
+                      onPressed: () {
+                        final provider = ref.read(pageFlowProvider.notifier);
+                        provider.next(routeParams);
+                      },
+                      title: skip ? localizations.skip : title,
+                      type: ButtonType.gradient,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

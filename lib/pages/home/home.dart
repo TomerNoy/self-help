@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
-import 'package:self_help/core/theme.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
@@ -26,7 +25,7 @@ class Home extends HookConsumerWidget {
     void updateAppBar() {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) {
-          loggerService.debug('§§ Home updateAppBar expanded');
+          loggerService.debug('§§ Home up dateAppBar expanded');
           appbarNotifier.updateState(
             appBarType: AppBarType.expanded,
             appBarTitle: title,
@@ -52,38 +51,41 @@ class Home extends HookConsumerWidget {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        shrinkWrap: true,
+      body: Stack(
         children: [
-          HomeCard(
-            backgroundColor: whiteGrey,
-            description: 'פרוטוקול להתמודדות עם לחץ/חרדה',
-            buttonTitle: localizations.startSosButtonTitle,
-            imagePath: AssetsConstants.sosGirl,
-            onPressed: () {
-              final provider = ref.read(routerStateProvider);
-              provider.pushNamed(RoutePaths.sosLanding.name);
-            },
-          ),
-          HomeCard(
-            backgroundColor: whiteGrey,
-            description: 'בנה את החוסן הנפשי שלך - תרגול יום יומי',
-            buttonTitle: localizations.startResilienceButtonTitle,
-            imagePath: AssetsConstants.confidenceMan,
-            onPressed: () {
-              final provider = ref.read(routerStateProvider);
-              provider.pushNamed(RoutePaths.resilience.name);
-            },
-          ),
-          HomeCard(
-            backgroundColor: whiteGrey,
-            description: 'מצא מטפל קרוב אליך',
-            buttonTitle: localizations.startFindATherapistButtonTitle,
-            imagePath: AssetsConstants.therapist,
-            onPressed: () {
-              // todo
-            },
+          ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              HomeCard(
+                // backgroundColor: whiteGrey,
+                description: 'פרוטוקול להתמודדות עם לחץ/חרדה',
+                buttonTitle: localizations.startSosButtonTitle,
+                imagePath: AssetsConstants.sosGirl,
+                onPressed: () {
+                  final provider = ref.read(routerStateProvider);
+                  provider.pushNamed(RoutePaths.sosLanding.name);
+                },
+              ),
+              HomeCard(
+                // backgroundColor: whiteGrey,
+                description: 'בנה את החוסן הנפשי שלך - תרגול יום יומי',
+                buttonTitle: localizations.startResilienceButtonTitle,
+                imagePath: AssetsConstants.confidenceMan,
+                onPressed: () {
+                  final provider = ref.read(routerStateProvider);
+                  provider.pushNamed(RoutePaths.resilience.name);
+                },
+              ),
+              HomeCard(
+                // backgroundColor: whiteGrey,
+                description: 'מצא מטפל קרוב אליך',
+                buttonTitle: localizations.startFindATherapistButtonTitle,
+                imagePath: AssetsConstants.therapist,
+                onPressed: () {
+                  // todo
+                },
+              ),
+            ],
           ),
         ],
       ),

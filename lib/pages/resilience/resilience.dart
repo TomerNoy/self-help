@@ -46,6 +46,7 @@ class Resilience extends ConsumerWidget {
     ];
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: ListView(
         children: List.generate(
           exercises.length,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_providers/page_flow_provider.dart';
-import 'package:self_help/pages/global_widgets/flow_appbar.dart';
 import 'package:self_help/pages/global_widgets/flow_drawer.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/pages/magic_touch/providers/magic_touch_provider.dart';
@@ -28,10 +27,10 @@ class MagicTouch extends HookConsumerWidget {
         }
       },
       child: Scaffold(
-        appBar: FlowAppBar(
-          title: localizations.magicTouch,
-          subtitle: localizations.magicTouchSubtitle,
-        ),
+        // appBar: FlowAppBar(
+        //   title: localizations.magicTouch,
+        //   subtitle: localizations.magicTouchSubtitle,
+        // ),
         body: SingleChildScrollView(
           child: DefaultTabController(
             length: 2,

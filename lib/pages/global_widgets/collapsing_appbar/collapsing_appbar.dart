@@ -4,7 +4,6 @@ import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
-import 'package:self_help/pages/global_widgets/animated_background.dart';
 import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/services/services.dart';
 
@@ -66,89 +65,85 @@ class CollapsingAppbar extends HookConsumerWidget
         decoration: BoxDecoration(
           borderRadius: borderRadius,
         ),
-        child: Stack(
-          children: [
-            Positioned.fill(child: const AnimatedBackground()),
-            AppBar(
-              backgroundColor: Colors.transparent,
-              title: Text(appBarTitle ?? ''),
-              titleTextStyle: Theme.of(context).textTheme.headlineMedium,
-              centerTitle: true,
-              leading: hasBackButton
-                  ? IconButton.filled(
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(
-                          Colors.white30,
-                        ),
-                      ),
-                      onPressed: () => ref.read(routerStateProvider).pop(),
-                      icon: Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.black,
-                      ),
-                    )
-                  : null,
-              bottom: PreferredSize(
-                preferredSize: MediaQuery.of(context).size,
-                child: AnimatedContainer(
-                  constraints: BoxConstraints(
-                    maxWidth: 800,
+        child: AppBar(
+          title: Text(appBarTitle ?? ''),
+          centerTitle: true,
+          leading: hasBackButton
+              ? IconButton.filled(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(
+                      Colors.white30,
+                    ),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  duration: Constants.animationDuration,
-                  height: bottomHeight,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      if (logo != null)
-                        Flexible(
-                          child: Image.asset(
-                            AssetsConstants.selfHelpNoBk,
-                            height: 140.0,
-                          ),
-                        ),
-                      Flexible(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (fullScreenTitle != null)
-                              Flexible(
-                                child: Text(
-                                  '$fullScreenTitle\n',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            if (subtitle != null)
-                              Flexible(
-                                child: Text(
-                                  subtitle,
-                                  style: subtitleStyle,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                          ],
-                        ),
+                  onPressed: () => ref.read(routerStateProvider).pop(),
+                  icon: Icon(
+                    Icons.arrow_back_ios_new,
+                    color: Colors.black,
+                  ),
+                )
+              : null,
+          bottom: PreferredSize(
+            preferredSize: MediaQuery.of(context).size,
+            child: AnimatedContainer(
+              constraints: BoxConstraints(
+                maxWidth: 800,
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              duration: Constants.animationDuration,
+              height: bottomHeight,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  if (logo != null)
+                    Flexible(
+                      child: Image.asset(
+                        AssetsConstants.selfHelpNoBk,
+                        height: 140.0,
                       ),
-                      if (startCallback != null)
-                        Flexible(
-                          child: Center(
-                            child: WideButton(
-                              title: 'המשך',
-                              onPressed: startCallback,
-                              type: ButtonType.transparent,
-                              width: double.infinity,
+                    ),
+                  Flexible(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (fullScreenTitle != null)
+                          Flexible(
+                            child: Text(
+                              '$fullScreenTitle\n',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium
+                                  ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                  ),
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                        ),
-                    ],
+                        if (subtitle != null)
+                          Flexible(
+                            child: Text(
+                              subtitle,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
-                ),
+                  if (startCallback != null)
+                    Flexible(
+                      child: Center(
+                        child: WideButton(
+                          title: 'המשך',
+                          onPressed: startCallback,
+                          type: ButtonType.transparent,
+                          width: double.infinity,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

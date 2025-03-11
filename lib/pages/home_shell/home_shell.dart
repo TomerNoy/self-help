@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
-import 'package:self_help/core/theme.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 
@@ -48,7 +47,6 @@ class HomeShell extends HookConsumerWidget {
             height: 60,
             shape: const CircularNotchedRectangle(),
             notchMargin: notchMarginAnimation.value,
-            color: blue,
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
@@ -118,10 +116,6 @@ class AnimatedIconButton extends HookWidget {
     isExpanded ? animationController.forward() : animationController.reverse();
 
     return TextButton.icon(
-      style: ButtonStyle(
-        foregroundColor: WidgetStateProperty.all(Colors.black),
-        iconColor: WidgetStateProperty.all(Colors.black),
-      ),
       onPressed: onPressed,
       icon: ScaleTransition(
         scale: scaleAnimation,
@@ -160,21 +154,14 @@ class AnimatedFAB extends HookConsumerWidget {
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              blue,
-              // purple,
-              darkGrey,
-            ],
-          ),
         ),
-        child: IconButton(
-          icon: Icon(
-            Icons.home,
-            color: Colors.white,
+        child: IconButton.filled(
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all(
+              Theme.of(context).colorScheme.primary,
+            ),
           ),
+          icon: Icon(Icons.home),
           onPressed: () {
             final provider = ref.read(routerStateProvider);
             provider.pushNamed(RoutePaths.home.name);
