@@ -6,11 +6,13 @@ class Exercise extends Equatable {
     required this.path,
     required this.description,
     required this.title,
+    required this.imagePath,
   });
 
   final RoutePaths path;
   final String description;
   final String title;
+  final String imagePath;
 
   @override
   List<Object> get props => [path, description, title];

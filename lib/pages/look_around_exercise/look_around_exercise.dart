@@ -61,88 +61,108 @@ class LookAroundExercise extends HookConsumerWidget {
       };
     }, []);
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: 800,
-              ),
-              child: Column(
-                children: List.generate(
-                  2,
-                  (titleIndex) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          titles[titleIndex],
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.5,
-                                  ),
-                        ),
-                        SizedBox(height: 8),
-                        Wrap(
-                          spacing: 16,
-                          runSpacing: 8,
-                          alignment: WrapAlignment.center,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          runAlignment: WrapAlignment.center,
-                          children: List.generate(
-                            4,
-                            (boxIndex) {
-                              return SizedBox(
-                                width: 173,
-                                height: 47,
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                      borderSide: BorderSide(),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.opaque,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: 800,
+                ),
+                child: Column(
+                  children: List.generate(
+                    2,
+                    (titleIndex) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            titles[titleIndex],
+                            style:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.5,
                                     ),
-                                    contentPadding: const EdgeInsets.all(0),
-                                    counter: Offstage(),
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  controller: controllers
-                                      .value[boxIndex + titleIndex * 4],
-                                  onChanged: (value) {
-                                    controllers.value =
-                                        List.from(controllers.value);
-
-                                    loggerService.debug(
-                                        'controllers value: ${controllers.value.map(
-                                      (e) => e.text,
-                                    )}');
-                                  },
-                                ),
-                              );
-                            },
                           ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          examples[titleIndex],
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        SizedBox(height: 24),
-                      ],
-                    );
-                  },
+                          SizedBox(height: 8),
+                          Wrap(
+                            spacing: 16,
+                            runSpacing: 8,
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            runAlignment: WrapAlignment.center,
+                            children: List.generate(
+                              4,
+                              (boxIndex) {
+                                return SizedBox(
+                                  width: 173,
+                                  height: 47,
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                        borderSide: BorderSide(),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                        borderSide: BorderSide(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                        borderSide: BorderSide(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                      ),
+                                      contentPadding: const EdgeInsets.all(0),
+                                      counter: Offstage(),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    controller: controllers
+                                        .value[boxIndex + titleIndex * 4],
+                                    onChanged: (value) {
+                                      controllers.value =
+                                          List.from(controllers.value);
+
+                                      loggerService.debug(
+                                          'controllers value: ${controllers.value.map(
+                                        (e) => e.text,
+                                      )}');
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            examples[titleIndex],
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          SizedBox(height: 24),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: FlowNavigationBar(
-        title: localization.continueButtonTitle,
-        skip: !controllers.value.every((e) => e.text.isNotEmpty),
+        bottomNavigationBar: FlowNavigationBar(
+          title: localization.continueButtonTitle,
+          skip: !controllers.value.every((e) => e.text.isNotEmpty),
+        ),
       ),
     );
   }

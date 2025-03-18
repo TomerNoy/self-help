@@ -7,7 +7,6 @@ import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/calculate_exercise/providers/calc_exercise_provider.dart';
-import 'package:self_help/services/services.dart';
 
 class CalcExercise extends HookConsumerWidget {
   const CalcExercise({super.key});
@@ -39,14 +38,18 @@ class CalcExercise extends HookConsumerWidget {
       },
     );
 
-    final isValid = useState(false);
-
     final focusNodes = useState<List<FocusNode>>(
-      List.generate(5, (_) => FocusNode()),
+      List.generate(numberOfOperations, (_) => FocusNode()),
     );
 
+    final isAnswerCorrect = useState<List<bool>>(
+      List.generate(numberOfOperations, (_) => false),
+    );
+
+    final areAllAnswersCorrect = useState<bool>(false);
+
     final controllers = useState<List<TextEditingController>>(
-      List.generate(5, (_) => TextEditingController()),
+      List.generate(numberOfOperations, (_) => TextEditingController()),
     );
 
     useEffect(() {
@@ -62,108 +65,132 @@ class CalcExercise extends HookConsumerWidget {
       };
     }, []);
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Directionality(
-            textDirection: TextDirection.ltr,
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: 800,
-                ),
-                child: Column(
-                  children: List.generate(
-                    5,
-                    (index) {
-                      final provider = ref.watch(calcExerciseProvider);
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.opaque,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 800,
+                  ),
+                  child: Column(
+                    children: List.generate(
+                      numberOfOperations,
+                      (index) {
+                        final provider = ref.watch(calcExerciseProvider);
 
-                      return Card(
-                        margin: EdgeInsets.symmetric(vertical: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  '${provider[index].firstNumber} ${provider[index].operation.displayText} ${provider[index].secondNumber} =',
-                                  style:
-                                      Theme.of(context).textTheme.headlineLarge,
-                                ),
-                              ),
-                              Container(
-                                width: 79,
-                                height: 48,
-                                decoration: BoxDecoration(
-                                  color: provider[index].result ==
-                                          int.tryParse(
-                                              controllers.value[index].text)
-                                      ? Theme.of(context)
-                                          .colorScheme
-                                          .secondaryContainer
-                                      : Theme.of(context)
-                                          .colorScheme
-                                          .errorContainer,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: TextField(
-                                  controller: controllers.value[index],
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                      borderSide: BorderSide(),
-                                    ),
-                                    contentPadding: const EdgeInsets.all(0),
-                                    counter: Offstage(),
-                                  ),
-                                  maxLength: 2,
-                                  keyboardType: TextInputType.number,
-                                  textAlign: TextAlign.center,
-                                  style:
-                                      Theme.of(context).textTheme.headlineLarge,
-                                  focusNode: focusNodes.value[index],
-                                  onChanged: (value) {
-                                    controllers.value =
-                                        List.from(controllers.value);
-
-                                    if (provider[index].result ==
-                                        int.tryParse(value)) {
-                                      loggerService.debug('correct');
-                                      // focus on next node
-                                      if (index < 4) {
-                                        focusNodes.value[index + 1]
-                                            .requestFocus();
-                                      } else {
-                                        isValid.value = true;
-                                        focusNodes.value[index].unfocus();
-                                      }
-                                    } else {
-                                      loggerService.debug('incorrect');
-                                      isValid.value = false;
-                                    }
-                                  },
-                                ),
-                              ),
-                            ],
+                        return Card(
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
                           ),
-                        ),
-                      );
-                    },
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '${provider[index].firstNumber} ${provider[index].operation.displayText} ${provider[index].secondNumber} =',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 2,
+                                        ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 79,
+                                  height: 48,
+                                  child: TextField(
+                                    controller: controllers.value[index],
+                                    decoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                        borderSide: BorderSide(
+                                          color: isAnswerCorrect.value[index]
+                                              ? Colors.green
+                                              : Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                        borderSide: BorderSide(
+                                          color: isAnswerCorrect.value[index]
+                                              ? Colors.green
+                                              : Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                        ),
+                                      ),
+                                      contentPadding: const EdgeInsets.all(0),
+                                      counter: Offstage(),
+                                    ),
+                                    maxLength: 2,
+                                    keyboardType: TextInputType.number,
+                                    textAlign: TextAlign.center,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 2,
+                                        ),
+                                    focusNode: focusNodes.value[index],
+                                    onChanged: (value) {
+                                      // Update the controllers list to trigger a rebuild
+                                      controllers.value =
+                                          List.from(controllers.value);
+
+                                      final correctAnswer =
+                                          provider[index].result ==
+                                              int.tryParse(value);
+
+                                      // update the isAnswerCorrect list
+                                      isAnswerCorrect.value[index] =
+                                          correctAnswer;
+
+                                      areAllAnswersCorrect.value =
+                                          isAnswerCorrect.value.every((e) => e);
+
+                                      // handle focus change
+                                      if (correctAnswer) {
+                                        if (index < 4) {
+                                          focusNodes.value[index + 1]
+                                              .requestFocus();
+                                        } else {
+                                          focusNodes.value[index].unfocus();
+                                        }
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: FlowNavigationBar(
-        title: localization.continueButtonTitle,
-        skip: !isValid.value,
+        bottomNavigationBar: FlowNavigationBar(
+          title: localization.continueButtonTitle,
+          skip: !areAllAnswersCorrect.value,
+        ),
       ),
     );
   }

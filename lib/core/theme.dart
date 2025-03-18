@@ -346,17 +346,8 @@ class MaterialTheme {
         ),
         scaffoldBackgroundColor: colorScheme.surface,
         canvasColor: colorScheme.surface,
-        appBarTheme: AppBarTheme(
-          backgroundColor: colorScheme.primaryContainer,
-          foregroundColor: colorScheme.onPrimaryContainer,
-          titleTextStyle: textTheme.headlineMedium?.copyWith(
-            color: colorScheme.onPrimaryContainer,
-          ),
-        ),
-        cardTheme: CardTheme(
-          color: colorScheme.surfaceContainerLowest.withAlpha(100),
-          shadowColor: colorScheme.surfaceContainerLowest.withAlpha(100),
-        ),
+
+        // elements
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.all(
@@ -370,16 +361,85 @@ class MaterialTheme {
                 color: colorScheme.onSecondaryContainer,
               ),
             ),
-            elevation: WidgetStateProperty.all(3),
           ),
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
-            backgroundColor: WidgetStateProperty.all(colorScheme.surface),
+            backgroundColor: WidgetStateProperty.all(
+              colorScheme.surface,
+            ),
+            foregroundColor: WidgetStateProperty.all(
+              colorScheme.onSurface,
+            ),
+            textStyle: WidgetStateProperty.all(
+              textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSecondaryContainer,
+              ),
+            ),
+          ),
+        ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all(
+              colorScheme.primary,
+            ),
+            foregroundColor: WidgetStateProperty.all(
+              colorScheme.onPrimary,
+            ),
+            textStyle: WidgetStateProperty.all(
+              textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onPrimary,
+              ),
+            ),
           ),
         ),
         bottomAppBarTheme: BottomAppBarTheme(
           elevation: 3,
+        ),
+        cardTheme: CardTheme(
+          elevation: 2,
+          color: colorScheme.surface.withAlpha(200),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: BorderSide(
+              color: colorScheme.outline,
+            ),
+          ),
+          counterStyle: textTheme.labelMedium?.copyWith(
+            fontSize: 0,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: BorderSide(
+              color: colorScheme.primary,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: BorderSide(
+              color: colorScheme.error,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: BorderSide(
+              color: colorScheme.error,
+            ),
+          ),
+          labelStyle: textTheme.labelMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+          ),
+          hintStyle: textTheme.labelMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+          ),
+          errorStyle: textTheme.labelMedium?.copyWith(
+            color: colorScheme.onError,
+          ),
         ),
       );
 

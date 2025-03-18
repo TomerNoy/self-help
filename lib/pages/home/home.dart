@@ -7,6 +7,7 @@ import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_providers/user_provider.dart';
+import 'package:self_help/pages/global_widgets/buttons.dart';
 import 'package:self_help/pages/home/widgets/home_card.dart';
 import 'package:self_help/services/services.dart';
 
@@ -25,7 +26,7 @@ class Home extends HookConsumerWidget {
     void updateAppBar() {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) {
-          loggerService.debug('§§ Home up dateAppBar expanded');
+
           appbarNotifier.updateState(
             appBarType: AppBarType.expanded,
             appBarTitle: title,
@@ -48,6 +49,8 @@ class Home extends HookConsumerWidget {
       updateAppBar();
       return null;
     }, const []);
+
+
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -85,6 +88,11 @@ class Home extends HookConsumerWidget {
                   // todo
                 },
               ),
+              // GradientFilledButton(onPressed: () {}, title: 'title'),
+              // SizedBox(height: 16),
+              // GradientElevatedButton(onPressed: () {}, title: 'title'),
+              // SizedBox(height: 16),
+              // GradientOutlinedButton(onPressed: () {}, title: 'title'),
             ],
           ),
         ],

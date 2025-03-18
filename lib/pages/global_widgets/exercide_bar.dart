@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
-import 'package:self_help/pages/global_widgets/wide_button.dart';
 
 class ExercideBar extends ConsumerWidget {
   const ExercideBar({super.key});
@@ -15,10 +14,9 @@ class ExercideBar extends ConsumerWidget {
       color: Colors.transparent,
       child: Column(
         children: [
-          WideButton(
+          OutlinedButton(
             onPressed: () => context.pop(),
-            title: localizations.endExercise,
-            type: ButtonType.transparent,
+            child: Text(localizations.endExercise),
           ),
           SizedBox(width: 32),
         ],

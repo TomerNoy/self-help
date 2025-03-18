@@ -4,11 +4,9 @@ import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
-import 'package:self_help/pages/global_widgets/wide_button.dart';
-import 'package:self_help/services/services.dart';
+import 'package:self_help/pages/global_widgets/buttons.dart';
 
-class CollapsingAppbar extends HookConsumerWidget
-    implements PreferredSizeWidget {
+class CollapsingAppbar extends ConsumerWidget implements PreferredSizeWidget {
   const CollapsingAppbar({
     super.key,
     required this.size,
@@ -21,8 +19,6 @@ class CollapsingAppbar extends HookConsumerWidget
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appState = ref.watch(animatedAppBarProvider);
-
-    loggerService.debug('§§ CollapsingAppbar ${appState.appBarType}');
 
     final appBarType = appState.appBarType;
     final appBarTitle = appState.appBarTitle;
@@ -40,7 +36,7 @@ class CollapsingAppbar extends HookConsumerWidget
     );
     final borderRadius = isFullScreen ? null : radius;
     final subtitleStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
-          height: 1.5,
+          height: 2,
         );
     final appBarHeight = AppBar().preferredSize.height;
     final padding = MediaQuery.of(context).padding.top;
@@ -55,7 +51,8 @@ class CollapsingAppbar extends HookConsumerWidget
       )..layout(maxWidth: MediaQuery.of(context).size.width - padding);
       bottomHeight = textPainter.height + 16;
     } else if (appBarType == AppBarType.fullScreen) {
-      bottomHeight = MediaQuery.of(context).size.height - appBarHeight;
+      bottomHeight =
+          MediaQuery.of(context).size.height - appBarHeight - padding;
     }
 
     return IntrinsicHeight(
@@ -66,29 +63,57 @@ class CollapsingAppbar extends HookConsumerWidget
           borderRadius: borderRadius,
         ),
         child: AppBar(
-          title: Text(appBarTitle ?? ''),
+          backgroundColor: Colors.transparent,
+          title: Text(
+            appBarTitle ?? '',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+          ),
           centerTitle: true,
-          leading: hasBackButton
-              ? IconButton.filled(
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(
-                      Colors.white30,
-                    ),
+          // actions: [
+          //   _buildMenuButton(ref),
+          // ],
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  // Theme.of(context).colorScheme.primaryContainer,
+                  Theme.of(context).colorScheme.inversePrimary,
+                  Theme.of(context).colorScheme.surfaceDim,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
+
+          actions: [
+            if (hasBackButton)
+              IconButton.filled(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(
+                    Colors.white30,
                   ),
-                  onPressed: () => ref.read(routerStateProvider).pop(),
-                  icon: Icon(
-                    Icons.arrow_back_ios_new,
-                    color: Colors.black,
-                  ),
-                )
-              : null,
+                ),
+                onPressed: () => ref.read(routerStateProvider).pop(),
+                icon: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.black,
+                ),
+              ),
+          ],
           bottom: PreferredSize(
             preferredSize: MediaQuery.of(context).size,
             child: AnimatedContainer(
               constraints: BoxConstraints(
                 maxWidth: 800,
               ),
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+                bottom: 16,
+              ),
               duration: Constants.animationDuration,
               height: bottomHeight,
               child: Column(
@@ -114,7 +139,7 @@ class CollapsingAppbar extends HookConsumerWidget
                                   .headlineMedium
                                   ?.copyWith(
                                     color:
-                                        Theme.of(context).colorScheme.onPrimary,
+                                        Theme.of(context).colorScheme.primary,
                                   ),
                               textAlign: TextAlign.center,
                             ),
@@ -124,6 +149,7 @@ class CollapsingAppbar extends HookConsumerWidget
                             child: Text(
                               subtitle,
                               textAlign: TextAlign.center,
+                              style: subtitleStyle,
                             ),
                           ),
                       ],
@@ -132,11 +158,13 @@ class CollapsingAppbar extends HookConsumerWidget
                   if (startCallback != null)
                     Flexible(
                       child: Center(
-                        child: WideButton(
-                          title: 'המשך',
-                          onPressed: startCallback,
-                          type: ButtonType.transparent,
+                        child: SizedBox(
                           width: double.infinity,
+                          height: 50,
+                          child: GradientFilledButton(
+                            onPressed: startCallback,
+                            title: 'המשך',
+                          ),
                         ),
                       ),
                     ),

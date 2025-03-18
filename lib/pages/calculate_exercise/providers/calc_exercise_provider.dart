@@ -1,9 +1,10 @@
 import 'dart:math';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:self_help/services/services.dart';
 
 part 'calc_exercise_provider.g.dart';
+
+const numberOfOperations = 5;
 
 class CalcExerciseState {
   final int firstNumber;
@@ -45,34 +46,45 @@ enum CalcOperation {
 class CalcExercise extends _$CalcExercise {
   @override
   List<CalcExerciseState> build() {
-    return List.generate(
-      5,
-      (index) {
-        final operation = _getRandomOperation();
-        final firstRandom = _getRandomInt();
-        loggerService.debug('§ firstRandom: $firstRandom');
-        // if operation is subtract then first number should be greater than second number
-        final secondRandom = operation == CalcOperation.subtract
-            ? _getRandomInt(
-                min: 1,
-                max: firstRandom - 1,
-              )
-            : _getRandomInt();
+    final list = <CalcExerciseState>[];
 
-        final result = switch (operation) {
-          CalcOperation.add => firstRandom + secondRandom,
-          CalcOperation.subtract => firstRandom - secondRandom,
-          CalcOperation.multiply => firstRandom * secondRandom,
-        };
+    while (list.length < numberOfOperations) {
+      final operation = _getRandomOperation();
+      final firstRandom = _getRandomInt();
+      final secondRandom = operation == CalcOperation.subtract
+          ? _getRandomInt(
+              min: 1,
+              max: firstRandom - 1,
+            )
+          : _getRandomInt();
 
-        return CalcExerciseState(
-          firstNumber: firstRandom,
-          secondNumber: secondRandom,
-          operation: operation,
-          result: result,
-        );
-      },
-    );
+      // check duplicated operations
+      if (list.any(
+        (e) =>
+            e.firstNumber == firstRandom &&
+            e.secondNumber == secondRandom &&
+            e.operation == operation,
+      )) {
+        continue;
+      }
+
+      final result = switch (operation) {
+        CalcOperation.add => firstRandom + secondRandom,
+        CalcOperation.subtract => firstRandom - secondRandom,
+        CalcOperation.multiply => firstRandom * secondRandom,
+      };
+
+      final state = CalcExerciseState(
+        firstNumber: firstRandom,
+        secondNumber: secondRandom,
+        operation: operation,
+        result: result,
+      );
+
+      list.add(state);
+    }
+
+    return list;
   }
 
   int _getRandomInt({int min = 2, int max = 10}) {

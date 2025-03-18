@@ -7,7 +7,6 @@ import 'package:self_help/models/app_user.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_providers/user_provider.dart';
-import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/services/services.dart';
 
 class Profile extends HookConsumerWidget {
@@ -27,6 +26,7 @@ class Profile extends HookConsumerWidget {
         (_) => appbarNotifier.updateState(
           appBarType: AppBarType.collapsed,
           appBarTitle: title,
+          hasBackButton: true,
         ),
       );
     }
@@ -86,22 +86,33 @@ class Profile extends HookConsumerWidget {
               ),
               SizedBox(height: 32),
               Center(
-                child: WideButton(
+                child: ElevatedButton(
                   onPressed: () {},
-                  title: 'Register as a Therapist',
-                  type: ButtonType.gradient,
-                  width: 300,
+                  child: Text('Register as a Therapist'),
                 ),
               ),
               SizedBox(height: 32),
               Center(
-                child: WideButton(
+                child: OutlinedButton(
                   onPressed: () async => await userService.signOut(),
-                  title: 'Sign Out',
-                  type: ButtonType.transparent,
-                  width: 200,
+                  // style: Theme.of(context).outlinedButtonTheme.style?.copyWith(
+                  //       side: WidgetStateProperty.all(
+                  //         BorderSide(
+                  //           color: Theme.of(context).colorScheme.error,
+                  //         ),
+                  //       ),
+                  //       backgroundColor: WidgetStateProperty.all(
+                  //         Theme.of(context).colorScheme.errorContainer,
+                  //       ),
+                  //     ),
+                  child: Text(
+                    'Sign Out',
+                    // style: TextStyle(
+                    //   color: Theme.of(context).colorScheme.onErrorContainer,
+                    // ),
+                  ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -131,7 +142,7 @@ class Profile extends HookConsumerWidget {
           ),
           actions: <Widget>[
             Center(
-              child: WideButton(
+              child: FilledButton(
                 onPressed: () async {
                   Navigator.of(context).pop();
 
@@ -159,9 +170,7 @@ class Profile extends HookConsumerWidget {
                     showSnackBar(message);
                   }
                 },
-                title: 'Accept',
-                type: ButtonType.gradient,
-                width: 200,
+                child: Text('Accept'),
               ),
             ),
           ],

@@ -9,15 +9,21 @@ class FlowDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final localization = AppLocalizations.of(context)!;
     final logo = Image.asset(AssetsConstants.selfHelpIcon, width: 70);
+    final page = ref.read(routerListenerProvider);
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              // color: purple,
+              gradient: LinearGradient(
+                colors: [
+                  Theme.of(context).primaryColor,
+                  Theme.of(context).primaryColorDark,
+                ],
+              ),
             ),
             child: Column(
               children: [
@@ -35,22 +41,25 @@ class FlowDrawer extends ConsumerWidget {
               ],
             ),
           ),
-          ListTile(
-            title: const Text('Home'),
-            leading: Icon(Icons.home),
-            onTap: () {
-              final provider = ref.read(routerStateProvider);
-              provider.goNamed(RoutePaths.home.name);
-            },
-          ),
+          if (page != RoutePaths.home)
+            ListTile(
+              title: const Text('Home'),
+              leading: Icon(Icons.home),
+              onTap: () {
+                final provider = ref.read(routerStateProvider);
+                provider.goNamed(RoutePaths.home.name);
+                Navigator.of(context).pop();
+              },
+            ),
           ListTile(
             title: const Text('Profile'),
             onTap: () {
               final provider = ref.read(routerStateProvider);
-              while (provider.canPop() == true) {
-                provider.pop();
-              }
+              // while (provider.canPop() == true) {
+              //   provider.pop();
+              // }
               provider.pushNamed(RoutePaths.profile.name);
+              Navigator.of(context).pop();
             },
             leading: Icon(Icons.person),
           ),
@@ -59,10 +68,11 @@ class FlowDrawer extends ConsumerWidget {
             leading: Icon(Icons.settings),
             onTap: () {
               final provider = ref.read(routerStateProvider);
-              while (provider.canPop() == true) {
-                provider.pop();
-              }
+              // while (provider.canPop() == true) {
+              //   provider.pop();
+              // }
               provider.pushNamed(RoutePaths.settings.name);
+              Navigator.of(context).pop();
             },
           ),
         ],

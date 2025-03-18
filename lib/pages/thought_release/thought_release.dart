@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
-import 'package:self_help/pages/global_widgets/wide_button.dart';
 
 class ThoughtRelease extends ConsumerWidget {
   const ThoughtRelease({super.key});
@@ -37,10 +36,9 @@ class ThoughtRelease extends ConsumerWidget {
               alignment: Alignment.center,
               children: [
                 cloud,
-                WideButton(
-                  title: localization.addThoughtButtonTitle,
+                OutlinedButton(
+                  child: Text(localization.addThoughtButtonTitle),
                   onPressed: () {},
-                  type: ButtonType.transparent,
                 ),
               ],
             ),

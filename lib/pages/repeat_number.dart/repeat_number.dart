@@ -65,121 +65,150 @@ class RepeatNumber extends HookConsumerWidget {
       return null;
     }, []);
 
-    final orderedBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-      borderSide: BorderSide(
-        color: orderedInputValid.value ? Colors.green : Colors.grey,
-      ),
-    );
-    final reversedBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-      borderSide: BorderSide(
-        color: reversedInputValid.value ? Colors.green : Colors.grey,
-      ),
-    );
+    // final orderedBorder = OutlineInputBorder(
+    //   borderRadius: BorderRadius.circular(10.0),
+    //   borderSide: BorderSide(
+    //     color: orderedInputValid.value ? Colors.green : Colors.grey,
+    //   ),
+    // );
+    // final reversedBorder = OutlineInputBorder(
+    //   borderRadius: BorderRadius.circular(10.0),
+    //   borderSide: BorderSide(
+    //     color: reversedInputValid.value ? Colors.green : Colors.grey,
+    //   ),
+    // );
 
-    return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: 800,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Enter the number you see below',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      orderedRandomNumber,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            letterSpacing: 10,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.opaque,
+      child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 800,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        orderedRandomNumber,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              letterSpacing: 10,
+                            ),
+                      ),
+                      SizedBox(height: 16),
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            counter: Offstage(),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              borderSide: BorderSide(
+                                color: orderedInputValid.value
+                                    ? Colors.green
+                                    : Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              borderSide: BorderSide(
+                                color: orderedInputValid.value
+                                    ? Colors.green
+                                    : Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
                           ),
-                    ),
-                    SizedBox(height: 16),
-                    Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: TextField(
-                        controller: orderedController,
-                        focusNode: orderedFocusNode,
-                        textAlign: TextAlign.center,
-                        keyboardType: TextInputType.number,
-                        maxLength: 10,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(letterSpacing: 10),
-                        decoration: InputDecoration(
-                          counter: Offstage(),
-                          enabledBorder: orderedBorder,
-                          focusedBorder: orderedBorder,
+                          controller: orderedController,
+                          focusNode: orderedFocusNode,
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.number,
+                          maxLength: 10,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(letterSpacing: 10),
+                          onChanged: (value) {
+                            if (value == orderedRandomNumber) {
+                              FocusScope.of(context)
+                                  .requestFocus(reversedFocusNode);
+                              orderedInputValid.value = true;
+                            } else {
+                              orderedInputValid.value = false;
+                            }
+                          },
                         ),
-                        onChanged: (value) {
-                          if (value == orderedRandomNumber) {
-                            FocusScope.of(context)
-                                .requestFocus(reversedFocusNode);
-                            orderedInputValid.value = true;
-                          } else {
-                            orderedInputValid.value = false;
-                          }
-                        },
                       ),
-                    ),
-                    SizedBox(height: 16),
-                    Text('Now enter the number in reverse order',
-                        style: Theme.of(context).textTheme.titleMedium),
-                    SizedBox(height: 16),
-                    Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: TextField(
-                        controller: reversedController,
-                        focusNode: reversedFocusNode,
-                        textAlign: TextAlign.center,
-                        keyboardType: TextInputType.number,
-                        maxLength: 10,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(letterSpacing: 10),
-                        decoration: InputDecoration(
-                          counter: Offstage(),
-                          enabledBorder: reversedBorder,
-                          focusedBorder: reversedBorder,
+                      SizedBox(height: 16),
+                      Text(localizations.enterNumberBackwards,
+                          style: Theme.of(context).textTheme.titleMedium),
+                      Text(localizations.enterNumberBackwardsSubtitle,
+                          style: Theme.of(context).textTheme.titleMedium),
+                      SizedBox(height: 16),
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: TextField(
+                          controller: reversedController,
+                          focusNode: reversedFocusNode,
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.number,
+                          maxLength: 10,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(letterSpacing: 10),
+                          decoration: InputDecoration(
+                            counter: Offstage(),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              borderSide: BorderSide(
+                                color: reversedInputValid.value
+                                    ? Colors.green
+                                    : Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              borderSide: BorderSide(
+                                color: reversedInputValid.value
+                                    ? Colors.green
+                                    : Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                          onChanged: (value) {
+                            loggerService.debug(
+                                'reversedRandomNumber: $reversedRandomNumber');
+                            if (value == reversedRandomNumber) {
+                              reversedFocusNode.unfocus();
+                              reversedInputValid.value = true;
+                            } else {
+                              reversedInputValid.value = false;
+                            }
+                          },
                         ),
-                        onChanged: (value) {
-                          loggerService.debug(
-                              'reversedRandomNumber: $reversedRandomNumber');
-                          if (value == reversedRandomNumber) {
-                            reversedFocusNode.unfocus();
-                            reversedInputValid.value = true;
-                          } else {
-                            reversedInputValid.value = false;
-                          }
-                        },
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        bottomNavigationBar: FlowNavigationBar(
-          title: localizations.continueButtonTitle,
-          skip: !reversedInputValid.value,
-        ));
+          bottomNavigationBar: FlowNavigationBar(
+            title: localizations.continueButtonTitle,
+            skip: !reversedInputValid.value,
+          )),
+    );
   }
 
   String generateRandom() {

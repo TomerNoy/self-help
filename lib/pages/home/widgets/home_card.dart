@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:self_help/pages/global_widgets/buttons.dart';
 
 class HomeCard extends ConsumerWidget {
   const HomeCard({
@@ -26,27 +27,11 @@ class HomeCard extends ConsumerWidget {
         child: Stack(
           alignment: Alignment.bottomLeft,
           children: [
-            Positioned.fill(
-              child: ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(32), // Match card's border radius
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-                  child: Container(
-                    color: Colors
-                        .transparent, // Necessary for BackdropFilter to work
-                  ),
-                ),
-              ),
-            ),
             ConstrainedBox(
               constraints: BoxConstraints.tight(
-                Size(800, 180),
+                Size(500, 140),
               ),
               child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32),
-                ),
                 elevation: 2,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -63,7 +48,7 @@ class HomeCard extends ConsumerWidget {
                                   description,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .bodyLarge
+                                      .titleMedium
                                       ?.copyWith(
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -73,12 +58,11 @@ class HomeCard extends ConsumerWidget {
                               ),
                             ),
                             SizedBox(height: 16),
-                            SizedBox(
-                              height: 50,
-                              child: ElevatedButton(
-                                onPressed: onPressed,
-                                child: Text(buttonTitle),
-                              ),
+                            GradientElevatedButton(
+                              maxWidth: 200,
+                              minWidth: 100,
+                              onPressed: onPressed,
+                              title: buttonTitle,
                             ),
                           ],
                         ),
@@ -92,7 +76,7 @@ class HomeCard extends ConsumerWidget {
             Positioned(
               top: 0,
               left: 16,
-              child: SvgPicture.asset(imagePath, width: 160),
+              child: SvgPicture.asset(imagePath, width: 140),
             ),
           ],
         ),

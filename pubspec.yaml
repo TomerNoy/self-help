@@ -43,6 +43,9 @@ dependencies:
   equatable: ^2.0.7
   google_fonts: ^6.2.1
   animated_background: ^2.0.0
+  dynamic_background: ^0.5.0
+  blurrycontainer: ^2.1.0
+  glass_kit: ^4.0.1
 
 dev_dependencies:
   flutter_test:

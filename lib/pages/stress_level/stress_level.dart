@@ -61,15 +61,15 @@ class StressLevel extends HookConsumerWidget {
       },
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        // appBar: FlowAppBar(
-        //   title: localizations.measureTitle,
-        //   subtitle: localizations.measureSubtitle,
-        // ),
         body: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
+                // Text(
+                //   localizations.measureSubtitle,
+                // style: Theme.of(context).textTheme.headlineLarge,
+                // ),
                 SizedBox(
                   width: width,
                   height: width,
@@ -88,8 +88,13 @@ class StressLevel extends HookConsumerWidget {
                       ),
                       customColors: CustomSliderColors(
                         progressBarColors: [
-                          Theme.of(context).colorScheme.tertiary,
-                          Theme.of(context).colorScheme.primary,
+                          Theme.of(context).colorScheme.error.withAlpha(200),
+                          Theme.of(context).colorScheme.tertiary.withAlpha(200),
+                          Theme.of(context)
+                              .colorScheme
+                              .secondary
+                              .withAlpha(200),
+                          Theme.of(context).colorScheme.primary.withAlpha(200),
                           // Theme.of(context).colorScheme.secondary,
                         ],
                         trackColor: Theme.of(context).colorScheme.surfaceDim,

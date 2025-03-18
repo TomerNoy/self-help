@@ -106,7 +106,7 @@
   "@measureTitle": {
     "description": "pressure measurement"
   },
-  "measureSubtitle": "Mark the level that best describes your feeling right now.",
+  "measureSubtitle": "Mark the level that best describes how you are feeling right now.\n\nThis process helps with awareness and the self-soothing process.",
   "@measureSubtitle": {
     "description": "pressure measurement subtitle"
   },
@@ -138,7 +138,7 @@
   "@anxious": {
     "description": "anxious"
   },
-  "enterNumber": "Enter a number",
+  "enterNumber": "Repeat the number below",
   "@enterNumber": {
     "description": "enter number"
   },
@@ -150,7 +150,7 @@
   "@back": {
     "description": "go back button title"
   },
-  "enterNumberBackwards": "This time, write your phone number from end to beginning.",
+  "enterNumberBackwards": "This time write the number backwards.",
   "@enterNumberBackwards": {
     "description": "enter number backwards"
   },

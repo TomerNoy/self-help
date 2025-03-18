@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:self_help/core/constants/flow_route_constant.dart';
 import 'package:self_help/pages/global_providers/page_flow_provider.dart';
+import 'package:self_help/pages/global_widgets/buttons.dart';
 import 'package:self_help/pages/global_widgets/exercide_bar.dart';
-import 'package:self_help/pages/global_widgets/wide_button.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 
 class FlowNavigationBar extends ConsumerWidget {
@@ -38,24 +38,22 @@ class FlowNavigationBar extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: WideButton(
+                    child: GradientOutlinedButton(
                       onPressed: () {
                         final provider = ref.read(pageFlowProvider.notifier);
                         provider.back();
                       },
                       title: localizations.back,
-                      type: ButtonType.transparent,
                     ),
                   ),
                   SizedBox(width: 32),
                   Expanded(
-                    child: WideButton(
+                    child: GradientFilledButton(
                       onPressed: () {
                         final provider = ref.read(pageFlowProvider.notifier);
                         provider.next(routeParams);
                       },
                       title: skip ? localizations.skip : title,
-                      type: ButtonType.gradient,
                     ),
                   ),
                 ],

@@ -11,9 +11,9 @@ import 'package:self_help/services/services.dart';
 
 part 'router_provider.g.dart';
 
+
 @Riverpod(keepAlive: true)
 GoRouter routerState(Ref ref) {
-  final routerKey = GlobalKey<NavigatorState>(debugLabel: 'routerKey');
   var authState = ValueNotifier<UserAuthState>(UserAuthState.loading);
 
   var hasSeenWelcome = false;
@@ -35,7 +35,6 @@ GoRouter routerState(Ref ref) {
 
   final appRouter = router(
     refreshListenable: authState,
-    routerKey: routerKey,
     redirect: (context, state) async {
       final location = state.matchedLocation;
 

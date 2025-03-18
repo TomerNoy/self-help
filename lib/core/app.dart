@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:self_help/core/debug_overlay.dart';
 import 'package:self_help/core/theme.dart';
 import 'package:self_help/pages/global_pages/app_overlay.dart';
 import 'package:self_help/pages/global_providers/local_language_provider.dart';
@@ -12,7 +11,6 @@ class App extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     TextTheme textTheme = createTextTheme(context, "Rubik", "Rubik");
     MaterialTheme theme = MaterialTheme(textTheme);
 
@@ -34,7 +32,7 @@ class App extends ConsumerWidget {
             child ?? const SizedBox.shrink(),
             // CollapsingAppbar(),
             AppOverlay(),
-            DebugOverlay(),
+            // DebugOverlay(),
           ],
         );
       },

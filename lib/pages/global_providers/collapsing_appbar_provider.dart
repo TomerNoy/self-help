@@ -70,7 +70,6 @@ class AnimatedAppBar extends _$AnimatedAppBar {
     bool? hasBackButton,
     VoidCallback? startCallback,
   }) {
-    loggerService.debug('§§ AnimatedAppBar updateState $appBarType');
     state = state.copyWith(
       appBarType: appBarType,
       appBarTitle: appBarTitle,
