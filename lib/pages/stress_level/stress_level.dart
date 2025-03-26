@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
+import 'package:self_help/models/stress_track.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/page_flow_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
@@ -160,6 +161,15 @@ class StressLevel extends HookConsumerWidget {
         ),
         bottomNavigationBar: FlowNavigationBar(
           title: localizations.continueButtonTitle,
+          onContinue: () {
+            // TODO: add for prod
+            // ref.read(stressLevelProvider.notifier).addStressTrack(
+            //       StressTrack(
+            //         date: DateTime.now(),
+            //         stressLevel: level,
+            //       ),
+            //     );
+          },
         ),
         drawer: FlowDrawer(),
       ),

@@ -26,7 +26,6 @@ class Home extends HookConsumerWidget {
     void updateAppBar() {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) {
-
           appbarNotifier.updateState(
             appBarType: AppBarType.expanded,
             appBarTitle: title,
@@ -49,8 +48,6 @@ class Home extends HookConsumerWidget {
       updateAppBar();
       return null;
     }, const []);
-
-
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -85,7 +82,7 @@ class Home extends HookConsumerWidget {
                 buttonTitle: localizations.startFindATherapistButtonTitle,
                 imagePath: AssetsConstants.therapist,
                 onPressed: () {
-                  // todo
+                  // TODO:
                 },
               ),
               // GradientFilledButton(onPressed: () {}, title: 'title'),

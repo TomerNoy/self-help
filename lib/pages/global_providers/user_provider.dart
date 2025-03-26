@@ -7,7 +7,7 @@ part 'user_provider.g.dart';
 
 @riverpod
 Stream<AppUser?> user(Ref ref) async* {
-  yield* userService.userChanges
+  yield* userProfileService.userChanges
       .map<AppUser?>((user) => user)
       .distinct()
       .handleError(

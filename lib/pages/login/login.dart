@@ -181,7 +181,7 @@ class Login extends HookConsumerWidget {
                       ),
                     ],
                   ),
-                  // todo remove after testing
+                  // TODO: remove after testing
                 ],
               ),
             ),
@@ -203,7 +203,8 @@ class Login extends HookConsumerWidget {
       //     .read(collapsingAppBarProvider.notifier)
       //     .updateState(AppBarType.loading);
 
-      final result = await userService.loginUser(email.trim(), password.trim());
+      final result =
+          await userAuthService.loginUser(email.trim(), password.trim());
 
       loggerService.debug('login result: $result');
 
@@ -230,10 +231,10 @@ class Login extends HookConsumerWidget {
       // ref
       //     .read(collapsingAppBarProvider.notifier)
       //     .updateState(AppBarType.loading);
-      //todo: is this needed? if so why isn't it on the other login method?
+      //TODO: is this needed? if so why isn't it on the other login method?
       // ref.read(routerListenerProvider.notifier).updateState(RoutePaths.loading);
 
-      final result = await userService.loginWithGoogle(googleUser);
+      final result = await userAuthService.loginWithGoogle(googleUser);
 
       if (result.isFailure) {
         if (!context.mounted) return;

@@ -4,14 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:self_help/core/constants/constants.dart';
-import 'package:self_help/models/app_user.dart';
+// import 'package:self_help/models/app_user.dart';
 import 'package:self_help/models/result.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
 import 'package:self_help/services/services.dart';
 
 /// this class is responsible for handling user authentication and user data
-class UserService {
-  UserService() {
+class UserAuthService {
+  UserAuthService() {
     _authStateChanges.add(UserAuthState.loading);
     _authChangesSub = _auth
         .authStateChanges()
@@ -20,26 +20,13 @@ class UserService {
             : UserAuthState.authenticated)
         .distinct()
         .listen(_authStateChanges.add);
-
-    _userChangesSub = _auth
-        .userChanges()
-        .map((user) => user == null ? null : AppUser.fromFirebaseUser(user))
-        .distinct()
-        .listen(_userChanges.add);
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  final _userChanges = BehaviorSubject<AppUser?>();
   final _authStateChanges = BehaviorSubject<UserAuthState>();
-
-  late final StreamSubscription<AppUser?> _userChangesSub;
   late final StreamSubscription<UserAuthState> _authChangesSub;
 
-  Stream<AppUser?> get userChanges => _userChanges.stream;
   Stream<UserAuthState> get authStateChanges => _authStateChanges.stream;
-
-  AppUser get currentUser => AppUser.fromFirebaseUser(_auth.currentUser!);
 
   /// this method is used to register a new user
   Future<Result<User>> registerUser(
@@ -93,16 +80,7 @@ class UserService {
     });
   }
 
-  Future<Result<String>> updateUserName({required String name}) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return Result.failure('User not found');
-    return _handleCall(() async {
-      await user.updateProfile(displayName: name);
-      await user.reload();
-      loggerService.info('User name updated: ${user.displayName}');
-      return 'updated successfully';
-    });
-  }
+  
 
   Future<Result<T>> _handleCall<T>(Future<T> Function() operation) async {
     _authStateChanges.add(UserAuthState.loading);
@@ -130,7 +108,6 @@ class UserService {
   }
 
   void dispose() {
-    _userChangesSub.cancel();
     _authChangesSub.cancel();
   }
 }

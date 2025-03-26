@@ -4,7 +4,9 @@ import 'package:self_help/services/app_lifecycle_service.dart';
 import 'package:self_help/services/firebase_service.dart';
 import 'package:self_help/services/logger_service.dart';
 import 'package:self_help/services/storage_service.dart';
-import 'package:self_help/services/user_service.dart';
+import 'package:self_help/services/user_auth_service.dart';
+import 'package:self_help/services/user_data_service.dart';
+import 'package:self_help/services/user_profile_service.dart';
 
 class ServiceProvider {
   static final _getIt = GetIt.instance;
@@ -42,10 +44,20 @@ class ServiceProvider {
         AppLifeCycleService(),
       );
 
-      // user service
-      _getIt.registerSingleton<UserService>(UserService(), dispose: (service) {
+      // user auth service
+      _getIt.registerSingleton<UserAuthService>(UserAuthService(),
+          dispose: (service) {
         service.dispose;
       });
+
+      // user profile service
+      _getIt.registerSingleton<UserProfileService>(UserProfileService(),
+          dispose: (service) {
+        service.dispose;
+      });
+
+      // user data service
+      _getIt.registerSingleton<UserDataService>(UserDataService());
     } catch (e, st) {
       loggerService.error('services error', e, st);
     }
@@ -64,4 +76,11 @@ AppLifeCycleService get appLifeCycleService {
   return ServiceProvider._getIt.get<AppLifeCycleService>();
 }
 
-UserService get userService => ServiceProvider._getIt.get<UserService>();
+UserAuthService get userAuthService =>
+    ServiceProvider._getIt.get<UserAuthService>();
+
+UserProfileService get userProfileService =>
+    ServiceProvider._getIt.get<UserProfileService>();
+
+UserDataService get userDataService =>
+    ServiceProvider._getIt.get<UserDataService>();

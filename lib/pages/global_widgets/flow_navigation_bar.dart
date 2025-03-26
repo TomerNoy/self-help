@@ -12,11 +12,13 @@ class FlowNavigationBar extends ConsumerWidget {
     required this.title,
     this.routeParams = const {},
     this.skip = false,
+    this.onContinue,
   });
 
   final Map<String, String> routeParams;
   final String title;
   final bool skip;
+  final VoidCallback? onContinue;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,6 +52,9 @@ class FlowNavigationBar extends ConsumerWidget {
                   Expanded(
                     child: GradientFilledButton(
                       onPressed: () {
+                        if (onContinue != null) {
+                          onContinue!();
+                        }
                         final provider = ref.read(pageFlowProvider.notifier);
                         provider.next(routeParams);
                       },

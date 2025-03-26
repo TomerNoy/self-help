@@ -10,7 +10,7 @@ enum UserAuthState { authenticated, unauthenticated, hasError, loading }
 Stream<UserAuthState> userAuth(Ref ref) async* {
   yield UserAuthState.loading;
 
-  yield* userService.authStateChanges.distinct().handleError(
+  yield* userAuthService.authStateChanges.distinct().handleError(
     (error, stackTrace) {
       loggerService.error("Error in userAuth stream: $error", stackTrace);
       return UserAuthState.hasError;

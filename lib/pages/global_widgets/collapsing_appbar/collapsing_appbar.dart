@@ -14,7 +14,7 @@ class CollapsingAppbar extends ConsumerWidget implements PreferredSizeWidget {
 
   final Size size;
 
-// TODO add fade transition to appbar?
+// TODO: add fade transition to appbar?
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,7 +36,7 @@ class CollapsingAppbar extends ConsumerWidget implements PreferredSizeWidget {
     );
     final borderRadius = isFullScreen ? null : radius;
     final subtitleStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
-          height: 2,
+          height: 1.5,
         );
     final appBarHeight = AppBar().preferredSize.height;
     final padding = MediaQuery.of(context).padding.top;
