@@ -182,13 +182,13 @@
   "@holdBreath": {
     "description": "hold breath"
   },
-  "calcExercise": "Calc exercises",
+  "calcExercise": "Solve the following exercises",
   "@calcExercise": {
-    "description": "calc exercises"
+    "description": "calculation exercise"
   },
-  "calcExerciseSubtitle": "In the next exercise, we will practice simple and quick calculations in order to activate the brain and redirect thoughts from stress",
+  "calcExerciseSubtitle": "Simple math exercise that will help you calm your thoughts and concentrate.\nThe exercises will help you activate the rational part of the brain to reduce stress and regain control",
   "@calcExerciseSubtitle": {
-    "description": "calc exercises subtitle"
+    "description": "calculation exercise subtitle"
   },
   "lookAroundExercise": "Look around",
   "@lookAroundExercise": {
@@ -285,5 +285,17 @@
   "endExercise": "End exercise",
   "@endExercise": {
     "description": "end exercise"
+  },
+  "homeCardSosDescription": "Protocol for dealing with stress and anxiety",
+  "@homeCardSosDescription": {
+    "description": "home card SOS description"
+  },
+  "homeCardResilienceDescription": "Build your mental resilience - daily practice",
+  "@homeCardResilienceDescription": {
+    "description": "home card resilience description"
+  },
+  "homeCardTherapistDescription": "Find a therapist near you",
+  "@homeCardTherapistDescription": {
+    "description": "home card therapist description"
   }
 }

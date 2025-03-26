@@ -58,7 +58,7 @@ class Home extends HookConsumerWidget {
             children: [
               HomeCard(
                 // backgroundColor: whiteGrey,
-                description: 'פרוטוקול להתמודדות עם לחץ/חרדה',
+                description: localizations.homeCardSosDescription,
                 buttonTitle: localizations.startSosButtonTitle,
                 imagePath: AssetsConstants.sosGirl,
                 onPressed: () {
@@ -68,7 +68,7 @@ class Home extends HookConsumerWidget {
               ),
               HomeCard(
                 // backgroundColor: whiteGrey,
-                description: 'בנה את החוסן הנפשי שלך - תרגול יום יומי',
+                description: localizations.homeCardResilienceDescription,
                 buttonTitle: localizations.startResilienceButtonTitle,
                 imagePath: AssetsConstants.confidenceMan,
                 onPressed: () {
@@ -78,7 +78,7 @@ class Home extends HookConsumerWidget {
               ),
               HomeCard(
                 // backgroundColor: whiteGrey,
-                description: 'מצא מטפל קרוב אליך',
+                description: localizations.homeCardTherapistDescription,
                 buttonTitle: localizations.startFindATherapistButtonTitle,
                 imagePath: AssetsConstants.therapist,
                 onPressed: () {

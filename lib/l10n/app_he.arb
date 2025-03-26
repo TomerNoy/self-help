@@ -43,8 +43,8 @@
   "breathIn": "הכנס אוויר",
   "breathOut": "הוצא אוויר",
   "holdBreath": "החזק אוויר",
-  "calcExercise": "תרגילי חישוב ",
-  "calcExerciseSubtitle": "בתרגיל הבא נתרגל חישובים פשוטים ומהירים על מנת להפעיל את המוח ולהפנות את המחשבות מהלחץ",
+  "calcExercise": "פתור את התרגילים הבאים",
+  "calcExerciseSubtitle": "תרגיל חשבון פשוט שיעזור לך להרגיע את המחשבות ולהתרכז.\nהתרגילים יעזרו לך להפעיל את החלק הרציונלי במוח להפחית מתח ולהחזיר את השליטה",
   "lookAroundExercise": "התבוננות מסביב",
   "lookAroundExerciseSubtitle": "בתרגיל הבא נתרגל התבוננות מסביב וזיהוי צבעים וצורות על מנת להפנות את המחשבות מהלחץ",
   "colors": "צבעים",
@@ -69,5 +69,8 @@
   "settings": "הגדרות",
   "profile": "פרופיל",
   "home": "בית",
-  "endExercise": "סיום תרגול"
+  "endExercise": "סיום תרגול",
+  "homeCardSosDescription": "פרוטוקול להתמודדות עם לחץ וחרדה",
+  "homeCardResilienceDescription": "בנה את החוסן הנפשי שלך - תרגול יום יומי",
+  "homeCardTherapistDescription": "מצא מטפל קרוב אליך"
 }
