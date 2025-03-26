@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/pages/breathing/breathing.dart';
+import 'package:self_help/pages/butterfly/butterfly.dart';
 import 'package:self_help/pages/calculate_exercise/calc_exercise.dart';
+import 'package:self_help/pages/calm_touch/calm_touch.dart';
+import 'package:self_help/pages/magic_touch/widgets/butterfly_hug.dart';
 import 'package:self_help/pages/main_shell/main_shell.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
 import 'package:self_help/pages/home/home.dart';
@@ -159,7 +162,7 @@ GoRouter router({
                     state: state,
                   ),
                 ),
-                // todo add routes for resilience
+                // TODO: add routes for resilience
               ],
             ),
             GoRoute(
@@ -177,6 +180,33 @@ GoRouter router({
               // builder: (context, state) => const LookAroundExercise(),
               pageBuilder: (context, state) => buildPageWithDefaultTransition(
                 child: const LookAroundExercise(),
+                state: state,
+              ),
+            ),
+            GoRoute(
+              path: RoutePaths.butterfly.path,
+              name: RoutePaths.butterfly.name,
+              // builder: (context, state) => const LookAroundExercise(),
+              pageBuilder: (context, state) => buildPageWithDefaultTransition(
+                child: const Butterfly(),
+                state: state,
+              ),
+            ),
+            GoRoute(
+              path: RoutePaths.butterflyHug.path,
+              name: RoutePaths.butterflyHug.name,
+              // builder: (context, state) => const LookAroundExercise(),
+              pageBuilder: (context, state) => buildPageWithDefaultTransition(
+                child: const ButterflyHug(),
+                state: state,
+              ),
+            ),
+            GoRoute(
+              path: RoutePaths.calmTouch.path,
+              name: RoutePaths.calmTouch.name,
+              // builder: (context, state) => const LookAroundExercise(),
+              pageBuilder: (context, state) => buildPageWithDefaultTransition(
+                child: const CalmTouch(),
                 state: state,
               ),
             ),

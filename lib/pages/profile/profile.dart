@@ -94,7 +94,7 @@ class Profile extends HookConsumerWidget {
               SizedBox(height: 32),
               Center(
                 child: OutlinedButton(
-                  onPressed: () async => await userService.signOut(),
+                  onPressed: () async => await userAuthService.signOut(),
                   // style: Theme.of(context).outlinedButtonTheme.style?.copyWith(
                   //       side: WidgetStateProperty.all(
                   //         BorderSide(
@@ -155,7 +155,7 @@ class Profile extends HookConsumerWidget {
                   //     .updateState(AppBarType.loading);
 
                   final result =
-                      await userService.updateUserName(name: newValue!);
+                      await userProfileService.updateUserName(name: newValue!);
 
                   loggerService.debug('result: $result');
 

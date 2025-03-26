@@ -65,7 +65,7 @@ class Breathing extends HookConsumerWidget {
       _ => 'Paused',
     };
 
-    //todo: colors?
+    //TODO: colors?
     final breathingTypeColor = switch (breathingType) {
       BreathingState.breathIn => Theme.of(context).colorScheme.primary,
       BreathingState.peakHold => Theme.of(context).colorScheme.tertiary,

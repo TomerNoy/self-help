@@ -20,9 +20,7 @@ class Resilience extends ConsumerWidget {
         ),
         itemCount: Exercises.exercises.length,
         itemBuilder: (context, index) {
-          return ExerciseCard(
-            index: index,
-          );
+          return ExerciseCard(index: index);
         },
       ),
     );

@@ -180,7 +180,7 @@ class Register extends HookConsumerWidget {
       //     .read(collapsingAppBarProvider.notifier)
       //     .updateState(AppBarType.loading);
 
-      final result = await userService.registerUser(email, password, name);
+      final result = await userAuthService.registerUser(email, password, name);
       if (result.isFailure) {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
@@ -146,56 +147,83 @@ class RepeatNumber extends HookConsumerWidget {
                           },
                         ),
                       ),
-                      SizedBox(height: 16),
-                      Text(localizations.enterNumberBackwards,
-                          style: Theme.of(context).textTheme.titleMedium),
-                      Text(localizations.enterNumberBackwardsSubtitle,
-                          style: Theme.of(context).textTheme.titleMedium),
-                      SizedBox(height: 16),
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: TextField(
-                          controller: reversedController,
-                          focusNode: reversedFocusNode,
-                          textAlign: TextAlign.center,
-                          keyboardType: TextInputType.number,
-                          maxLength: 10,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge
-                              ?.copyWith(letterSpacing: 10),
-                          decoration: InputDecoration(
-                            counter: Offstage(),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                              borderSide: BorderSide(
-                                color: reversedInputValid.value
-                                    ? Colors.green
-                                    : Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                              borderSide: BorderSide(
-                                color: reversedInputValid.value
-                                    ? Colors.green
-                                    : Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                          ),
-                          onChanged: (value) {
-                            loggerService.debug(
-                                'reversedRandomNumber: $reversedRandomNumber');
-                            if (value == reversedRandomNumber) {
-                              reversedFocusNode.unfocus();
-                              reversedInputValid.value = true;
-                            } else {
-                              reversedInputValid.value = false;
-                            }
-                          },
+                      AnimatedSize(
+                        duration: Constants.animationDuration,
+                        curve: Curves.easeInOut,
+                        child: AnimatedOpacity(
+                          opacity: orderedInputValid.value ? 1 : 0,
+                          duration: Constants.animationDuration,
+                          child: orderedInputValid.value
+                              ? Column(
+                                  children: [
+                                    SizedBox(height: 16),
+                                    Text(localizations.enterNumberBackwards,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium),
+                                    Text(
+                                        localizations
+                                            .enterNumberBackwardsSubtitle,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium),
+                                    SizedBox(height: 16),
+                                    Directionality(
+                                      textDirection: TextDirection.ltr,
+                                      child: TextField(
+                                        controller: reversedController,
+                                        focusNode: reversedFocusNode,
+                                        textAlign: TextAlign.center,
+                                        keyboardType: TextInputType.number,
+                                        maxLength: 10,
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                        ],
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge
+                                            ?.copyWith(letterSpacing: 10),
+                                        decoration: InputDecoration(
+                                          counter: Offstage(),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(25.0),
+                                            borderSide: BorderSide(
+                                              color: reversedInputValid.value
+                                                  ? Colors.green
+                                                  : Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(25.0),
+                                            borderSide: BorderSide(
+                                              color: reversedInputValid.value
+                                                  ? Colors.green
+                                                  : Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                            ),
+                                          ),
+                                        ),
+                                        onChanged: (value) {
+                                          loggerService.debug(
+                                              'reversedRandomNumber: $reversedRandomNumber');
+                                          if (value == reversedRandomNumber) {
+                                            reversedFocusNode.unfocus();
+                                            reversedInputValid.value = true;
+                                          } else {
+                                            reversedInputValid.value = false;
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : SizedBox.shrink(),
                         ),
                       )
                     ],

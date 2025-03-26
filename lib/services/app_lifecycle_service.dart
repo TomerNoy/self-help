@@ -13,9 +13,9 @@ class AppLifeCycleService extends WidgetsBindingObserver {
     loggerService.debug('app state: ${state.name}');
 
     if (state == AppLifecycleState.resumed) {
-      //todo
+      //TODO:
     } else {
-      //todo
+      //TODO:
     }
   }
 }

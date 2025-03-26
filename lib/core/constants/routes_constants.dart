@@ -8,14 +8,16 @@ enum RoutePaths {
   sosLanding('/sos'),
   gainControlLanding('/gainControl'),
   thoughtRelease('/thoughtRelease'),
+  butterfly('/butterfly'),
+  butterflyHug('/butterflyHug'),
+  calmTouch('/calmTouch'),
   resilience('/resilience'),
   calculateExercise('/calculateExercise'),
   lookAroundExercise('/lookAroundExercise'),
   repeatNumber('/repeatNumber'),
   stressLevel('/stressLevel'),
   magicTouch('/magicTouch'),
-  emergency('/emergency'),
-  butterfly('/butterfly'),
+  emergency('/emergency'), 
   breathing('/breathing');
 
   final String path;

@@ -106,7 +106,7 @@ class PageFlow extends _$PageFlow {
     router.goNamed(RoutePaths.home.name);
     _reset();
 
-    // todo dispose this provider
+    // TODO: dispose this provider
   }
 
   // internal reset
