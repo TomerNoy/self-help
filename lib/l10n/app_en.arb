@@ -285,5 +285,17 @@
   "endExercise": "End exercise",
   "@endExercise": {
     "description": "end exercise"
+  },
+  "areYouTherapist": "Are you a therapist?",
+  "@areYouTherapist" : {
+    "description": "Are you a therapist?"
+  },
+  "yes": "Yes",
+  "@yes" : {
+      "description": "Yes"
+  },
+  "no": "No",
+  "@no" : {
+        "description": "No"
   }
 }

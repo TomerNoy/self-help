@@ -37,6 +37,8 @@ class Register extends HookConsumerWidget {
 
     final formKey = useMemoized(() => GlobalKey<FormState>());
 
+    final isTherapist = useState<bool>(false);
+
     ref.listen(
       routerListenerProvider,
       (previous, next) {
@@ -117,6 +119,39 @@ class Register extends HookConsumerWidget {
                           passwordController.text,
                         ),
                       ),
+
+                      // Therapist radio button section
+                      Text(localizations.areYouTherapist),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Radio<bool>(
+                                value: true,
+                                groupValue: isTherapist.value,
+                                onChanged: (bool? value) {
+                                  isTherapist.value = value!;
+                                },
+                              ),
+                              Text(localizations.yes),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Radio<bool>(
+                                value: false,
+                                groupValue: isTherapist.value,
+                                onChanged: (bool? value) {
+                                  isTherapist.value = value!;
+                                },
+                              ),
+                              Text(localizations.no),
+                            ],
+                          ),
+                        ],
+                      ),
+
                       const SizedBox(height: 32),
                       SizedBox(
                         width: double.infinity,
