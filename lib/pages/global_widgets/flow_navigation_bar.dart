@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:self_help/core/constants/flow_route_constant.dart';
 import 'package:self_help/pages/global_providers/page_flow_provider.dart';
 import 'package:self_help/pages/global_widgets/buttons.dart';
 import 'package:self_help/pages/global_widgets/exercide_bar.dart';
@@ -10,19 +9,19 @@ class FlowNavigationBar extends ConsumerWidget {
   const FlowNavigationBar({
     super.key,
     required this.title,
-    this.routeParams = const {},
+    this.stressType,
     this.skip = false,
     this.onContinue,
   });
 
-  final Map<String, String> routeParams;
+  final StressType? stressType;
   final String title;
   final bool skip;
   final VoidCallback? onContinue;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (ref.read(pageFlowProvider).flowType == FlowType.none) {
+    if (ref.read(pageFlowProvider).flowList.isEmpty) {
       return ExercideBar();
     }
     final localizations = AppLocalizations.of(context)!;
@@ -34,36 +33,17 @@ class FlowNavigationBar extends ConsumerWidget {
           constraints: BoxConstraints(
             maxWidth: 800,
           ),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: GradientOutlinedButton(
-                      onPressed: () {
-                        final provider = ref.read(pageFlowProvider.notifier);
-                        provider.back();
-                      },
-                      title: localizations.back,
-                    ),
-                  ),
-                  SizedBox(width: 32),
-                  Expanded(
-                    child: GradientFilledButton(
-                      onPressed: () {
-                        if (onContinue != null) {
-                          onContinue!();
-                        }
-                        final provider = ref.read(pageFlowProvider.notifier);
-                        provider.next(routeParams);
-                      },
-                      title: skip ? localizations.skip : title,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          child: Center(
+            child: GradientFilledButton(
+              onPressed: () {
+                if (onContinue != null) {
+                  onContinue!();
+                }
+                final provider = ref.read(pageFlowProvider.notifier);
+                provider.next(stressType);
+              },
+              title: skip ? localizations.skip : title,
+            ),
           ),
         ),
       ),

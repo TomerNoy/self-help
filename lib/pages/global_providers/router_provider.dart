@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:self_help/core/constants/flow_route_constant.dart';
 import 'package:self_help/core/router.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/pages/global_providers/page_flow_provider.dart';
@@ -10,7 +9,6 @@ import 'package:self_help/pages/global_providers/user_auth_provider.dart';
 import 'package:self_help/services/services.dart';
 
 part 'router_provider.g.dart';
-
 
 @Riverpod(keepAlive: true)
 GoRouter routerState(Ref ref) {
@@ -34,7 +32,8 @@ GoRouter routerState(Ref ref) {
     );
 
   final appRouter = router(
-    refreshListenable: authState,
+    authState: authState,
+    updateFlowBack: () => ref.read(pageFlowProvider.notifier).updateBack(),
     redirect: (context, state) async {
       final location = state.matchedLocation;
 
@@ -48,7 +47,7 @@ GoRouter routerState(Ref ref) {
 
       final onUnrestrictedPage = unrestrictedRoutes.contains(location);
 
-      loggerService.debug('§ authState: $authValue, location: $location');
+      loggerService.debug('authState: $authValue, location: $location');
 
       // authenticated
       if (authValue == UserAuthState.authenticated) {
@@ -81,7 +80,7 @@ GoRouter routerState(Ref ref) {
       final newRoute =
           appRouter.routerDelegate.currentConfiguration.lastOrNull?.route.path;
 
-      loggerService.info('§ RouterProvider: route changed to $newRoute');
+      loggerService.info('RouterProvider: route changed to $newRoute');
 
       if (newRoute == null) {
         loggerService.warning('Route changed to null');
@@ -117,7 +116,7 @@ class RouterListener extends _$RouterListener {
     state = newState;
 
     // update flow if needed
-    if (ref.read(pageFlowProvider).flowType == FlowType.none) return;
+    if (ref.read(pageFlowProvider).flowList.isEmpty) return;
     ref.read(pageFlowProvider.notifier).resetFlowIfNeeded(newState);
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:self_help/services/services.dart';
 
 part 'collapsing_appbar_provider.g.dart';
 

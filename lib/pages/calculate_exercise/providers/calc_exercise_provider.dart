@@ -35,8 +35,8 @@ class CalcExerciseState {
 
 enum CalcOperation {
   add('+'),
-  subtract('-'),
-  multiply('*');
+  subtract('-');
+  // multiply('*');
 
   final String displayText;
   const CalcOperation(this.displayText);
@@ -71,7 +71,7 @@ class CalcExercise extends _$CalcExercise {
       final result = switch (operation) {
         CalcOperation.add => firstRandom + secondRandom,
         CalcOperation.subtract => firstRandom - secondRandom,
-        CalcOperation.multiply => firstRandom * secondRandom,
+        //CalcOperation.multiply => firstRandom * secondRandom,
       };
 
       final state = CalcExerciseState(

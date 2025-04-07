@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/pages/global_providers/page_flow_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
@@ -11,7 +10,7 @@ class DebugOverlay extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final debugOn = useState<bool>(false);
+    final debugOn = useState<bool>(true);
 
     final authProvider = ref.watch(userAuthProvider);
     final route = ref.watch(routerListenerProvider);
@@ -45,12 +44,13 @@ class DebugOverlay extends HookConsumerWidget {
                           //     Text(route.name),
                           //   ],
                           // ),
-                          // Row(
-                          //   children: [
-                          //     Text('flow route: '),
-                          //     Text('${pageFlow.flowType}, ${pageFlow.index}'),
-                          //   ],
-                          // ),
+                          Row(
+                            children: [
+                              Text('flow route: '),
+                              Text(
+                                  '${pageFlow.flowList.length}, ${pageFlow.index},'),
+                            ],
+                          ),
                           // Divider(),
                           // Wrap(
                           //   alignment: WrapAlignment.center,
@@ -81,33 +81,33 @@ class DebugOverlay extends HookConsumerWidget {
                           //   ),
                           // ),
                           // Divider(),
-                          Wrap(
-                            alignment: WrapAlignment.center,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            runSpacing: 4,
-                            spacing: 8,
-                            runAlignment: WrapAlignment.center,
-                            children: List.generate(
-                              RoutePaths.values.length,
-                              (index) {
-                                final route = RoutePaths.values[index];
-                                return InkWell(
-                                  onTap: () {
-                                    ref.read(routerStateProvider).pushNamed(
-                                          route.name,
-                                        );
-                                  },
-                                  child: Container(
-                                    color: Colors.black.withAlpha(100),
-                                    child: Text(
-                                      route.name,
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                          // Wrap(
+                          //   alignment: WrapAlignment.center,
+                          //   crossAxisAlignment: WrapCrossAlignment.center,
+                          //   runSpacing: 4,
+                          //   spacing: 8,
+                          //   runAlignment: WrapAlignment.center,
+                          //   children: List.generate(
+                          //     RoutePaths.values.length,
+                          //     (index) {
+                          //       final route = RoutePaths.values[index];
+                          //       return InkWell(
+                          //         onTap: () {
+                          //           ref.read(routerStateProvider).pushNamed(
+                          //                 route.name,
+                          //               );
+                          //         },
+                          //         child: Container(
+                          //           color: Colors.black.withAlpha(100),
+                          //           child: Text(
+                          //             route.name,
+                          //             style: TextStyle(color: Colors.white),
+                          //           ),
+                          //         ),
+                          //       );
+                          //     },
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

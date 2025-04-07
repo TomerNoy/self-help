@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:self_help/core/constants/flow_route_constant.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
@@ -27,7 +26,7 @@ class SosLanding extends HookConsumerWidget {
           appBarType: AppBarType.fullScreen,
           fullScreenTitle: title,
           subtitle: subtitle,
-          startCallback: () => pageFlowNotifier.startFlow(FlowType.sos),
+          startCallback: () => pageFlowNotifier.startFlow(),
           hasBackButton: true,
         ),
       );

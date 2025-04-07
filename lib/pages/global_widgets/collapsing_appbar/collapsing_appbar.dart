@@ -96,7 +96,12 @@ class CollapsingAppbar extends ConsumerWidget implements PreferredSizeWidget {
                     Colors.white30,
                   ),
                 ),
-                onPressed: () => ref.read(routerStateProvider).pop(),
+                onPressed: () {
+                  final router = ref.read(routerStateProvider);
+                  if (router.canPop()) {
+                    router.pop();
+                  }
+                },
                 icon: Icon(
                   Icons.arrow_forward_ios,
                   color: Colors.black,

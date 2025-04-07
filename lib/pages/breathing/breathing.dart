@@ -1,13 +1,11 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/models/breathing_state.dart';
-import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
-import 'package:self_help/pages/global_providers/router_provider.dart';
+import 'package:self_help/pages/global_hooks/use_appbar_manager.dart';
 import 'package:self_help/pages/global_widgets/flow_drawer.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
@@ -21,31 +19,12 @@ class Breathing extends HookConsumerWidget {
     final title = localizations.breathingExercise;
     final subtitle = localizations.breathingExerciseSubtitle;
 
-    final appbarNotifier = ref.read(animatedAppBarProvider.notifier);
-
-    void updateAppBar() {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => appbarNotifier.updateState(
-          appBarType: AppBarType.expanded,
-          appBarTitle: title,
-          subtitle: subtitle,
-        ),
-      );
-    }
-
-    ref.listen(
-      routerListenerProvider,
-      (previous, next) {
-        if (next != previous && next == RoutePaths.breathing) {
-          updateAppBar();
-        }
-      },
+    useAppBarManager(
+      ref: ref,
+      title: title,
+      subtitle: subtitle,
+      routePath: RoutePaths.breathing,
     );
-
-    useEffect(() {
-      updateAppBar();
-      return null;
-    }, const []);
 
     final maxSize = Constants.minimumScreenWidth;
 
