@@ -69,3 +69,4 @@ ios/Runner/GoogleService-Info.plist
 *.env
 .firebase/hosting.YnVpbGQvd2Vi.cache
 .netlify/state.json
+shared-release-key.jks
