@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
-import 'package:self_help/pages/global_providers/page_flow_provider.dart';
 import 'package:self_help/pages/global_widgets/flow_drawer.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/pages/magic_touch/providers/magic_touch_provider.dart';
@@ -22,9 +21,9 @@ class MagicTouch extends HookConsumerWidget {
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
-          ref.read(pageFlowProvider.notifier).didPop();
-        }
+        // if (didPop) {
+        //   ref.read(pageFlowProvider.notifier).didPop();
+        // }
       },
       child: Scaffold(
         // appBar: FlowAppBar(

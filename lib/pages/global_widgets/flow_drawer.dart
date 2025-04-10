@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
-import 'package:self_help/services/services.dart';
 
 class FlowDrawer extends ConsumerWidget {
   const FlowDrawer({super.key});
@@ -12,7 +11,6 @@ class FlowDrawer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final logo = Image.asset(AssetsConstants.selfHelpIcon, width: 70);
     final page = ref.read(routerListenerProvider);
-    loggerService.debug('§§ FlowDrawer: page: $page');
 
     return Drawer(
       child: ListView(

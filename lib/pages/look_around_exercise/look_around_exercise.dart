@@ -3,8 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
-import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
-import 'package:self_help/pages/global_providers/router_provider.dart';
+import 'package:self_help/pages/global_hooks/use_appbar_manager.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/services/services.dart';
 
@@ -17,27 +16,13 @@ class LookAroundExercise extends HookConsumerWidget {
     final title = localization.lookAroundExercise;
     final subtitle = localization.lookAroundExerciseSubtitle;
 
-    final appbarNotifier = ref.read(animatedAppBarProvider.notifier);
-
-    void updateAppBar() {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => appbarNotifier.updateState(
-          appBarType: AppBarType.expanded,
-          appBarTitle: title,
-          subtitle: subtitle,
-        ),
-      );
-    }
-
-    ref.listen(
-      routerListenerProvider,
-      (previous, next) {
-        if (next != previous && next == RoutePaths.lookAroundExercise) {
-          updateAppBar();
-        }
-      },
+    useAppBarManager(
+      ref: ref,
+      title: title,
+      subtitle: subtitle,
+      routePath: RoutePaths.lookAroundExercise,
     );
-
+    
     final titles = [
       localization.colors,
       localization.textures,
@@ -53,7 +38,6 @@ class LookAroundExercise extends HookConsumerWidget {
     );
 
     useEffect(() {
-      updateAppBar();
       return () {
         for (var controller in controllers.value) {
           controller.dispose();

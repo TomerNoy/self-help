@@ -1,29 +1,37 @@
 import 'package:self_help/core/constants/routes_constants.dart';
 
-enum FlowType { sos, gainControl, none }
+const initCheckStress = [
+  RoutePaths.stressLevel,
+];
 
-class FlowLists {
-  static Map<FlowType, List<String>> flowListsMap = {
-    FlowType.sos: sos,
-    FlowType.gainControl: gainControl,
-    FlowType.none: [],
-  };
+const beginSosRoutes = [
+  RoutePaths.breathing,
+  RoutePaths.repeatNumber,
+  RoutePaths.butterflyHug,
+  RoutePaths.stressLevel,
+];
 
-  static List<String> sos = [
-    RoutePaths.stressLevel.name,
-    RoutePaths.repeatNumber.name,
-    RoutePaths.breathing.name,
-    RoutePaths.stressLevel.name,
-    RoutePaths.magicTouch.name,
-    RoutePaths.stressLevel.name,
-    RoutePaths.calculateExercise.name,
-    RoutePaths.lookAroundExercise.name,
-    RoutePaths.stressLevel.name,
-  ];
+const thoughtRoutes = [
+  RoutePaths.thoughtManagement,
+  RoutePaths.thoughtIdentify,
+  RoutePaths.thoughtCloud,
+  RoutePaths.stressLevel,
+];
 
-  static List<String> gainControl = [
-    RoutePaths.gainControlLanding.name,
-    RoutePaths.thoughtRelease.name,
-    RoutePaths.stressLevel.name,
-  ];
-}
+const relaxRoutes = [
+  RoutePaths.calculateExercise,
+  RoutePaths.lookAroundExercise,
+  RoutePaths.calmTouch,
+  RoutePaths.stressLevel,
+];
+
+const questionRoutes = [
+  RoutePaths.question,
+  RoutePaths.forAgainst,
+  RoutePaths.stressLevel,
+];
+
+const endSosRoutes = [
+  RoutePaths.eights,
+  RoutePaths.stressLevel,
+];

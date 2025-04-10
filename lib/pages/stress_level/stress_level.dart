@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
-import 'package:self_help/models/stress_track.dart';
-import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
+import 'package:self_help/pages/global_hooks/use_appbar_manager.dart';
 import 'package:self_help/pages/global_providers/page_flow_provider.dart';
-import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_widgets/flow_drawer.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
@@ -22,7 +19,13 @@ class StressLevel extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final level = ref.watch(stressLevelProvider);
 
-    final appbarNotifier = ref.read(animatedAppBarProvider.notifier);
+    final stressType = switch (level) {
+      < 3 => StressType.low,
+      > 2 && < 7 => StressType.medium,
+      > 6 => StressType.high,
+      _ => StressType.low,
+    };
+
     final localizations = AppLocalizations.of(context)!;
 
     final title = localizations.measureTitle;
@@ -30,35 +33,18 @@ class StressLevel extends HookConsumerWidget {
 
     final width = Constants.minimumScreenWidth;
 
-    void updateAppBar() {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => appbarNotifier.updateState(
-          appBarType: AppBarType.expanded,
-          appBarTitle: title,
-          subtitle: subtitle,
-        ),
-      );
-    }
-
-    ref.listen(
-      routerListenerProvider,
-      (previous, next) {
-        if (next != previous && next == RoutePaths.stressLevel) {
-          updateAppBar();
-        }
-      },
+    useAppBarManager(
+      ref: ref,
+      title: title,
+      subtitle: subtitle,
+      routePath: RoutePaths.stressLevel,
     );
-
-    useEffect(() {
-      updateAppBar();
-      return null;
-    }, const []);
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
-          ref.read(pageFlowProvider.notifier).didPop();
-        }
+        // if (didPop) {
+        //   ref.read(pageFlowProvider.notifier).didPop();
+        // }
       },
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -161,6 +147,8 @@ class StressLevel extends HookConsumerWidget {
         ),
         bottomNavigationBar: FlowNavigationBar(
           title: localizations.continueButtonTitle,
+          stressType: stressType,
+          // stressType: StressType.stressLevel,
           onContinue: () {
             // TODO: add for prod
             // ref.read(stressLevelProvider.notifier).addStressTrack(

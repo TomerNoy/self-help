@@ -3,7 +3,6 @@ import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/pages/global_widgets/animated_background.dart';
 import 'package:self_help/pages/global_widgets/collapsing_appbar/collapsing_appbar.dart';
 import 'package:self_help/pages/global_widgets/flow_drawer.dart';
-import 'package:self_help/services/services.dart';
 
 class MainShell extends StatelessWidget {
   const MainShell({

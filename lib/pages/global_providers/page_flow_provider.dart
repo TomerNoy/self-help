@@ -1,39 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:self_help/core/constants/flow_route_constant.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
+import 'package:self_help/models/page_flow_state.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/services/services.dart';
 
 part 'page_flow_provider.g.dart';
 
-@immutable
-class PageFlowState {
-  final int index;
-  final FlowType flowType;
-
-  const PageFlowState({
-    required this.index,
-    required this.flowType,
-  });
-
-  PageFlowState copyWith({
-    int? index,
-    FlowType? flowType,
-  }) {
-    loggerService.debug(
-        'flow state changing to: ${index ?? this.index}, ${flowType ?? this.flowType}');
-    return PageFlowState(
-      index: index ?? this.index,
-      flowType: flowType ?? this.flowType,
-    );
-  }
-
-  @override
-  String toString() {
-    return 'PageFlowState{index: $index, flowType: $flowType}';
-  }
-}
+enum StressType { low, medium, high }
 
 @Riverpod(keepAlive: true)
 class PageFlow extends _$PageFlow {
@@ -42,78 +16,154 @@ class PageFlow extends _$PageFlow {
     // default state
     return const PageFlowState(
       index: 0,
-      flowType: FlowType.none,
+      flowList: [],
     );
   }
 
-  List<String> get _currentFlowList => FlowLists.flowListsMap[state.flowType]!;
-
-  // init flow by type
-  void startFlow(FlowType flowType) {
-    loggerService.debug('flow state started for $flowType');
-    final router = ref.read(routerStateProvider);
-    final routeToGo = FlowLists.flowListsMap[flowType]!.first;
-    router.pushNamed(routeToGo);
+  void startFlow() {
+    // update state
     state = PageFlowState(
-      flowType: flowType,
       index: 0,
+      flowList: initCheckStress,
     );
+    // go to page
+    _goToPage();
   }
 
-  // next with router control
-  void next([
-    Map<String, String> params = const {},
-  ]) {
-    if (_currentFlowList.length > state.index + 1) {
+  void _goToPage() {
+    final router = ref.read(routerStateProvider);
+    final routeName = state.flowList[state.index].name;
+    try {
+      router.pushNamed(routeName);
+    } catch (e) {
+      loggerService.error('Failed to navigate to $routeName: $e');
+      _backToHome();
+    }
+  }
+
+  void next([StressType? stressType]) {
+    loggerService.debug(
+      'updatePageIndex with stressType: $stressType, current state: $state',
+    );
+
+    if (state.flowList.isEmpty) {
+      loggerService.debug('Flow list is empty, cannot proceed');
+
+      throw Exception(
+        'Flow list is empty, cannot proceed',
+      );
+    }
+
+    if (state.flowList.length > state.index + 1) {
+      // update state
       state = state.copyWith(index: state.index + 1);
-      loggerService.debug('flow state changed to: $state');
-      final router = ref.read(routerStateProvider);
-      final routeToGo = _currentFlowList[state.index];
-      loggerService.debug('routeToGo: $routeToGo');
-      router.pushNamed(routeToGo, pathParameters: params);
+      // go to page
+      _goToPage();
+    } else if (state.flowList.length == 1) {
+      state = state.copyWith(
+        index: state.index + 1,
+        flowList: [...state.flowList, ...beginSosRoutes],
+      );
+      _goToPage();
+    } else if (stressType == null) {
+      throw Exception(
+        'StressType is null on end flow',
+      );
+    } else if (stressType == StressType.low) {
+      _backToHome();
+    } else {
+      final lastRoute = _getLastRoute();
+      if (lastRoute == null) return;
+      // update state
+      state = state.copyWithAddReplaceRoutes(
+        stressType == StressType.medium
+            ? _getNextMediumStressRoutes(lastRoute)
+            : _getNextHighStressRoutes(lastRoute),
+      );
+      _goToPage();
+    }
+  }
+
+  RoutePaths? _getLastRoute() {
+    if (state.flowList.length < 2) return null;
+    return state.flowList[state.flowList.length - 2];
+  }
+
+  List<RoutePaths> _getNextMediumStressRoutes(RoutePaths lastRoute) {
+    if (beginSosRoutes.contains(lastRoute)) {
+      return thoughtRoutes;
+    } else if (thoughtRoutes.contains(lastRoute)) {
+      return questionRoutes;
+    } else if (relaxRoutes.contains(lastRoute)) {
+      return thoughtRoutes;
+    } else if (questionRoutes.contains(lastRoute)) {
+      return endSosRoutes;
+    } else if (endSosRoutes.contains(lastRoute)) {
+      return thoughtRoutes;
+    } else {
+      return [];
+    }
+  }
+
+  List<RoutePaths> _getNextHighStressRoutes(RoutePaths lastRoute) {
+    if (beginSosRoutes.contains(lastRoute)) {
+      return relaxRoutes;
+    } else if (thoughtRoutes.contains(lastRoute)) {
+      return relaxRoutes;
+    } else if (relaxRoutes.contains(lastRoute)) {
+      return beginSosRoutes;
+    } else if (questionRoutes.contains(lastRoute)) {
+      return thoughtRoutes;
+    } else if (endSosRoutes.contains(lastRoute)) {
+      return relaxRoutes;
+    } else {
+      return [];
     }
   }
 
   // back with router control
-  void back() {
-    final router = ref.read(routerStateProvider);
-    if (state.index > 0) {
-      state = state.copyWith(index: state.index - 1);
-      final routeToGo = _currentFlowList[state.index];
-      router.pushNamed(routeToGo);
-      loggerService.debug('flow state changed to: $state');
+  void updateBack() {
+    // update to default state
+    if (state.index < 1) {
+      // _reset();
     } else {
-      backToHome();
-    }
+      final backPage = state.flowList[state.index - 1];
+      final isBackStressLevel = backPage == RoutePaths.stressLevel;
+      final shouldCleanRoutes = state.index > 1 && isBackStressLevel;
 
-    loggerService.debug('flow state changed to: $state');
-  }
+      loggerService.debug(
+        'shouldCleanRoutes: $shouldCleanRoutes, isBackStressLevel : $isBackStressLevel',
+      );
 
-  // back without router control
-  void didPop() {
-    // if index is 0, then back to home is
-    // handled by resetFlowIfNeeded - triggered by RouterListenerProvider
-    if (state.index > 0) {
-      state = state.copyWith(index: state.index - 1);
-      loggerService.debug('flow state changed to: $state');
+      final flowList = shouldCleanRoutes
+          ? state.flowList.sublist(0, state.index - 1)
+          : state.flowList;
+
+      // update state
+      state = state.copyWith(
+        index: state.index - 1,
+        flowList: flowList,
+      );
     }
   }
 
   // back to home
-  void backToHome() {
-    loggerService.debug('Ending flow state, resetting state to 0');
+  void _backToHome() {
     final router = ref.read(routerStateProvider);
     router.goNamed(RoutePaths.home.name);
     _reset();
+    loggerService.debug(
+      'back to home with state: $state',
+    );
 
-    // TODO: dispose this provider
+    // TODO: dispose this provider?
   }
 
   // internal reset
   void _reset() {
     state = const PageFlowState(
       index: 0,
-      flowType: FlowType.none,
+      flowList: [],
     );
   }
 
@@ -123,7 +173,7 @@ class PageFlow extends _$PageFlow {
       'updatePageIndex with path: $path, current state: $state',
     );
 
-    if (!_currentFlowList.contains(path.name)) {
+    if (!state.flowList.contains(path)) {
       _reset();
     }
   }

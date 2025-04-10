@@ -5,6 +5,8 @@ import 'package:self_help/pages/breathing/breathing.dart';
 import 'package:self_help/pages/butterfly/butterfly.dart';
 import 'package:self_help/pages/calculate_exercise/calc_exercise.dart';
 import 'package:self_help/pages/calm_touch/calm_touch.dart';
+import 'package:self_help/pages/eights/eights.dart';
+import 'package:self_help/pages/for_against/for_against.dart';
 import 'package:self_help/pages/magic_touch/widgets/butterfly_hug.dart';
 import 'package:self_help/pages/main_shell/main_shell.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
@@ -13,6 +15,7 @@ import 'package:self_help/pages/login/login.dart';
 import 'package:self_help/pages/look_around_exercise/look_around_exercise.dart';
 import 'package:self_help/pages/magic_touch/magic_touch.dart';
 import 'package:self_help/pages/profile/profile.dart';
+import 'package:self_help/pages/question/question.dart';
 import 'package:self_help/pages/register/register.dart';
 import 'package:self_help/pages/repeat_number.dart/repeat_number.dart';
 import 'package:self_help/pages/resilience/resilience.dart';
@@ -20,9 +23,11 @@ import 'package:self_help/pages/resilience_shell/resilience_shell.dart';
 import 'package:self_help/pages/settings/settings.dart';
 import 'package:self_help/pages/sos_landing/sos_landing.dart';
 import 'package:self_help/pages/stress_level/stress_level.dart';
+import 'package:self_help/pages/thought_Identify/thought_Identify.dart';
+import 'package:self_help/pages/thought_cloud/thought_cloud.dart';
+import 'package:self_help/pages/thought_management/thought_management.dart';
 import 'package:self_help/pages/thought_release/thought_release.dart';
 import 'package:self_help/pages/welcome/welcome.dart';
-import 'package:self_help/services/services.dart';
 
 final rootRouterKey = GlobalKey<NavigatorState>(debugLabel: 'routerKey');
 final shellRouterKey = GlobalKey<NavigatorState>(debugLabel: 'shell');
@@ -52,13 +57,19 @@ CustomTransitionPage<T> buildPageWithDefaultTransition<T>({
 
 GoRouter router({
   GoRouterRedirect? redirect,
-  required ValueNotifier<UserAuthState> refreshListenable,
+  required ValueNotifier<UserAuthState> authState,
+  required VoidCallback updateFlowBack,
 }) {
+  onExit(context, state) {
+    updateFlowBack();
+    return true;
+  }
+
   return GoRouter(
     debugLogDiagnostics: true,
     redirect: redirect,
     navigatorKey: rootRouterKey,
-    refreshListenable: refreshListenable,
+    refreshListenable: authState,
     routes: [
       ShellRoute(
           navigatorKey: shellRouterKey,
@@ -83,6 +94,7 @@ GoRouter router({
               path: RoutePaths.sosLanding.path,
               name: RoutePaths.sosLanding.name,
               builder: (context, state) => SosLanding(),
+              onExit: onExit,
             ),
             GoRoute(
               path: RoutePaths.login.path,
@@ -103,11 +115,6 @@ GoRouter router({
               ),
             ),
             // ShellRoute(
-            //   builder: (context, state, child) {
-            //     final page = RoutePaths.fromPath(state.fullPath ?? '');
-            //     return HomeShell(page: page, child: child);
-            //   },
-            //   routes: [
             GoRoute(
               path: RoutePaths.home.path,
               name: RoutePaths.home.name,
@@ -145,6 +152,7 @@ GoRouter router({
                 child: const ThoughtRelease(),
                 state: state,
               ),
+              onExit: onExit,
             ),
             ShellRoute(
               builder: (context, state, child) {
@@ -173,6 +181,7 @@ GoRouter router({
                 child: const CalcExercise(),
                 state: state,
               ),
+              onExit: onExit,
             ),
             GoRoute(
               path: RoutePaths.lookAroundExercise.path,
@@ -182,6 +191,7 @@ GoRouter router({
                 child: const LookAroundExercise(),
                 state: state,
               ),
+              onExit: onExit,
             ),
             GoRoute(
               path: RoutePaths.butterfly.path,
@@ -191,6 +201,7 @@ GoRouter router({
                 child: const Butterfly(),
                 state: state,
               ),
+              onExit: onExit,
             ),
             GoRoute(
               path: RoutePaths.butterflyHug.path,
@@ -200,6 +211,7 @@ GoRouter router({
                 child: const ButterflyHug(),
                 state: state,
               ),
+              onExit: onExit,
             ),
             GoRoute(
               path: RoutePaths.calmTouch.path,
@@ -209,6 +221,61 @@ GoRouter router({
                 child: const CalmTouch(),
                 state: state,
               ),
+              onExit: onExit,
+            ),
+            GoRoute(
+              path: RoutePaths.thoughtManagement.path,
+              name: RoutePaths.thoughtManagement.name,
+              pageBuilder: (context, state) => buildPageWithDefaultTransition(
+                child: const ThoughtManagement(),
+                state: state,
+              ),
+              onExit: onExit,
+            ),
+            GoRoute(
+              path: RoutePaths.thoughtIdentify.path,
+              name: RoutePaths.thoughtIdentify.name,
+              pageBuilder: (context, state) => buildPageWithDefaultTransition(
+                child: const ThoughtIdentify(),
+                state: state,
+              ),
+              onExit: onExit,
+            ),
+            GoRoute(
+              path: RoutePaths.question.path,
+              name: RoutePaths.question.name,
+              pageBuilder: (context, state) => buildPageWithDefaultTransition(
+                child: const Question(),
+                state: state,
+              ),
+              onExit: onExit,
+            ),
+            GoRoute(
+              path: RoutePaths.forAgainst.path,
+              name: RoutePaths.forAgainst.name,
+              pageBuilder: (context, state) => buildPageWithDefaultTransition(
+                child: const ForAgainst(),
+                state: state,
+              ),
+              onExit: onExit,
+            ),
+            GoRoute(
+              path: RoutePaths.eights.path,
+              name: RoutePaths.eights.name,
+              pageBuilder: (context, state) => buildPageWithDefaultTransition(
+                child: const Eights(),
+                state: state,
+              ),
+              onExit: onExit,
+            ),
+            GoRoute(
+              path: RoutePaths.thoughtCloud.path,
+              name: RoutePaths.thoughtCloud.name,
+              pageBuilder: (context, state) => buildPageWithDefaultTransition(
+                child: const ThoughtCloud(),
+                state: state,
+              ),
+              onExit: onExit,
             ),
             GoRoute(
               path: RoutePaths.stressLevel.path,
@@ -218,6 +285,7 @@ GoRouter router({
                 child: const StressLevel(),
                 state: state,
               ),
+              onExit: onExit,
             ),
             GoRoute(
               path: RoutePaths.repeatNumber.path,
@@ -227,6 +295,7 @@ GoRouter router({
                 child: const RepeatNumber(),
                 state: state,
               ),
+              onExit: onExit,
             ),
             GoRoute(
               path: RoutePaths.magicTouch.path,
@@ -236,6 +305,7 @@ GoRouter router({
                 child: const MagicTouch(),
                 state: state,
               ),
+              onExit: onExit,
             ),
             GoRoute(
               path: RoutePaths.breathing.path,
@@ -245,6 +315,7 @@ GoRouter router({
                 child: const Breathing(),
                 state: state,
               ),
+              onExit: onExit,
             ),
           ]),
     ],
