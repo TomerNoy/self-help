@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:retry/retry.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:self_help/core/constants/constants.dart';
 // import 'package:self_help/models/app_user.dart';
@@ -41,8 +43,15 @@ class UserAuthService {
         email: email,
         password: password,
       );
-      await userCredential.user!.updateProfile(displayName: name);
-      await userCredential.user!.reload();
+      try {
+        await userCredential.user!.updateProfile(displayName: name);
+        await userCredential.user!.reload();
+      } catch (e, st) {
+        loggerService.error('Error updating user profile', e, st);
+        return Future.error(
+          'Error updating user profile. Please try again.',
+        );
+      }
       final updatedUser = _auth.currentUser;
       loggerService.info('User registered: ${updatedUser?.displayName}');
       return updatedUser!;
@@ -62,14 +71,25 @@ class UserAuthService {
 
   Future<Result<User>> loginWithGoogle(GoogleSignInAccount googleUser) async {
     return _handleCall(() async {
-      final googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-      final userCredential = await _auth.signInWithCredential(credential);
-      loggerService.info('User logged in with Google: ${userCredential.user}');
-      return userCredential.user!;
+      try {
+        final googleAuth = await googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        final userCredential = await _auth.signInWithCredential(credential);
+        loggerService
+            .info('User logged in with Google: ${userCredential.user}');
+        return userCredential.user!;
+      } on PlatformException catch (e) {
+        if (e.code == 'sign_in_canceled') {
+          loggerService.info('Google Sign-In canceled');
+          return Future.error(
+            'Google Sign-In canceled. Please try again.',
+          );
+        }
+        rethrow;
+      }
     });
   }
 
@@ -80,32 +100,71 @@ class UserAuthService {
     });
   }
 
-  
-
   Future<Result<T>> _handleCall<T>(Future<T> Function() operation) async {
     _authStateChanges.add(UserAuthState.loading);
     try {
-      return Result.success(
-        await operation().timeout(
-          Constants.defaultTimeout,
-          onTimeout: () => throw TimeoutException(
-            'The connection has timed out, please try again.',
-          ),
-        ),
-      );
+      final result = await _retryOperation(operation);
+
+      if (result == null) {
+        loggerService.error(
+            'Operation returned null', null, StackTrace.current);
+        _authStateChanges.add(UserAuthState.hasError);
+        return Result.failure('Operation failed. Please try again.');
+      }
+      loggerService.info('Operation successful: $result');
+      return Result.success(result);
     } on TimeoutException catch (e, st) {
       loggerService.error('Operation timed out', e, st);
+
+      _authStateChanges.add(UserAuthState.hasError);
+
       return Result.failure('Operation timed out. Please try again.');
     } on FirebaseException catch (e, st) {
       loggerService.error('Firebase error', e, st);
+
+      _authStateChanges.add(
+          ['user-not-found', 'wrong-password', 'user-disabled'].contains(e.code)
+              ? UserAuthState.unauthenticated
+              : UserAuthState.hasError);
+
       return Result.failure(
-        e.code.replaceAll('-', ' ').toLowerCase(),
+        _firebaseErrorMessages[e.code] ??
+            'Authentication failed. Please try again.',
       );
     } catch (e, st) {
       loggerService.error('Unexpected error', e, st);
+      _authStateChanges.add(UserAuthState.hasError);
       return Result.failure('An unexpected error occurred. Please try again.');
     }
   }
+
+  Future<T?> _retryOperation<T>(Future<T?> Function() operation) async {
+    return retry(
+      () => operation().timeout(
+        Constants.defaultTimeout,
+        onTimeout: () => throw TimeoutException('Authentication timed out'),
+      ),
+      maxAttempts: 3,
+      delayFactor: Duration(seconds: 1),
+      randomizationFactor: 0.25,
+    );
+  }
+
+  static const _firebaseErrorMessages = {
+    'user-not-found': 'User not found. Please register.',
+    'wrong-password': 'Wrong password. Please try again.',
+    'email-already-in-use': 'Email already in use. Please try another.',
+    'invalid-email': 'Invalid email. Please try again.',
+    'operation-not-allowed': 'Operation not allowed. Please try again.',
+    'weak-password': 'Weak password. Please try again.',
+    'network-request-failed': 'Network request failed. Please try again.',
+    'user-disabled': 'User disabled. Please contact support.',
+    'invalid-credential': 'Invalid credentials. Please check and try again.',
+    'account-exists-with-different-credential':
+        'Account exists with a different sign-in method. Try another provider.',
+    'too-many-requests': 'Too many attempts. Please try again later.',
+    'requires-recent-login': 'Please sign in again to perform this action.',
+  };
 
   void dispose() {
     _authChangesSub.cancel();

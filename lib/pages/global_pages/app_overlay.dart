@@ -10,7 +10,7 @@ class AppOverlay extends ConsumerWidget {
     final overlayState = ref.watch(appOverlayProvider);
 
     return switch (overlayState.type) {
-      AppOverlayType.hidden => SizedBox.shrink(),
+      AppOverlayType.hidden || AppOverlayType.error => SizedBox.shrink(),
       AppOverlayType.loading => Scaffold(
           backgroundColor: Colors.white54,
           body: Center(
@@ -40,11 +40,6 @@ class AppOverlay extends ConsumerWidget {
                 }),
               ],
             ),
-          ),
-        ),
-      AppOverlayType.error => Scaffold(
-          body: Center(
-            child: Text(overlayState.message),
           ),
         ),
     };
