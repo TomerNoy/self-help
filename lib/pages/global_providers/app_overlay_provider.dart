@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
+import 'package:self_help/services/services.dart';
 
 part 'app_overlay_provider.g.dart';
 
@@ -41,6 +42,8 @@ class AppOverlay extends _$AppOverlay {
   @override
   AppOverlayState build() {
     final authProvider = ref.watch(userAuthProvider);
+    loggerService.debug('§§ auth state => ${authProvider.value}');
+    // loggerService.debug('§§ app overlay state => $state');
 
     return switch (authProvider.value) {
       UserAuthState.hasError => AppOverlayState(
