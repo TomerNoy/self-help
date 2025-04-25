@@ -10,6 +10,7 @@ import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_widgets/buttons.dart';
 import 'package:self_help/services/services.dart';
+import './TherapistDetailsForm.dart';
 
 class Register extends HookConsumerWidget {
   const Register({super.key});
@@ -221,6 +222,25 @@ class Register extends HookConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(result.error!), backgroundColor: Colors.red),
         );
+      }
+      else {
+        final user = result;
+
+        if (isTherapist) {
+          // Redirect to therapist details form
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => TherapistDetailsForm(
+                uid: user.uid,
+                email: email,
+                displayName: name,
+              ),
+            ),
+          );
+        } else {
+          // Redirect to main app or show success message
+          context.go(RoutePaths.home.name); // adjust this path to your actual home route
+        }
       }
     }
   }
