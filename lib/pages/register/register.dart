@@ -11,6 +11,8 @@ import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_widgets/buttons.dart';
 import 'package:self_help/services/services.dart';
 import './TherapistDetailsForm.dart';
+import 'package:self_help/models/app_therapist.dart';
+import 'package:self_help/models/contact_details.dart';
 
 class Register extends HookConsumerWidget {
   const Register({super.key});
@@ -24,7 +26,7 @@ class Register extends HookConsumerWidget {
 
     void updateAppBar() {
       WidgetsBinding.instance.addPostFrameCallback(
-        (_) => appbarNotifier.updateState(
+            (_) => appbarNotifier.updateState(
           appBarType: AppBarType.collapsed,
           appBarTitle: title,
         ),
@@ -36,13 +38,21 @@ class Register extends HookConsumerWidget {
     final passwordController = useTextEditingController();
     final repeatPasswordController = useTextEditingController();
 
-    final formKey = useMemoized(() => GlobalKey<FormState>());
+    // New Therapist Controllers
+    final descriptionController = useTextEditingController();
+    final phoneController = useTextEditingController();
+    final websiteController = useTextEditingController();
+    final contactEmailController = useTextEditingController();
+    final selectedGender = useState(Gender.other);
+    final cityController = useTextEditingController(); // NEW
 
-    final isTherapist = useState<bool>(false);
+
+    final formKey = useMemoized(() => GlobalKey<FormState>());
+    final isTherapist = useState(false); // NEW
 
     ref.listen(
       routerListenerProvider,
-      (previous, next) {
+          (previous, next) {
         if (next != previous && next == RoutePaths.register) {
           updateAppBar();
         }
@@ -66,94 +76,122 @@ class Register extends HookConsumerWidget {
               key: formKey,
               child: Center(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: 800,
-                  ),
+                  constraints: const BoxConstraints(maxWidth: 800),
                   child: Column(
                     children: [
                       TextFormField(
                         controller: nameController,
-                        decoration: InputDecoration(
-                          labelText: localizations.name,
-                        ),
+                        decoration: InputDecoration(labelText: localizations.name),
                         keyboardType: TextInputType.name,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'[a-zA-Z\s]'))
-                        ],
+                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]'))],
                         validator: FormValidators.nameValidator,
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: emailController,
-                        decoration: InputDecoration(
-                          labelText: localizations.email,
-                        ),
+                        decoration: InputDecoration(labelText: localizations.email),
                         keyboardType: TextInputType.emailAddress,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                        ],
+                        inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
                         validator: FormValidators.emailValidator,
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: passwordController,
-                        decoration: InputDecoration(
-                          labelText: localizations.password,
-                        ),
+                        decoration: InputDecoration(labelText: localizations.password),
                         obscureText: true,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                        ],
+                        inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
                         validator: FormValidators.passwordValidator,
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: repeatPasswordController,
-                        decoration: InputDecoration(
-                          labelText: localizations.repeatPassword,
-                        ),
+                        decoration: InputDecoration(labelText: localizations.repeatPassword),
                         obscureText: true,
-                        validator: (value) =>
-                            FormValidators.passwordMatchValidator(
+                        validator: (value) => FormValidators.passwordMatchValidator(
                           value,
                           passwordController.text,
                         ),
                       ),
+                      const SizedBox(height: 24),
 
-                      // Therapist radio button section
-                      Text(localizations.areYouTherapist),
+                      // NEW: Is Therapist? Radio Buttons
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Text(localizations.areYouTherapist),
+                          const SizedBox(width: 16),
                           Row(
                             children: [
                               Radio<bool>(
                                 value: true,
                                 groupValue: isTherapist.value,
-                                onChanged: (bool? value) {
-                                  isTherapist.value = value!;
-                                },
+                                onChanged: (value) => isTherapist.value = value!,
                               ),
                               Text(localizations.yes),
-                            ],
-                          ),
-                          Row(
-                            children: [
                               Radio<bool>(
                                 value: false,
                                 groupValue: isTherapist.value,
-                                onChanged: (bool? value) {
-                                  isTherapist.value = value!;
-                                },
+                                onChanged: (value) => isTherapist.value = value!,
                               ),
                               Text(localizations.no),
                             ],
                           ),
                         ],
                       ),
+                      const SizedBox(height: 16),
 
-                      const SizedBox(height: 32),
+                      // If therapist -> show additional fields
+                      if (isTherapist.value) ...[
+                        const Divider(),
+                        const Text("Therapist Details", style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: descriptionController,
+                          decoration: const InputDecoration(labelText: 'Description'),
+                          maxLines: 3,
+                          validator: (value) =>
+                          value == null || value.isEmpty ? 'Please enter a description' : null,
+                        ),
+                        const SizedBox(height: 16),
+                        DropdownButtonFormField<Gender>(
+                          value: selectedGender.value,
+                          onChanged: (value) => selectedGender.value = value!,
+                          items: Gender.values.map((gender) {
+                            return DropdownMenuItem(
+                              value: gender,
+                              child: Text(gender.name),
+                            );
+                          }).toList(),
+                          decoration: const InputDecoration(labelText: 'Gender'),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: phoneController,
+                          decoration: const InputDecoration(labelText: 'Phone Number'),
+                          keyboardType: TextInputType.phone,
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: cityController,
+                          decoration: const InputDecoration(labelText: 'City'),
+                          keyboardType: TextInputType.text,
+                          validator: (value) =>
+                          value == null || value.isEmpty ? 'Please enter a city' : null,
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: contactEmailController,
+                          decoration: const InputDecoration(labelText: 'Contact Email'),
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: websiteController,
+                          decoration: const InputDecoration(labelText: 'Website'),
+                          keyboardType: TextInputType.url,
+                        ),
+                        const SizedBox(height: 24),
+                      ],
+
                       SizedBox(
                         width: double.infinity,
                         height: 50,
@@ -165,6 +203,13 @@ class Register extends HookConsumerWidget {
                               emailController.text,
                               passwordController.text,
                               nameController.text,
+                              isTherapist.value,
+                              descriptionController.text,
+                              selectedGender.value,
+                              phoneController.text,
+                              cityController.text,
+                              contactEmailController.text,
+                              websiteController.text,
                               context,
                               ref,
                             );
@@ -172,25 +217,15 @@ class Register extends HookConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              // ref
-                              //     .read(collapsingAppBarProvider.notifier)
-                              //     .updateState(AppBarType.login);
-                              context.pop(RoutePaths.login.name);
-                            },
-                            child: Row(
-                              children: [
-                                const Icon(Icons.arrow_back_ios),
-                                Text(localizations.backToLogging),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )
+                      TextButton(
+                        onPressed: () => context.pop(RoutePaths.login.name),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.arrow_back_ios),
+                            Text(localizations.backToLogging),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -202,46 +237,57 @@ class Register extends HookConsumerWidget {
     );
   }
 
-  _register(
-    GlobalKey<FormState> formKey,
-    String email,
-    String password,
-    String name,
-    BuildContext context,
-    WidgetRef ref,
-  ) async {
-    loggerService.debug('user name is: $name');
-    if (formKey.currentState!.validate()) {
-      // ref
-      //     .read(collapsingAppBarProvider.notifier)
-      //     .updateState(AppBarType.loading);
 
+  _register(
+      GlobalKey<FormState> formKey,
+      String email,
+      String password,
+      String name,
+      bool isTherapist,
+      String description,
+      Gender gender,
+      String phone,
+      String city,
+      String contactEmail,
+      String website,
+      BuildContext context,
+      WidgetRef ref,
+      ) async {
+    if (formKey.currentState!.validate()) {
       final result = await userAuthService.registerUser(email, password, name);
       if (result.isFailure) {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(result.error!), backgroundColor: Colors.red),
         );
+        return;
       }
-      else {
-        final user = result;
 
-        if (isTherapist) {
-          // Redirect to therapist details form
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => TherapistDetailsForm(
-                uid: user.uid,
-                email: email,
-                displayName: name,
-              ),
-            ),
-          );
-        } else {
-          // Redirect to main app or show success message
-          context.go(RoutePaths.home.name); // adjust this path to your actual home route
-        }
+      final user = result.data;
+      if (user == null) return;
+
+      if (isTherapist) {
+        final contactDetails = ContactDetails(
+          city: city,
+          phoneNumber: phone,
+          email: contactEmail,
+          website: website,
+        );
+        final therapist = AppTherapist(
+          uid: user.uid,
+          email: user.email!,
+          displayName: user.displayName,
+          description: description,
+          gender: gender,
+          contactDetails: contactDetails,
+        );
+        // Save therapist to Firestore or whatever you want here
+      } else {
+        // Save regular user or navigate
       }
+
+      context.go(RoutePaths.home.name);
     }
   }
+
 }
