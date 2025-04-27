@@ -3,14 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class ContactDetails extends Equatable {
   final String phoneNumber;
-  final String email;
   final String city;
   final String? website;
 
   const ContactDetails({
     required this.city,
     required this.phoneNumber,
-    required this.email,
     this.website,
   });
 
@@ -22,7 +20,6 @@ class ContactDetails extends Equatable {
     return ContactDetails(
       city: city,
       phoneNumber: user.phoneNumber ?? '',
-      email: user.email ?? '',
       website: website,
     );
   }

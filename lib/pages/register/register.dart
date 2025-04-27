@@ -179,12 +179,6 @@ class Register extends HookConsumerWidget {
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
-                          controller: contactEmailController,
-                          decoration: const InputDecoration(labelText: 'Contact Email'),
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                        const SizedBox(height: 16),
-                        TextFormField(
                           controller: websiteController,
                           decoration: const InputDecoration(labelText: 'Website'),
                           keyboardType: TextInputType.url,
@@ -208,7 +202,6 @@ class Register extends HookConsumerWidget {
                               selectedGender.value,
                               phoneController.text,
                               cityController.text,
-                              contactEmailController.text,
                               websiteController.text,
                               context,
                               ref,
@@ -248,7 +241,6 @@ class Register extends HookConsumerWidget {
       Gender gender,
       String phone,
       String city,
-      String contactEmail,
       String website,
       BuildContext context,
       WidgetRef ref,
@@ -270,7 +262,6 @@ class Register extends HookConsumerWidget {
         final contactDetails = ContactDetails(
           city: city,
           phoneNumber: phone,
-          email: contactEmail,
           website: website,
         );
         final therapist = AppTherapist(
