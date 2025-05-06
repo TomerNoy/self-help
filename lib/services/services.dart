@@ -2,6 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:self_help/services/app_lifecycle_service.dart';
 import 'package:self_help/services/firebase_service.dart';
+import 'package:self_help/services/local_database_service.dart';
 import 'package:self_help/services/logger_service.dart';
 import 'package:self_help/services/storage_service.dart';
 import 'package:self_help/services/user_auth_service.dart';
@@ -28,6 +29,8 @@ class ServiceProvider {
         },
       );
 
+      // TODO: separate logged in and logged out services
+
       // storage
       _getIt.registerSingletonAsync<StorageService>(
         () async {
@@ -35,6 +38,16 @@ class ServiceProvider {
           await storageService.init();
           return storageService;
         },
+      );
+
+      // local database
+      _getIt.registerSingletonAsync<LocalDatabaseService>(
+        () async {
+          final localDatabaseService = LocalDatabaseService();
+          await localDatabaseService.init();
+          return localDatabaseService;
+        },
+        dispose: (service) => service.dispose(),
       );
 
       await _getIt.allReady();
@@ -46,18 +59,18 @@ class ServiceProvider {
 
       // user auth service
       _getIt.registerSingleton<UserAuthService>(UserAuthService(),
-          dispose: (service) {
-        service.dispose;
-      });
+          dispose: (service) => service.dispose);
+
+      await _getIt.allReady();
 
       // user profile service
       _getIt.registerSingleton<UserProfileService>(UserProfileService(),
-          dispose: (service) {
-        service.dispose;
-      });
+          dispose: (service) => service.dispose);
 
       // user data service
       _getIt.registerSingleton<UserDataService>(UserDataService());
+
+      await _getIt.allReady();
     } catch (e, st) {
       loggerService.error('services error', e, st);
     }
@@ -84,3 +97,6 @@ UserProfileService get userProfileService =>
 
 UserDataService get userDataService =>
     ServiceProvider._getIt.get<UserDataService>();
+
+LocalDatabaseService get localDatabaseService =>
+    ServiceProvider._getIt.get<LocalDatabaseService>();
