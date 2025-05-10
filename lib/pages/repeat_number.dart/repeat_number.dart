@@ -9,7 +9,7 @@ import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_hooks/use_appbar_manager.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
-import 'package:self_help/services/services.dart';
+import 'package:self_help/services/logger_service.dart';
 
 class RepeatNumber extends HookConsumerWidget {
   const RepeatNumber({super.key});
@@ -193,7 +193,7 @@ class RepeatNumber extends HookConsumerWidget {
                                         ),
                                       ),
                                       onChanged: (value) {
-                                        loggerService.debug(
+                                        LoggerService.debug(
                                             'reversedRandomNumber: $reversedRandomNumber');
                                         if (value == reversedRandomNumber) {
                                           reversedFocusNode.unfocus();

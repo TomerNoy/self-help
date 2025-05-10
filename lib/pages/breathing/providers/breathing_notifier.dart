@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/models/breathing_state.dart';
+import 'package:self_help/services/logger_service.dart';
 import 'package:self_help/services/services.dart';
 
 part 'breathing_notifier.g.dart';
@@ -41,7 +42,7 @@ class BreathingExercise extends _$BreathingExercise {
 
     ref.onDispose(
       () {
-        loggerService.debug('disposing breathing exercise notifier');
+        LoggerService.debug('disposing breathing exercise notifier');
         _exercisetimer?.cancel();
         _preparetimer?.cancel();
       },

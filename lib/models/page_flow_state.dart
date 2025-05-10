@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
-import 'package:self_help/services/services.dart';
+import 'package:self_help/services/logger_service.dart';
 
 @immutable
 class PageFlowState {
@@ -16,7 +16,7 @@ class PageFlowState {
     int? index,
     List<RoutePaths>? flowList,
   }) {
-    loggerService.debug(
+    LoggerService.debug(
       'PageFlowState copyWith: $index, $flowList',
     );
 

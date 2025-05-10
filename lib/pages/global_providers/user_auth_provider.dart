@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:self_help/services/logger_service.dart';
 import 'package:self_help/services/services.dart';
 
 part 'user_auth_provider.g.dart';
@@ -12,7 +13,7 @@ Stream<UserAuthState> userAuth(Ref ref) async* {
 
   yield* userAuthService.authStateChanges.distinct().handleError(
     (error, stackTrace) {
-      loggerService.error("Error in userAuth stream: $error", stackTrace);
+      LoggerService.error("Error in userAuth stream: $error", stackTrace);
       return UserAuthState.hasError;
     },
   );

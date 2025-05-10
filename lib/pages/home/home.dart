@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:self_help/core/constants/assets_constants.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
+import 'package:self_help/core/extensions/date_extensions.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
+import 'package:self_help/models/diary_thought.dart';
 import 'package:self_help/pages/global_hooks/use_appbar_manager.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_providers/user_provider.dart';
 import 'package:self_help/pages/home/widgets/home_card.dart';
+import 'package:self_help/services/logger_service.dart';
+import 'package:self_help/services/services.dart';
 
 class Home extends HookConsumerWidget {
   const Home({super.key});
@@ -60,6 +64,7 @@ class Home extends HookConsumerWidget {
                   // TODO:
                 },
               ),
+
               // GradientFilledButton(onPressed: () {}, title: 'title'),
               // SizedBox(height: 16),
               // GradientElevatedButton(onPressed: () {}, title: 'title'),

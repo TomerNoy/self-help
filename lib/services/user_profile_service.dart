@@ -5,7 +5,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:self_help/core/constants/constants.dart';
 import 'package:self_help/models/app_user.dart';
 import 'package:self_help/models/result.dart';
-import 'package:self_help/services/services.dart';
+import 'package:self_help/services/logger_service.dart';
 
 class UserProfileService {
   UserProfileService() {
@@ -28,7 +28,7 @@ class UserProfileService {
     return _handleCall(() async {
       await user.updateProfile(displayName: name);
       await user.reload();
-      loggerService.info('User name updated: ${user.displayName}');
+      LoggerService.info('User name updated: ${user.displayName}');
       return 'updated successfully';
     });
   }
@@ -44,15 +44,15 @@ class UserProfileService {
         ),
       );
     } on TimeoutException catch (e, st) {
-      loggerService.error('Operation timed out', e, st);
+      LoggerService.error('Operation timed out', e, st);
       return Result.failure('Operation timed out. Please try again.');
     } on FirebaseException catch (e, st) {
-      loggerService.error('Firebase error', e, st);
+      LoggerService.error('Firebase error', e, st);
       return Result.failure(
         e.code.replaceAll('-', ' ').toLowerCase(),
       );
     } catch (e, st) {
-      loggerService.error('Unexpected error', e, st);
+      LoggerService.error('Unexpected error', e, st);
       return Result.failure('An unexpected error occurred. Please try again.');
     }
   }

@@ -7,6 +7,7 @@ import 'package:self_help/models/app_user.dart';
 import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_providers/user_provider.dart';
+import 'package:self_help/services/logger_service.dart';
 import 'package:self_help/services/services.dart';
 
 class Profile extends HookConsumerWidget {
@@ -157,14 +158,14 @@ class Profile extends HookConsumerWidget {
                   final result =
                       await userProfileService.updateUserName(name: newValue!);
 
-                  loggerService.debug('result: $result');
+                  LoggerService.debug('result: $result');
 
                   // ref
                   //     .read(collapsingAppBarProvider.notifier)
                   //     .updateState(AppBarType.hidden);
 
                   final message = result.isSuccess ? result.data : result.error;
-                  loggerService.debug('message: $message');
+                  LoggerService.debug('message: $message');
 
                   if (message != null) {
                     showSnackBar(message);

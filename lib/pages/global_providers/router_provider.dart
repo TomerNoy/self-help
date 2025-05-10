@@ -6,7 +6,7 @@ import 'package:self_help/core/router.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/pages/global_providers/page_flow_provider.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
-import 'package:self_help/services/services.dart';
+import 'package:self_help/services/logger_service.dart';
 
 part 'router_provider.g.dart';
 
@@ -18,7 +18,7 @@ GoRouter routerState(Ref ref) {
 
   ref
     ..onDispose(() {
-      loggerService.info('RouterProvider: disposed');
+      LoggerService.info('RouterProvider: disposed');
       authState.dispose();
     })
     ..listen<AsyncValue<UserAuthState>>(
@@ -26,7 +26,7 @@ GoRouter routerState(Ref ref) {
       (previous, next) {
         if (next.hasValue) {
           authState.value = next.value!;
-          loggerService.debug('authState updated to: ${authState.value}');
+          LoggerService.debug('authState updated to: ${authState.value}');
         }
       },
     );
@@ -47,7 +47,7 @@ GoRouter routerState(Ref ref) {
 
       final onUnrestrictedPage = unrestrictedRoutes.contains(location);
 
-      loggerService.debug('authState: $authValue, location: $location');
+      LoggerService.debug('authState: $authValue, location: $location');
 
       // authenticated
       if (authValue == UserAuthState.authenticated) {
@@ -80,10 +80,10 @@ GoRouter routerState(Ref ref) {
       final newRoute =
           appRouter.routerDelegate.currentConfiguration.lastOrNull?.route.path;
 
-      loggerService.info('RouterProvider: route changed to $newRoute');
+      LoggerService.info('RouterProvider: route changed to $newRoute');
 
       if (newRoute == null) {
-        loggerService.warning('Route changed to null');
+        LoggerService.warning('Route changed to null');
       }
 
       final path = RoutePaths.fromPath(newRoute!);
@@ -96,7 +96,7 @@ GoRouter routerState(Ref ref) {
 
   ref.onDispose(
     () {
-      loggerService.info('RouterProvider: disposed');
+      LoggerService.info('RouterProvider: disposed');
       appRouter.dispose();
     },
   );
