@@ -6,7 +6,7 @@ import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
 import 'package:self_help/pages/magic_touch/providers/magic_touch_provider.dart';
 import 'package:self_help/pages/magic_touch/widgets/butterfly_hug.dart';
 import 'package:self_help/pages/magic_touch/widgets/calming_hug.dart';
-import 'package:self_help/services/services.dart';
+import 'package:self_help/services/logger_service.dart';
 
 class MagicTouch extends HookConsumerWidget {
   const MagicTouch({super.key});
@@ -17,7 +17,7 @@ class MagicTouch extends HookConsumerWidget {
     final provider = ref.watch(magicTouchProvider);
     final notifier = ref.read(magicTouchProvider.notifier);
 
-    loggerService.debug('timer on $provider');
+    LoggerService.debug('timer on $provider');
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {

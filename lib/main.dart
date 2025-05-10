@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:self_help/core/app.dart';
+import 'package:self_help/services/logger_service.dart';
 import 'package:self_help/services/services.dart';
 
 Future<void> main() async {
@@ -22,7 +23,7 @@ class MyProviderObserver extends ProviderObserver {
     Object? newValue,
     ProviderContainer container,
   ) {
-    loggerService.debug('''
+    LoggerService.debug('''
 provider: ${provider.name ?? provider.runtimeType}
 newValue: $newValue
 ''');

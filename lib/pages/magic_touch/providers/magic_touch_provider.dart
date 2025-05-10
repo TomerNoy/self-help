@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:self_help/core/constants/constants.dart';
-import 'package:self_help/services/services.dart';
+import 'package:self_help/services/logger_service.dart';
 
 part 'magic_touch_provider.g.dart';
 
@@ -43,7 +43,7 @@ class MagicTouch extends _$MagicTouch {
   TimerState build() {
     ref.onDispose(
       () {
-        loggerService.debug('disposing magic touch notifier');
+        LoggerService.debug('disposing magic touch notifier');
         _timer?.cancel();
         _timer = null;
       },

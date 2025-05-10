@@ -9,6 +9,7 @@ import 'package:self_help/pages/global_hooks/use_appbar_manager.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/pages/global_providers/user_provider.dart';
 import 'package:self_help/pages/home/widgets/home_card.dart';
+import 'package:self_help/services/logger_service.dart';
 import 'package:self_help/services/services.dart';
 
 class Home extends HookConsumerWidget {
@@ -64,11 +65,6 @@ class Home extends HookConsumerWidget {
                 },
               ),
 
-              // text widget
-              IconButton(
-                onPressed: _testPressed,
-                icon: Icon(Icons.build),
-              )
               // GradientFilledButton(onPressed: () {}, title: 'title'),
               // SizedBox(height: 16),
               // GradientElevatedButton(onPressed: () {}, title: 'title'),
@@ -79,42 +75,5 @@ class Home extends HookConsumerWidget {
         ],
       ),
     );
-  }
-
-  // TODO: remove this test function, push changes and  and continue with the building a dedicated provider
-  void _testPressed() async {
-    await localDatabaseService.deleteAllThoughts();
-
-    final initialThoughts = await localDatabaseService.getThoughts();
-
-    loggerService.debug('§ initial Thoughts: $initialThoughts');
-
-    final thought = DiaryThought(
-      date: DateTime.now().dateOnly,
-      content: 'this is some content',
-    );
-
-    loggerService.debug('§ new Thought: $thought');
-
-    await localDatabaseService.saveThought(thought);
-
-    loggerService.debug('§ Thought saved');
-
-    final savedThought =
-        await localDatabaseService.getThoughtByDate(DateTime.now().dateOnly);
-
-    loggerService.debug('§ get Thought by date: $savedThought');
-
-    final allThoughts = await localDatabaseService.getThoughts();
-    loggerService.debug('§ all Thoughts: $allThoughts');
-
-    await localDatabaseService.deleteThought(DateTime.now().dateOnly);
-
-    loggerService.debug('§ Thought deleted');
-
-    await localDatabaseService.getThoughtByDate(DateTime.now().dateOnly);
-
-    final allThoughtsAfterDelete = await localDatabaseService.getThoughts();
-    loggerService.debug('§ all Thoughts: $allThoughtsAfterDelete');
   }
 }

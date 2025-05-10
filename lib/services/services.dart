@@ -17,9 +17,6 @@ class ServiceProvider {
       // load env
       await dotenv.load(fileName: ".env");
 
-      // logger
-      _getIt.registerSingleton<LoggerService>(LoggerService());
-
       // firebase
       _getIt.registerSingletonAsync<FirebaseService>(
         () async {
@@ -72,13 +69,9 @@ class ServiceProvider {
 
       await _getIt.allReady();
     } catch (e, st) {
-      loggerService.error('services error', e, st);
+      LoggerService.error('services error', e, st);
     }
   }
-}
-
-LoggerService get loggerService {
-  return ServiceProvider._getIt.get<LoggerService>();
 }
 
 StorageService get storageService {

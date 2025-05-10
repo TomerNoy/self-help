@@ -9,7 +9,7 @@ import 'package:self_help/core/constants/constants.dart';
 // import 'package:self_help/models/app_user.dart';
 import 'package:self_help/models/result.dart';
 import 'package:self_help/pages/global_providers/user_auth_provider.dart';
-import 'package:self_help/services/services.dart';
+import 'package:self_help/services/logger_service.dart';
 
 /// this class is responsible for handling user authentication and user data
 class UserAuthService {
@@ -47,13 +47,13 @@ class UserAuthService {
         await userCredential.user!.updateProfile(displayName: name);
         await userCredential.user!.reload();
       } catch (e, st) {
-        loggerService.error('Error updating user profile', e, st);
+        LoggerService.error('Error updating user profile', e, st);
         return Future.error(
           'Error updating user profile. Please try again.',
         );
       }
       final updatedUser = _auth.currentUser;
-      loggerService.info('User registered: ${updatedUser?.displayName}');
+      LoggerService.info('User registered: ${updatedUser?.displayName}');
       return updatedUser!;
     });
   }
@@ -64,7 +64,7 @@ class UserAuthService {
         email: email,
         password: password,
       );
-      loggerService.info('User logged in: ${userCredential.user}');
+      LoggerService.info('User logged in: ${userCredential.user}');
       return userCredential.user!;
     });
   }
@@ -78,12 +78,12 @@ class UserAuthService {
           idToken: googleAuth.idToken,
         );
         final userCredential = await _auth.signInWithCredential(credential);
-        loggerService
+        LoggerService
             .info('User logged in with Google: ${userCredential.user}');
         return userCredential.user!;
       } on PlatformException catch (e) {
         if (e.code == 'sign_in_canceled') {
-          loggerService.info('Google Sign-In canceled');
+          LoggerService.info('Google Sign-In canceled');
           return Future.error(
             'Google Sign-In canceled. Please try again.',
           );
@@ -96,7 +96,7 @@ class UserAuthService {
   Future<Result<void>> signOut() async {
     return _handleCall(() async {
       await _auth.signOut();
-      loggerService.info('User signed out');
+      LoggerService.info('User signed out');
     });
   }
 
@@ -106,21 +106,21 @@ class UserAuthService {
       final result = await _retryOperation(operation);
 
       if (result == null) {
-        loggerService.error(
+        LoggerService.error(
             'Operation returned null', null, StackTrace.current);
         _authStateChanges.add(UserAuthState.hasError);
         return Result.failure('Operation failed. Please try again.');
       }
-      loggerService.info('Operation successful: $result');
+      LoggerService.info('Operation successful: $result');
       return Result.success(result);
     } on TimeoutException catch (e, st) {
-      loggerService.error('Operation timed out', e, st);
+      LoggerService.error('Operation timed out', e, st);
 
       _authStateChanges.add(UserAuthState.hasError);
 
       return Result.failure('Operation timed out. Please try again.');
     } on FirebaseException catch (e, st) {
-      loggerService.error('Firebase error', e, st);
+      LoggerService.error('Firebase error', e, st);
 
       _authStateChanges.add(
           ['user-not-found', 'wrong-password', 'user-disabled'].contains(e.code)
@@ -132,7 +132,7 @@ class UserAuthService {
             'Authentication failed. Please try again.',
       );
     } catch (e, st) {
-      loggerService.error('Unexpected error', e, st);
+      LoggerService.error('Unexpected error', e, st);
       _authStateChanges.add(UserAuthState.hasError);
       return Result.failure('An unexpected error occurred. Please try again.');
     }

@@ -9,6 +9,7 @@ import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_widgets/buttons.dart';
+import 'package:self_help/services/logger_service.dart';
 import 'package:self_help/services/services.dart';
 
 class Register extends HookConsumerWidget {
@@ -174,7 +175,7 @@ class Register extends HookConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) async {
-    loggerService.debug('user name is: $name');
+    LoggerService.debug('user name is: $name');
     if (formKey.currentState!.validate()) {
       // ref
       //     .read(collapsingAppBarProvider.notifier)

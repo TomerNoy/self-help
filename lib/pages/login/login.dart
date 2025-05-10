@@ -12,6 +12,7 @@ import 'package:self_help/pages/global_providers/collapsing_appbar_provider.dart
 import 'package:self_help/pages/global_providers/router_provider.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_widgets/buttons.dart';
+import 'package:self_help/services/logger_service.dart';
 import 'package:self_help/services/services.dart';
 
 class Login extends HookConsumerWidget {
@@ -206,7 +207,7 @@ class Login extends HookConsumerWidget {
       final result =
           await userAuthService.loginUser(email.trim(), password.trim());
 
-      loggerService.debug('login result: $result');
+      LoggerService.debug('login result: $result');
 
       if (result.isFailure) {
         if (!context.mounted) return;
@@ -246,7 +247,7 @@ class Login extends HookConsumerWidget {
         );
       }
     } catch (e, st) {
-      loggerService.error('Google sign in failed', e, st);
+      LoggerService.error('Google sign in failed', e, st);
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

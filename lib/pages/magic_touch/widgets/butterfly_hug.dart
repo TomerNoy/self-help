@@ -6,14 +6,14 @@ import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/l10n/generated/app_localizations.dart';
 import 'package:self_help/pages/global_hooks/use_appbar_manager.dart';
 import 'package:self_help/pages/global_widgets/flow_navigation_bar.dart';
-import 'package:self_help/services/services.dart';
+import 'package:self_help/services/logger_service.dart';
 
 class ButterflyHug extends HookConsumerWidget {
   const ButterflyHug({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    loggerService.debug('ButterflyHug widget built');
+    LoggerService.debug('ButterflyHug widget built');
 
     final localizations = AppLocalizations.of(context)!;
     final title = 'חיבוק עצמי'; //TODO: use localization

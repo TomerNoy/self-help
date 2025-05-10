@@ -3,7 +3,7 @@ import 'package:self_help/core/constants/flow_route_constant.dart';
 import 'package:self_help/core/constants/routes_constants.dart';
 import 'package:self_help/models/page_flow_state.dart';
 import 'package:self_help/pages/global_providers/router_provider.dart';
-import 'package:self_help/services/services.dart';
+import 'package:self_help/services/logger_service.dart';
 
 part 'page_flow_provider.g.dart';
 
@@ -36,18 +36,18 @@ class PageFlow extends _$PageFlow {
     try {
       router.pushNamed(routeName);
     } catch (e) {
-      loggerService.error('Failed to navigate to $routeName: $e');
+      LoggerService.error('Failed to navigate to $routeName: $e');
       _backToHome();
     }
   }
 
   void next([StressType? stressType]) {
-    loggerService.debug(
+    LoggerService.debug(
       'updatePageIndex with stressType: $stressType, current state: $state',
     );
 
     if (state.flowList.isEmpty) {
-      loggerService.debug('Flow list is empty, cannot proceed');
+      LoggerService.debug('Flow list is empty, cannot proceed');
 
       throw Exception(
         'Flow list is empty, cannot proceed',
@@ -131,7 +131,7 @@ class PageFlow extends _$PageFlow {
       final isBackStressLevel = backPage == RoutePaths.stressLevel;
       final shouldCleanRoutes = state.index > 1 && isBackStressLevel;
 
-      loggerService.debug(
+      LoggerService.debug(
         'shouldCleanRoutes: $shouldCleanRoutes, isBackStressLevel : $isBackStressLevel',
       );
 
@@ -152,7 +152,7 @@ class PageFlow extends _$PageFlow {
     final router = ref.read(routerStateProvider);
     router.goNamed(RoutePaths.home.name);
     _reset();
-    loggerService.debug(
+    LoggerService.debug(
       'back to home with state: $state',
     );
 
@@ -169,7 +169,7 @@ class PageFlow extends _$PageFlow {
 
   // reset flow in case user exits flow
   void resetFlowIfNeeded(RoutePaths path) {
-    loggerService.debug(
+    LoggerService.debug(
       'updatePageIndex with path: $path, current state: $state',
     );
 

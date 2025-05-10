@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:self_help/services/services.dart';
+import 'package:self_help/services/logger_service.dart';
 
 class AppLifeCycleService extends WidgetsBindingObserver {
   AppLifeCycleService() {
@@ -10,7 +10,7 @@ class AppLifeCycleService extends WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
-    loggerService.debug('app state: ${state.name}');
+    LoggerService.debug('app state: ${state.name}');
 
     if (state == AppLifecycleState.resumed) {
       //TODO:

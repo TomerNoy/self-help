@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:hive_ce/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:self_help/models/diary_thought.dart';
-import 'package:self_help/services/services.dart';
+import 'package:self_help/services/logger_service.dart';
 
 class LocalDatabaseService {
   final path = Directory.current.path;
@@ -21,7 +21,7 @@ class LocalDatabaseService {
     try {
       await _box!.put(thought.date.toIso8601String(), thought.toJson());
     } catch (e) {
-      loggerService.error('Error saving thought', e);
+      LoggerService.error('Error saving thought', e);
       rethrow;
     }
   }
@@ -33,7 +33,7 @@ class LocalDatabaseService {
           .map((json) => DiaryThought.fromJson(json.cast()))
           .toList();
     } catch (e) {
-      loggerService.error('Error getting thoughts', e);
+      LoggerService.error('Error getting thoughts', e);
       rethrow;
     }
   }
@@ -43,19 +43,19 @@ class LocalDatabaseService {
     try {
       final key = date.toIso8601String();
 
-      loggerService.debug('Getting thought by date: $key');
+      LoggerService.debug('Getting thought by date: $key');
 
-      loggerService.debug('all keys in box: ${_box!.keys}');
+      LoggerService.debug('all keys in box: ${_box!.keys}');
 
       final Map? json = _box!.get(key);
 
-      loggerService.debug('Thought json: $json');
+      LoggerService.debug('Thought json: $json');
 
       if (json == null) return null;
       final thought = DiaryThought.fromJson(json.cast());
       return thought;
     } catch (e) {
-      loggerService.error('Error getting thought by date', e);
+      LoggerService.error('Error getting thought by date', e);
       rethrow;
     }
   }
@@ -65,7 +65,7 @@ class LocalDatabaseService {
     try {
       await _box!.delete(date.toIso8601String());
     } catch (e) {
-      loggerService.error('Error deleting thought', e);
+      LoggerService.error('Error deleting thought', e);
       rethrow;
     }
   }
@@ -75,7 +75,7 @@ class LocalDatabaseService {
     try {
       await _box!.clear();
     } catch (e) {
-      loggerService.error('Error deleting all thoughts', e);
+      LoggerService.error('Error deleting all thoughts', e);
       rethrow;
     }
   }
@@ -84,7 +84,7 @@ class LocalDatabaseService {
     try {
       await _box?.close();
     } catch (e) {
-      loggerService.error('Error closing box', e);
+      LoggerService.error('Error closing box', e);
       rethrow;
     }
   }

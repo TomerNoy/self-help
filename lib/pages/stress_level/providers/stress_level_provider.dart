@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:self_help/models/stress_track.dart';
+import 'package:self_help/services/logger_service.dart';
 import 'package:self_help/services/services.dart';
 
 part 'stress_level_provider.g.dart';
@@ -16,6 +17,6 @@ class StressLevel extends _$StressLevel {
 
   void addStressTrack(StressTrack track) {
     final result = userDataService.addStressTrack(track);
-    loggerService.debug('Stress track added: $result');
+    LoggerService.debug('Stress track added: $result');
   }
 }
